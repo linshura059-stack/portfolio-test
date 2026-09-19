@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#000000">
+    <meta name="description"
+        content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
+    <title>Sok Sophea | Web Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&family=Roboto:wght@400;500;700&family=Rubik+Wet+Paint&family=Ubuntu:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* 
+        Tokens (the look is a fixed dark "storm" theme, so one palette is used)*/
+        :root {
+            --bg: #02060b;
+            --ink: #f4f7fa;
+            --ink-dim: #b9c4cc;
+            --teal: #19e0d2;
+            --teal-glow: rgba(25, 224, 210, .55);
+            --line: #7ff3ea;
+            --neon: #ff5a2e;
+            --neon-soft: #ff9a6b;
+            --ok: #1f9d55;
+            --off: #2b2f35;
+            --err: #ff8080;
+            --hdr: 76px;
+            --pad: clamp(18px, 7vw, 120px);
+            --ease: cubic-bezier(.2, .7, .2, 1);
+            color-scheme: dark;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            scrollbar-color: #1c7f7a #000;
+            scrollbar-width: thin
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Ubuntu', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            line-height: 1.55;
+            overflow-x: hidden;
+            min-height: 100vh;
+            min-height: 100svh;
+            padding-top: var(--hdr);
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::-webkit-scrollbar {
+            width: 9px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1c7f7a;
+            border-radius: 9px
+        }
+
+        a {
+            color: inherit
+        }
+
+        img,
+        svg {
+            max-width: 100%
+        }
+
+        :focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 3px;
+            border-radius: 4px
+        }
+
+        .skip {
+            position: fixed;
+            left: 12px;
+            top: -60px;
+            z-index: 100;
+            background: #fff;
+            color: #000;
+            padding: .6rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: top .2s
+        }
+
+        .skip:focus {
+            top: 12px
+        }
+
+        .sr {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap
+        }
+
+        .wrap {
+            width: min(1240px, calc(100% - 2*var(--pad)));
+            margin-inline: auto
+        }
+
+        /* 
+   Background layers: sky, storm canvas, cursor glow, floating tech orbs*/
+        #sky {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(1100px 520px at 72% -8%, rgba(22, 70, 96, .38), transparent 62%),
+                radial-gradient(900px 520px at 6% 108%, rgba(10, 44, 66, .4), transparent 62%),
+                linear-gradient(#01040a, #030d15 55%, #02070c);
+        }
+
+        #sky::before,
+        #sky::after {
+            content: "";
+            position: absolute;
+            left: -20%;
+            width: 140%;
+            height: 46%;
+            background: radial-gradient(closest-side, rgba(40, 84, 110, .22), transparent);
+            filter: blur(30px);
+            animation: cloud 46s ease-in-out infinite alternate
+        }
+
+        #sky::before {
+            top: -14%
+        }
+
+        #sky::after {
+            top: 6%;
+            animation-duration: 62s;
+            animation-direction: alternate-reverse;
+            opacity: .7
+        }
+
+        #storm {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none
+        }
+
+        #cursor-glow {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 440px;
+            height: 440px;
+            margin: -220px 0 0 -220px;
+            z-index: 2;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(25, 224, 210, .11), transparent 62%);
+            opacity: 0;
+            transition: opacity .4s;
+            will-change: transform
+        }
+
+        #orbs {
+            position: fixed;
+            inset: 0;
+            z-index: 40;
+            pointer-events: none;
+            overflow: hidden
+        }
+
+        .orb {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: var(--sz);
+            height: var(--sz);
+            border-radius: 50%;
+            background: var(--bg-c, #04090d);
+            display: grid;
+            place-items: center;
+            will-change: transform;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, .65), 0 0 9px 1px var(--glow), 0 0 22px 3px rgba(31, 224, 210, .22)
+        }
+
+        .orb svg {
+            width: 58%;
+            height: 58%;
+            display: block
+        }
+
+        /* 
+   Header + neon line*/
+        .site-header {
+            position: fixed;
+            inset: 0 0 auto 0;
+            height: var(--hdr);
+            background: #000;
+            z-index: 50;
+            animation: hdrIn .8s var(--ease) both
+        }
+
+        .site-header::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            height: 2px;
+            background: var(--teal);
+            box-shadow: 0 0 10px 1px var(--teal-glow), 0 6px 24px rgba(25, 224, 210, .3);
+            transform-origin: left;
+            animation: drawLine 1.2s .15s var(--ease) both
+        }
+
+        .site-header::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 220px;
+            height: 2px;
+            z-index: 1;
+            background: linear-gradient(90deg, transparent, #eafffd, transparent);
+            animation: sweep 6s linear 1.6s infinite
+        }
+
+        .bar-in {
+            width: min(1320px, calc(100% - 2*var(--pad)));
+            margin-inline: auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .brand {
+            font: 700 clamp(1.3rem, 2.3vw, 1.9rem)/1 'Roboto', sans-serif;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #fff;
+            letter-spacing: .01em;
+            white-space: nowrap
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            gap: clamp(1.4rem, 4vw, 3.4rem)
+        }
+
+        .nav a {
+            position: relative;
+            display: inline-block;
+            padding: .45rem 0;
+            font: 400 .95rem 'Roboto', sans-serif;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #fff;
+            letter-spacing: .02em
+        }
+
+        .nav a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: var(--teal);
+            box-shadow: 0 0 8px var(--teal);
+            transition: width .35s var(--ease), left .35s var(--ease)
+        }
+
+        .nav a:hover::after,
+        .nav a[aria-current="page"]::after {
+            width: 100%;
+            left: 0
+        }
+
+        .nav a[aria-current="page"] {
+            font-weight: 700
+        }
+
+        .burger {
+            display: none;
+            width: 46px;
+            height: 46px;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            color: #fff;
+            position: relative;
+            border-radius: 8px
+        }
+
+        .burger span {
+            position: absolute;
+            left: 11px;
+            right: 11px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform .4s var(--ease), opacity .25s, top .4s var(--ease)
+        }
+
+        .burger span:nth-child(1) {
+            top: 16px
+        }
+
+        .burger span:nth-child(2) {
+            top: 22px
+        }
+
+        .burger span:nth-child(3) {
+            top: 28px
+        }
+
+        .burger[aria-expanded="true"] span:nth-child(1) {
+            top: 22px;
+            transform: rotate(45deg)
+        }
+
+        .burger[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0
+        }
+
+        .burger[aria-expanded="true"] span:nth-child(3) {
+            top: 22px;
+            transform: rotate(-45deg)
+        }
+
+        /* 
+   Pages*/
+        main {
+            position: relative;
+            z-index: 10;
+            flex: 1
+        }
+
+        .page {
+            position: relative;
+            padding-bottom: clamp(48px, 9vh, 110px)
+        }
+
+        .page[hidden] {
+            display: none
+        }
+
+        .page.leaving {
+            animation: pageOut .32s ease-in forwards
+        }
+
+        /* neon title: letters ignite one by one, then ripple */
+        .neon {
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .3em;
+            padding-left: .3em;
+            line-height: 1.55;
+            font-size: clamp(1.05rem, 2.4vw, 1.9rem);
+            color: #fff1ea;
+            margin: clamp(36px, 9vh, 84px) auto clamp(30px, 7vh, 70px);
+            text-shadow: 0 0 3px rgba(255, 255, 255, .9), 0 0 10px var(--neon-soft), 0 0 22px var(--neon), 0 0 44px rgba(255, 90, 46, .55);
+        }
+
+        .neon:focus {
+            outline: none
+        }
+
+        .neon .w {
+            display: inline-block;
+            white-space: nowrap
+        }
+
+        .neon .l {
+            display: inline-block;
+            animation: ignite .85s both, wave 3.2s ease-in-out infinite;
+            animation-delay: calc(var(--i)*38ms), calc(1.1s + var(--i)*85ms)
+        }
+
+        .neon.flick {
+            animation: flick .4s steps(1)
+        }
+
+        /* reveal on scroll (toggled by JS) */
+        .rv {
+            opacity: 0;
+            transform: translateY(34px) scale(.97)
+        }
+
+        .rv.in {
+            opacity: 1;
+            transform: none;
+            transition: opacity .85s var(--ease) var(--d, 0s), transform .95s var(--ease) var(--d, 0s)
+        }
+
+        /* ---------- Home / About ---------- */
+        .intro {
+            display: grid;
+            grid-template-columns: minmax(220px, .8fr) 1.5fr;
+            gap: clamp(28px, 6vw, 96px);
+            align-items: center
+        }
+
+        .avatar {
+            --ring: conic-gradient(#ff2a2a, #ffb300, #e6ff00, #22ff5a, #00e5ff, #2a5bff, #c400ff, #ff2a9d, #ff2a2a);
+            position: relative;
+            width: clamp(190px, 24vw, 300px);
+            aspect-ratio: 1;
+            justify-self: center;
+            border-radius: 50%;
+            padding: 6px;
+            isolation: isolate;
+            transition: transform .5s var(--ease)
+        }
+
+        .avatar::before,
+        .avatar::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: var(--ring);
+            animation: spin 5s linear infinite;
+            z-index: -1
+        }
+
+        .avatar::after {
+            inset: -4px;
+            filter: blur(16px);
+            opacity: .5;
+            z-index: -2
+        }
+
+        .avatar:hover::before,
+        .avatar:hover::after {
+            animation-duration: 1.6s
+        }
+
+        .photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #0a9cf5
+        }
+
+        .photo svg,
+        .photo img {
+            width: 100%;
+            height: 100%;
+            display: block
+        }
+
+        .photo img {
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .hello {
+            font-family: 'Rubik Wet Paint', 'Impact', sans-serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+            line-height: 1.15;
+            letter-spacing: .02em;
+            margin-bottom: 1rem;
+            color: #fff;
+            clip-path: inset(-20% 100% -40% -2%)
+        }
+
+        .hello.in {
+            clip-path: inset(-20% -2% -40% -2%);
+            transition: clip-path 1.2s cubic-bezier(.6, 0, .2, 1) .1s, opacity .6s var(--d, 0s), transform .9s var(--ease) var(--d, 0s)
+        }
+
+        .lede {
+            font-weight: 300;
+            font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+            color: #eef3f7;
+            max-width: 58ch
+        }
+
+        .intro-copy h3 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin: 1.5rem 0 .3rem
+        }
+
+        .intro-copy p.sm {
+            font-size: 1rem;
+            color: #e9eef2;
+            max-width: 62ch
+        }
+
+        .intro-copy strong {
+            color: #fff;
+            font-weight: 700
+        }
+
+        /* ---------- Portfolio ---------- */
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(34px, 4.5vw, 68px) clamp(20px, 3.6vw, 56px)
+        }
+
+        .project {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem
+        }
+
+        .laptop {
+            perspective: 1000px
+        }
+
+        .laptop-in {
+            transform-style: preserve-3d;
+            transition: transform .55s var(--ease), filter .55s;
+            will-change: transform
+        }
+
+        .project:hover .laptop-in,
+        .project:focus-within .laptop-in {
+            filter: drop-shadow(0 12px 26px rgba(25, 224, 210, .35))
+        }
+
+        .lid {
+            background: #0e0f11;
+            border: 1.5px solid #4b4e53;
+            border-bottom: 0;
+            border-radius: 12px 12px 0 0;
+            padding: 3.2% 3.6% 3.6%
+        }
+
+        .screen {
+            position: relative;
+            aspect-ratio: 16/10;
+            background: #fff;
+            overflow: hidden;
+            border-radius: 2px
+        }
+
+        .screen .bar {
+            height: 9%;
+            background: #eceef1;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 0 3%
+        }
+
+        .screen .bar i {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #bcc1c8
+        }
+
+        .screen .bar span {
+            flex: 1;
+            height: 58%;
+            background: #fff;
+            border-radius: 3px;
+            margin-left: 4%
+        }
+
+        .view {
+            position: absolute;
+            inset: 9% 0 0 0;
+            overflow: hidden
+        }
+
+        .view svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            transition: transform 3.2s cubic-bezier(.35, .1, .2, 1)
+        }
+
+        .chip {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            white-space: nowrap;
+            padding: .4rem .95rem;
+            border-radius: 6px;
+            background: rgba(18, 25, 30, .74);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            color: #59e8f0;
+            font-size: clamp(.7rem, 1.3vw, 1.02rem);
+            transition: opacity .4s, transform .4s var(--ease)
+        }
+
+        .base {
+            position: relative;
+            height: clamp(8px, 1.1vw, 13px);
+            width: 112%;
+            margin-left: -6%;
+            background: linear-gradient(#e6e7ea, #b5b7bc 60%, #8d8f94);
+            border-radius: 0 0 14px 14px/0 0 10px 10px;
+            box-shadow: 0 12px 26px rgba(0, 0, 0, .65)
+        }
+
+        .base::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 16%;
+            height: 55%;
+            transform: translateX(-50%);
+            background: linear-gradient(#a9abaf, #c9cbcf);
+            border-radius: 0 0 8px 8px
+        }
+
+        @media (hover:hover) {
+
+            .project:hover .view svg,
+            .project:focus-within .view svg {
+                transform: translateY(-44%)
+            }
+
+            .project:hover .chip,
+            .project:focus-within .chip {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(.9)
+            }
+        }
+
+        @media (hover:none) and (prefers-reduced-motion:no-preference) {
+            .project.in .view svg {
+                animation: peek 7s ease-in-out 1.2s infinite alternate
+            }
+        }
+
+        .meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .8rem;
+            flex-wrap: wrap
+        }
+
+        .meta h3 {
+            font: 500 1.02rem 'Roboto', sans-serif;
+            color: #fff
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: .55rem 1.1rem;
+            border-radius: 8px;
+            border: 0;
+            font: 500 .95rem 'Ubuntu', sans-serif;
+            text-decoration: none;
+            cursor: pointer;
+            color: #fff;
+            transition: transform .3s var(--ease), box-shadow .3s, background .3s
+        }
+
+        .btn-ok {
+            background: var(--ok)
+        }
+
+        .btn-ok:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(31, 157, 85, .5);
+            background: #23b062
+        }
+
+        .btn-off {
+            background: var(--off);
+            color: #a5acb3;
+            cursor: not-allowed
+        }
+
+        /* ---------- Contact ---------- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(22px, 3vw, 46px);
+            align-items: stretch
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem
+        }
+
+        .field input,
+        .field textarea {
+            width: 100%;
+            display: block;
+            background: rgba(0, 0, 0, .45);
+            color: #fff;
+            border: 1.5px solid var(--line);
+            border-radius: 6px;
+            padding: .9rem 1rem;
+            font: 400 1rem 'Ubuntu', sans-serif;
+            outline: none;
+            box-shadow: 0 0 7px rgba(127, 243, 234, .55), inset 0 0 7px rgba(127, 243, 234, .16);
+            transition: box-shadow .3s, border-color .3s, transform .3s var(--ease), background .3s
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 140px
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: #c6d1d6;
+            opacity: 1
+        }
+
+        .field input:focus,
+        .field textarea:focus {
+            border-color: #fff;
+            background: rgba(0, 10, 12, .7);
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, .35), 0 0 16px rgba(127, 243, 234, .9), 0 0 38px rgba(25, 224, 210, .45), inset 0 0 10px rgba(127, 243, 234, .28)
+        }
+
+        .err {
+            display: none;
+            color: var(--err);
+            font-size: .86rem;
+            margin: .35rem .2rem 0
+        }
+
+        .field.bad .err {
+            display: block
+        }
+
+        .field.bad input,
+        .field.bad textarea {
+            border-color: var(--err);
+            box-shadow: 0 0 12px rgba(255, 128, 128, .6);
+            animation: shake .38s
+        }
+
+        .send {
+            position: relative;
+            overflow: hidden;
+            min-height: 50px;
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid var(--line);
+            border-radius: 6px;
+            cursor: pointer;
+            font: 500 1rem 'Ubuntu', sans-serif;
+            box-shadow: 0 0 7px rgba(127, 243, 234, .55), inset 0 0 7px rgba(127, 243, 234, .16);
+            transition: background .3s, box-shadow .3s, transform .3s var(--ease)
+        }
+
+        .send::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -40%;
+            width: 30%;
+            background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .28), transparent);
+            transform: skewX(-18deg);
+            transition: left .7s var(--ease)
+        }
+
+        .send:hover {
+            background: rgba(127, 243, 234, .16);
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(127, 243, 234, .85), 0 0 40px rgba(25, 224, 210, .35)
+        }
+
+        .send:hover::before {
+            left: 120%
+        }
+
+        .send.busy {
+            pointer-events: none;
+            opacity: .85
+        }
+
+        .send.busy::after {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: .6rem;
+            vertical-align: -2px;
+            border: 2px solid #fff;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin .7s linear infinite
+        }
+
+        .status {
+            min-height: 1.4em;
+            font-size: .95rem;
+            color: #9df5ee
+        }
+
+        .status.bad {
+            color: var(--err)
+        }
+
+        .map {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            min-height: 360px;
+            background: #12464c;
+            border: 1.5px solid rgba(127, 243, 234, .6);
+            box-shadow: 0 0 24px rgba(25, 224, 210, .28)
+        }
+
+        .map>svg {
+            position: absolute;
+            inset: -6%;
+            width: 112%;
+            height: 112%;
+            transition: transform .3s ease-out
+        }
+
+        .map .open {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            min-height: 40px;
+            background: #fff;
+            color: #1a5fd0;
+            border-radius: 4px;
+            padding: .45rem .85rem;
+            font: 500 .9rem 'Roboto', sans-serif;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .4)
+        }
+
+        .map .open:hover {
+            background: #eef4ff
+        }
+
+        .map .place {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            z-index: 3;
+            background: rgba(0, 0, 0, .6);
+            color: #fff;
+            font-size: .88rem;
+            padding: .35rem .75rem;
+            border-radius: 999px;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px)
+        }
+
+        .ring {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: ping 2.6s ease-out infinite
+        }
+
+        /* 
+   Footer*/
+        .site-footer {
+            position: relative;
+            z-index: 10;
+            background: rgba(0, 0, 0, .6);
+            border-top: 2px solid var(--teal);
+            box-shadow: 0 -6px 24px rgba(25, 224, 210, .28)
+        }
+
+        .foot {
+            width: min(1240px, calc(100% - 2*var(--pad)));
+            margin-inline: auto;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr 1.2fr 1.6fr;
+            gap: 2rem;
+            padding: clamp(28px, 5vw, 46px) 0 1.2rem
+        }
+
+        .foot h4 {
+            font: 700 clamp(1.2rem, 2vw, 1.6rem)/1.2 'Roboto', sans-serif;
+            margin-bottom: 1rem;
+            color: #fff
+        }
+
+        .foot ul {
+            list-style: none;
+            display: grid;
+            gap: .6rem
+        }
+
+        .foot li,
+        .foot a {
+            font-size: .93rem;
+            color: #fff;
+            text-decoration: none
+        }
+
+        .foot nav a {
+            display: inline-block;
+            padding: .1rem 0;
+            transition: color .25s, transform .25s var(--ease)
+        }
+
+        .foot nav a:hover,
+        .foot .contact a:hover {
+            color: var(--teal);
+            transform: translateX(4px)
+        }
+
+        .foot .contact li {
+            display: flex;
+            align-items: center;
+            gap: .65rem
+        }
+
+        .foot .contact a {
+            display: inline-block;
+            transition: color .25s, transform .25s var(--ease)
+        }
+
+        .foot .contact svg {
+            width: 17px;
+            height: 17px;
+            flex: none
+        }
+
+        .copy {
+            text-align: center;
+            padding: .4rem var(--pad) 1.6rem;
+            font-size: .86rem;
+            color: var(--ink-dim)
+        }
+
+        /* 
+   Keyframes*/
+        @keyframes hdrIn {
+            from {
+                transform: translateY(-100%)
+            }
+
+            to {
+                transform: none
+            }
+        }
+
+        @keyframes drawLine {
+            from {
+                transform: scaleX(0)
+            }
+
+            to {
+                transform: scaleX(1)
+            }
+        }
+
+        @keyframes sweep {
+            from {
+                transform: translateX(-240px)
+            }
+
+            to {
+                transform: translateX(100vw)
+            }
+        }
+
+        @keyframes cloud {
+            from {
+                transform: translateX(-6%)
+            }
+
+            to {
+                transform: translateX(6%)
+            }
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-6px)
+            }
+        }
+
+        @keyframes ignite {
+            0% {
+                opacity: 0;
+                translate: 0 -18px
+            }
+
+            25% {
+                opacity: .9
+            }
+
+            30% {
+                opacity: .1
+            }
+
+            45% {
+                opacity: 1
+            }
+
+            52% {
+                opacity: .35
+            }
+
+            70% {
+                opacity: 1;
+                translate: 0 0
+            }
+
+            100% {
+                opacity: 1;
+                translate: 0 0
+            }
+        }
+
+        @keyframes flick {
+            0% {
+                opacity: 1
+            }
+
+            20% {
+                opacity: .55
+            }
+
+            35% {
+                opacity: 1
+            }
+
+            55% {
+                opacity: .7
+            }
+
+            100% {
+                opacity: 1
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @keyframes pageOut {
+            to {
+                opacity: 0;
+                transform: translateY(-16px)
+            }
+        }
+
+        @keyframes navIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        @keyframes shake {
+
+            20%,
+            60% {
+                transform: translateX(-5px)
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px)
+            }
+        }
+
+        @keyframes ping {
+            0% {
+                transform: scale(.25);
+                opacity: .9
+            }
+
+            100% {
+                transform: scale(1.7);
+                opacity: 0
+            }
+        }
+
+        @keyframes peek {
+            from {
+                transform: translateY(0)
+            }
+
+            to {
+                transform: translateY(-44%)
+            }
+        }
+
+        /* 
+   Responsive*/
+        @media (max-width:1024px) {
+            .projects {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .foot {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        @media (max-width:860px) {
+            .intro {
+                grid-template-columns: 1fr;
+                gap: 34px
+            }
+
+            .avatar {
+                width: clamp(170px, 46vw, 240px)
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr
+            }
+
+            .map {
+                min-height: 300px
+            }
+        }
+
+        @media (max-width:760px) {
+            :root {
+                --hdr: 64px
+            }
+
+            .burger {
+                display: block
+            }
+
+            .nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #000;
+                border-bottom: 2px solid var(--teal);
+                box-shadow: 0 10px 30px rgba(25, 224, 210, .25);
+                clip-path: inset(0 0 100% 0);
+                pointer-events: none;
+                visibility: hidden;
+                transition: clip-path .5s cubic-bezier(.7, 0, .2, 1), visibility 0s .5s
+            }
+
+            .nav.open {
+                clip-path: inset(0 -40px -40px -40px);
+                pointer-events: auto;
+                visibility: visible;
+                transition: clip-path .5s cubic-bezier(.7, 0, .2, 1), visibility 0s
+            }
+
+            .nav ul {
+                flex-direction: column;
+                gap: 0;
+                padding: .4rem var(--pad) 1.1rem
+            }
+
+            .nav a {
+                display: block;
+                padding: .95rem 0;
+                font-size: 1.1rem
+            }
+
+            .nav a::after {
+                bottom: .55rem
+            }
+
+            .nav a:hover::after,
+            .nav a[aria-current="page"]::after {
+                width: 3.2rem
+            }
+
+            .nav a::after {
+                left: 0
+            }
+
+            .nav.open li {
+                animation: navIn .5s var(--ease) both;
+                animation-delay: calc(var(--k)*70ms + 140ms)
+            }
+        }
+
+        @media (max-width:640px) {
+            .projects {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+                margin-inline: auto
+            }
+
+            .neon {
+                letter-spacing: .2em;
+                padding-left: .2em
+            }
+
+            .foot {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.6rem 1rem
+            }
+
+            .foot>:first-child,
+            .foot>:last-child {
+                grid-column: 1/-1
+            }
+
+            .meta {
+                gap: .6rem
+            }
+        }
+
+        @media (max-width:380px) {
+            .neon {
+                letter-spacing: .12em;
+                font-size: 1rem
+            }
+
+            .foot {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .001ms !important;
+                animation-iteration-count: 1 !important;
+                animation-delay: 0s !important;
+                transition-duration: .001ms !important;
+                transition-delay: 0s !important
+            }
+
+            #sky::before,
+            #sky::after {
+                animation: none
+            }
+        }
+    </style>
+    <noscript>
+        <style>
+            .rv {
+                opacity: 1;
+                transform: none
+            }
+
+            .hello {
+                clip-path: none
+            }
+        </style>
+    </noscript>
+</head>
+
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div id="sky" aria-hidden="true"></div>
+    <canvas id="storm" aria-hidden="true"></canvas>
+    <div id="cursor-glow" aria-hidden="true"></div>
+    <div id="orbs" aria-hidden="true"></div>
+
+    <header class="site-header">
+        <div class="bar-in">
+            <a class="brand" href="#/home" data-bind="name">Sok Sophea</a>
+            <button class="burger" type="button" aria-label="Open menu" aria-expanded="false"
+                aria-controls="nav"><span></span><span></span><span></span></button>
+            <nav class="nav" id="nav" aria-label="Main">
+                <ul>
+                    <li style="--k:0"><a href="#/home" data-route="home">Home</a></li>
+                    <li style="--k:1"><a href="#/about" data-route="about">About</a></li>
+                    <li style="--k:2"><a href="#/portfolio" data-route="portfolio">Portfolio</a></li>
+                    <li style="--k:3"><a href="#/contact" data-route="contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="page" data-page="home" hidden>
+            <h1 class="neon" data-title=""></h1>
+            <div class="wrap" data-slot="intro"></div>
+        </section>
+
+        <section class="page" data-page="about" hidden>
+            <h1 class="neon" data-title="About me"></h1>
+            <div class="wrap" data-slot="intro"></div>
+        </section>
+
+        <section class="page" data-page="portfolio" hidden>
+            <h1 class="neon" data-title="Portfolio"></h1>
+            <div class="wrap">
+                <div class="projects" id="projects"></div>
+            </div>
+        </section>
+
+        <section class="page" data-page="contact" hidden>
+            <h1 class="neon" data-title="Contact"></h1>
+            <div class="wrap contact-grid">
+                <form class="form" id="form" novalidate>
+                    <div class="field rv" style="--d:.05s">
+                        <label class="sr" for="f-name">Sok Sophea</label>
+                        <input id="f-name" name="name" type="text" placeholder="Sok Sophea" autocomplete="name">
+                        <p class="err">Enter your name.</p>
+                    </div>
+                    <div class="field rv" style="--d:.13s">
+                        <label class="sr" for="f-email">Your email</label>
+                        <input id="f-email" name="email" type="email" placeholder="Your email" autocomplete="email">
+                        <p class="err">Enter a valid email address, like name@example.com.</p>
+                    </div>
+                    <div class="field rv" style="--d:.21s">
+                        <label class="sr" for="f-subject">Subject</label>
+                        <input id="f-subject" name="subject" type="text" placeholder="Subject" autocomplete="off">
+                        <p class="err">Add a short subject.</p>
+                    </div>
+                    <div class="field rv" style="--d:.29s">
+                        <label class="sr" for="f-message">Your message</label>
+                        <textarea id="f-message" name="message" placeholder="Write your message here"
+                            rows="5"></textarea>
+                        <p class="err">Write at least 10 characters.</p>
+                    </div>
+                    <button class="send rv" style="--d:.37s" type="submit"><span class="send-label">Send
+                            Message</span></button>
+                    <p class="status" id="status" role="status" aria-live="polite"></p>
+                </form>
+                <div class="map rv" style="--d:.15s" id="map">
+                    <a class="open" id="maps-link" href="https://www.google.com/maps" target="_blank"
+                        rel="noopener noreferrer">Open in Maps
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+                        </svg>
+                    </a>
+                    <span class="place" data-bind="location">Your City, Country</span>
+                    <span id="map-art"></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+    <footer class="site-footer">
+
+        <div class="foot">
+
+            <div>
+                <h4 data-bind="name">Sok Sophea</h4>
+            </div>
+            <nav aria-label="Footer">
+                <h4>Pages</h4>
+                <ul>
+                    <li><a href="#/home">Home</a></li>
+                    <li><a href="#/about">About</a></li>
+                    <li><a href="#/portfolio">Portfolio</a></li>
+                    <li><a href="#/contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div>
+                <h4>Service</h4>
+                <ul>
+                    <li>Web Development</li>
+                    <li>Frontend Development</li>
+                    <li>Backend Development</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <ul class="contact">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 6h18v12H3z" />
+                            <path d="M3 7l9 6 9-6" />
+                        </svg><a id="l-mail" href="#" data-bind="email"></a></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                            stroke-linejoin="round" aria-hidden="true">
+                            <path
+                                d="M6.6 3h3l1.4 4-2 1.3a11 11 0 0 0 5.7 5.7l1.3-2 4 1.4v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4.6 5.2 2 2 0 0 1 6.6 3z" />
+                        </svg><a id="l-tel" href="#" data-bind="phone"></a></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                            stroke-linecap="round" aria-hidden="true">
+                            <rect x="3.5" y="3.5" width="17" height="17" rx="3" />
+                            <path d="M8 10.5V16M8 8v.01M11.5 16v-5.5M11.5 12.8c0-1.5 1-2.4 2.3-2.4s2.2.9 2.2 2.4V16" />
+                        </svg><a id="l-in" href="#" target="_blank" rel="noopener noreferrer" data-bind="name"></a></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                            stroke-linecap="round" aria-hidden="true">
+                            <circle cx="7" cy="6" r="2.4" />
+                            <circle cx="7" cy="18" r="2.4" />
+                            <circle cx="17" cy="9" r="2.4" />
+                            <path d="M7 8.4v7.2M17 11.4c0 3-3 3.6-10 4.6" />
+                        </svg><a id="l-gh" href="#" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+        <p class="copy">Copyright © <span id="yr"></span> | All rights reserved by <span data-bind="name">Alex
+                Morgan</span></p>
+    </footer>
+
+    <noscript>
+        <p style="position:relative;z-index:60;padding:1rem;text-align:center">This site needs JavaScript to show its
+            pages.</p>
+    </noscript>
+
+    <script>
+        (() => {
+            'use strict';
+
+            /* 
+               CONFIG: edit this block to make the site yours
+        */
+            const CONFIG = {
+                name: 'Sok Sophea',
+                role: 'Web Developer',
+                email: 'sophea044056@gmail.com',
+                phone: '969185182',
+                linkedinLabel: 'Sok Sophea', linkedinUrl: 'https://www.linkedin.com/',
+                githubUrl: 'https://github.com/',
+                location: 'Your City, Country',
+                mapsUrl: 'https://www.google.com/maps',
+                formEndpoint: '',   // e.g. 'https://formspree.io/f/xxxx'. If empty, the form opens the visitor's email app instead.
+                intro: 'I am an Information Technology student at the National Technical Training Institute (NTTI), currently in the first semester of my second year pursuing an Associate Degree in Information Technology.',
+                journey: 'My journey in technology has evolved from simple curiosity into a passion for creating clean, beautiful, and functional applications using modern web technologies.',
+                whatIDo: 'I build responsive and interactive interfaces using <strong>React.js</strong> and develop robust backend systems with <strong>Laravel</strong>. I create comprehensive digital experiences by combining clean architecture with modern UI/UX design principles.',
+                projects: [
+                    { title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', url: '' },
+                    { title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', url: '' },
+                    { title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', url: 'https://example.com' },
+                    { title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', url: '' },
+                    { title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', url: 'https://example.com' },
+                    { title: 'Health News', stack: 'React JS + API', screen: 'blog', url: 'https://example.com' }
+                ]
+            };
+
+            const $ = (s, r = document) => r.querySelector(s);
+            const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+            const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+            const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const canHover = matchMedia('(hover:hover)').matches;
+
+            /* 
+               Content binding
+        */
+            $$('[data-bind]').forEach(el => { if (CONFIG[el.dataset.bind] != null) el.textContent = CONFIG[el.dataset.bind]; });
+            $('#l-mail').href = 'mailto:' + CONFIG.email;
+            $('#l-tel').href = 'tel:' + CONFIG.phone.replace(/[^\d+]/g, '');
+            $('#l-in').href = CONFIG.linkedinUrl; $('#l-in').textContent = CONFIG.linkedinLabel;
+            $('#l-gh').href = CONFIG.githubUrl;
+            $('#maps-link').href = CONFIG.mapsUrl;
+            $('#yr').textContent = new Date().getFullYear();
+
+            const AVATAR = `<img src="assets/sok-sophea-profile.png" alt="Portrait of ${esc(CONFIG.name)}" loading="eager" decoding="async">`;
+
+            const introHTML = () => `
+  <div class="intro">
+    <div class="avatar rv" style="--d:.05s" data-tilt="8">
+      <div class="photo" role="img" aria-label="Portrait of ${esc(CONFIG.name)}">${AVATAR}</div>
+    </div>
+    <div class="intro-copy">
+      <h2 class="hello rv">Hello! I’m ${esc(CONFIG.name)}</h2>
+      <p class="lede rv" style="--d:.2s">${esc(CONFIG.intro)}</p>
+      <h3 class="rv" style="--d:.3s">My Journey</h3>
+      <p class="sm rv" style="--d:.36s">${esc(CONFIG.journey)}</p>
+      <h3 class="rv" style="--d:.44s">What I Do</h3>
+      <p class="sm rv" style="--d:.5s">${CONFIG.whatIDo}</p>
+    </div>
+  </div>`;
+            $$('[data-slot="intro"]').forEach(el => el.innerHTML = introHTML());
+
+            /* neon titles: split into words/letters so each letter can ignite and ripple */
+            function buildTitle(el, text) {
+                el.setAttribute('aria-label', text);
+                el.tabIndex = -1;
+                el.textContent = '';
+                let i = 0;
+                const words = text.toUpperCase().split(' ');
+                words.forEach((word, wi) => {
+                    const w = document.createElement('span'); w.className = 'w'; w.setAttribute('aria-hidden', 'true');
+                    [...word].forEach(ch => {
+                        const s = document.createElement('span'); s.className = 'l'; s.textContent = ch; s.style.setProperty('--i', i++); w.appendChild(s);
+                    });
+                    el.appendChild(w);
+                    if (wi < words.length - 1) el.appendChild(document.createTextNode(' '));
+                });
+            }
+            $$('.neon').forEach(h => buildTitle(h, h.dataset.title || `I'm ${CONFIG.name} ${CONFIG.role}`));
+
+            /* 
+               Tech icons (simple original glyphs, drawn inline so nothing is fetched)
+        */
+            const ICONS = [
+                { n: 'react', glow: '#61dafb', svg: '<g fill="none" stroke="#61dafb" stroke-width="1.2"><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></g><circle cx="12" cy="12" r="1.8" fill="#61dafb"/>' },
+                { n: 'html', glow: '#e44d26', svg: '<path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="#e44d26"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#f16529"/><text x="12" y="16" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">5</text>' },
+                { n: 'css', glow: '#2f8fe0', svg: '<path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="#1572b6"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#33a9dc"/><text x="12" y="16" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">3</text>' },
+                { n: 'js', glow: '#f7df1e', bg: '#f7df1e', svg: '<text x="12" y="16.5" font-size="11" font-weight="800" text-anchor="middle" fill="#1a1a1a" font-family="Arial,sans-serif">JS</text>' },
+                { n: 'ts', glow: '#3178c6', bg: '#3178c6', svg: '<text x="12" y="16.5" font-size="11" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">TS</text>' },
+                { n: 'bs', glow: '#7a1ff5', bg: '#7a1ff5', svg: '<text x="12" y="17" font-size="13" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">B</text>' },
+                { n: 'laravel', glow: '#ff2d20', svg: '<path d="M12 3l7 4v6l-7 4-7-4V7z" fill="none" stroke="#ff2d20" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 7l7 4 7-4M12 11v6" fill="none" stroke="#ff2d20" stroke-width="1.6" stroke-linejoin="round"/>' },
+                { n: 'php', glow: '#8892bf', bg: '#4f5b93', svg: '<text x="12" y="15.5" font-size="8.5" font-weight="700" font-style="italic" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">php</text>' },
+                { n: 'mongo', glow: '#47a248', svg: '<path d="M12 2c3 3.5 5 6 5 10a5 5 0 0 1-3.6 4.8L12.6 21h-1.2l-.8-4.2A5 5 0 0 1 7 12c0-4 2-6.5 5-10z" fill="#47a248"/><path d="M12 6v13" stroke="#b7e0b0" stroke-width=".8"/>' },
+                { n: 'figma', glow: '#a259ff', svg: '<rect x="8" y="2" width="4" height="6" rx="2" fill="#f24e1e"/><rect x="12" y="2" width="4" height="6" rx="2" fill="#ff7262"/><rect x="8" y="8" width="4" height="6" rx="2" fill="#a259ff"/><circle cx="14" cy="11" r="3" fill="#1abcfe"/><rect x="8" y="14" width="4" height="6" rx="2" fill="#0acf83"/>' },
+                { n: 'next', glow: '#ffffff', bg: '#000', svg: '<text x="12" y="17" font-size="13" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">N</text>' },
+                { n: 'gitlab', glow: '#fc6d26', svg: '<path d="M12 21L3.5 13.5 5 8l2 5h10l2-5 1.5 5.5z" fill="#e24329"/><path d="M12 21L7 13h10z" fill="#fc6d26"/><path d="M5 8l1.5-5L8.5 9zM19 8l-1.5-5-2 6z" fill="#e24329"/>' },
+                { n: 'vue', glow: '#41b883', svg: '<path d="M2 4h4l6 10 6-10h4L12 21z" fill="#41b883"/><path d="M6 4h3.2L12 9l2.8-5H18l-6 10z" fill="#35495e"/>' },
+                { n: 'api', glow: '#84ff2f', bg: '#84ff2f', svg: '<text x="12" y="16" font-size="9.5" font-weight="800" text-anchor="middle" fill="#0d1a05" font-family="Arial,sans-serif">{…}</text>' },
+                { n: 'send', glow: '#ff6c37', bg: '#ff6c37', svg: '<path d="M7 17l10-10" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="17" cy="7" r="2.2" fill="#fff"/>' },
+                { n: 'tw', glow: '#38bdf8', svg: '<path d="M12 6c-2.7 0-4.4 1.3-5 4 1-1.3 2.2-1.8 3.5-1.5.8.2 1.3.7 1.9 1.3 1 1 2.1 2.2 4.6 2.2 2.7 0 4.4-1.3 5-4-1 1.3-2.2 1.8-3.5 1.5-.8-.2-1.3-.7-1.9-1.3C15.6 7.2 14.5 6 12 6zM7 12c-2.7 0-4.4 1.3-5 4 1-1.3 2.2-1.8 3.5-1.5.8.2 1.3.7 1.9 1.3 1 1 2.1 2.2 4.6 2.2 2.7 0 4.4-1.3 5-4-1 1.3-2.2 1.8-3.5 1.5-.8-.2-1.3-.7-1.9-1.3C10.6 13.2 9.5 12 7 12z" fill="#38bdf8"/>' },
+                { n: 'node', glow: '#5fa04e', svg: '<path d="M12 2l8.5 5v10L12 22l-8.5-5V7z" fill="#5fa04e"/><path d="M12 7l4.2 2.5v5L12 17l-4.2-2.5v-5z" fill="#1a2a17"/>' }
+            ];
+
+            /* 
+               Portfolio: CSS/SVG website mockups inside laptop frames
+        */
+            const R = (x, y, w, h, f, rx = 2) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${f}"/>`;
+            const C = (x, y, r, f) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${f}"/>`;
+            const T = (x, y, s, f, t, w = 700, a = 'start') => `<text x="${x}" y="${y}" font-size="${s}" font-weight="${w}" fill="${f}" text-anchor="${a}" font-family="Arial,Helvetica,sans-serif">${t}</text>`;
+            const LN = (x, y, w, n, f = '#d3d9df', gap = 7, h = 3) => Array.from({ length: n }, (_, i) => R(x, y + i * gap, i === n - 1 ? w * .62 : w, h, f, 1.5)).join('');
+            const wrap = (inner, bg = '#fff') => `<svg viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${R(0, 0, 320, 400, bg, 0)}${inner}</svg>`;
+            const pie = (cx, cy, R_, segs) => {
+                const r = R_ / 2, c = 2 * Math.PI * r; let off = 0;
+                return segs.map(([p, col]) => { const s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="${R_}" stroke-dasharray="${c * p} ${c}" stroke-dashoffset="${-off * c}" transform="rotate(-90 ${cx} ${cy})"/>`; off += p; return s; }).join('');
+            };
+
+            const SCREENS = {
+                dashboard: () => wrap(
+                    R(0, 0, 58, 400, '#fff', 0) + C(29, 24, 11, '#f2b632') +
+                    [0, 1, 2, 3, 4, 5, 6, 7].map(i => R(10, 56 + i * 22, 38, 9, i === 0 ? '#3b82f6' : '#e8ebf0', 3)).join('') +
+                    T(70, 20, 11, '#2f80ed', 'Dashboard') +
+                    ['#22c55e', '#ef4444', '#f59e0b', '#3b82f6'].map((c, i) => R(70 + i * 61, 30, 55, 36, '#fff', 4) + R(76 + i * 61, 38, 20, 4, c, 2) + R(76 + i * 61, 48, 34, 7, '#1f2937', 2)).join('') +
+                    R(70, 76, 140, 104, '#fff', 4) + R(78, 84, 48, 5, '#94a3b8', 2) +
+                    [30, 52, 40, 66, 48, 72, 58, 44].map((h, i) => R(80 + i * 16.5, 172 - h, 10, h, i % 2 ? '#93c5fd' : '#3b82f6', 2)).join('') +
+                    R(218, 76, 94, 104, '#fff', 4) + R(226, 84, 40, 5, '#94a3b8', 2) + pie(265, 140, 30, [[.42, '#3b82f6'], [.26, '#ef4444'], [.2, '#f59e0b'], [.12, '#22c55e']]) +
+                    R(70, 190, 242, 96, '#fff', 4) + [0, 1, 2, 3, 4].map(i => R(80, 200 + i * 17, 222, 9, i % 2 ? '#f6f7f9' : '#e9edf3', 2)).join('') +
+                    R(70, 296, 116, 96, '#fff', 4) + R(194, 296, 118, 96, '#fff', 4) + pie(253, 346, 26, [[.55, '#22c55e'], [.3, '#3b82f6'], [.15, '#f59e0b']]) + LN(78, 306, 100, 6, '#dfe4ea', 12, 4),
+                    '#f3f5f9'),
+                travel: () => wrap(
+                    R(0, 0, 320, 24, '#fff', 0) + C(16, 12, 6, '#e0382f') + [0, 1, 2, 3, 4].map(i => R(120 + i * 36, 10, 26, 4, '#9aa4b2', 2)).join('') + R(0, 24, 320, 1, '#e5e7eb', 0) +
+                    '<path d="M28 52L74 40l44 10 14 34-14 20 10 34-36 22-30-10-22-28-20-26z" fill="#3b82c4"/><path d="M60 70l36-4 8 26-20 26-20-16z" fill="#5aa0de"/>' +
+                    LN(150, 44, 158, 7, '#cfd6de', 10, 4) + R(150, 126, 70, 14, '#e0382f', 3) +
+                    [0, 1, 2].map(i => R(14 + i * 102, 176, 94, 64, ['#7db7e8', '#f2b45a', '#84cba0'][i], 4) + LN(18 + i * 102, 250, 86, 3, '#d3d9df', 8, 3)).join('') +
+                    R(0, 300, 320, 100, '#f4f6f9', 0) + LN(20, 316, 280, 6, '#cbd2da', 12, 4)),
+                shop: () => wrap(
+                    R(0, 0, 320, 22, '#1e9e55', 0) + T(12, 15, 10, '#fff', 'iPhone') + [0, 1, 2, 3].map(i => R(140 + i * 38, 9, 26, 4, '#b8f0d0', 2)).join('') +
+                    R(0, 22, 320, 138, '#0b1912', 0) + '<rect x="14" y="34" width="292" height="114" fill="none" stroke="#22c55e" stroke-width="3"/>' +
+                    T(30, 76, 20, '#fff', 'iPhone Shop') + T(30, 94, 7.5, '#86efac', 'WELCOME TO OUR WEBSITE', 400) + R(30, 108, 58, 14, '#16a34a', 3) +
+                    R(210, 44, 58, 96, '#1f2933', 9) + R(214, 48, 50, 88, '#0f172a', 6) + C(239, 92, 14, '#e5e7eb') +
+                    [0, 1, 2].map(i => R(14 + i * 102, 172, 94, 90, '#fff', 4) + R(34 + i * 102, 182, 54, 50, '#e6f4ec', 4) + LN(22 + i * 102, 244, 60, 2, '#cbd5d0', 8, 3)).join('') +
+                    [0, 1, 2].map(i => R(14 + i * 102, 272, 94, 90, '#fff', 4) + R(34 + i * 102, 282, 54, 50, '#e6f4ec', 4) + LN(22 + i * 102, 344, 60, 2, '#cbd5d0', 8, 3)).join(''),
+                    '#f2f6f3'),
+                moto: () => {
+                    const bike = (x, y, c) => `<g transform="translate(${x} ${y})"><circle cx="12" cy="30" r="10" fill="none" stroke="#1f2937" stroke-width="3.5"/><circle cx="60" cy="30" r="10" fill="none" stroke="#1f2937" stroke-width="3.5"/><path d="M12 30L30 10h20l10 20M30 10l8 20h22M50 10l5-8" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+                    return wrap(
+                        R(0, 0, 320, 26, '#fff', 0) + C(16, 13, 8, '#1d4ed8') + [0, 1, 2, 3, 4].map(i => R(120 + i * 34, 11, 22, 4, '#6b7280', 2)).join('') + R(0, 26, 320, 1, '#e5e7eb', 0) +
+                        bike(12, 50, '#111') + bike(120, 50, '#0f5fd7') + bike(228, 50, '#d13b2c') +
+                        [0, 1, 2].map(i => LN(14 + i * 104, 100, 86, 3, '#d3d9df', 8, 3)).join('') +
+                        R(0, 140, 320, 120, '#f3f4f6', 0) + T(160, 172, 13, '#111827', 'New arrivals', 700, 'middle') +
+                        [0, 1, 2].map(i => R(14 + i * 102, 186, 94, 60, '#fff', 4) + bike(20 + i * 102, 192, '#9ca3af')).join('') +
+                        R(0, 270, 320, 130, '#fff', 0) + LN(20, 290, 280, 7, '#d3d9df', 12, 4));
+                },
+                folio: () => wrap(
+                    R(0, 0, 320, 24, '#1b1f26', 0) + T(12, 16, 9, '#fff', 'ALEX MORGAN') + [0, 1, 2, 3].map(i => R(190 + i * 32, 10, 22, 4, '#8b95a5', 2)).join('') +
+                    T(160, 66, 12, '#fff', 'I’M ALEX MORGAN WEB DEVELOPER', 700, 'middle') +
+                    C(70, 124, 34, '#3ba0f5') + C(70, 114, 11, '#d9a072') + '<path d="M46 154q24-26 48 0z" fill="#141a29"/>' +
+                    T(126, 108, 11, '#fff', 'HELLO!', 700) + LN(126, 120, 170, 6, '#8b95a5', 10, 4) +
+                    R(0, 196, 320, 204, '#0f1216', 0) + [0, 1, 2].map(i => R(16 + i * 102, 214, 90, 64, '#1d2430', 5) + R(24 + i * 102, 224, 50, 5, '#3ba0f5', 2) + LN(24 + i * 102, 238, 72, 3, '#44506a', 9, 3)).join('') +
+                    LN(16, 300, 288, 5, '#3b4658', 12, 4),
+                    '#14171c'),
+                blog: () => wrap(
+                    R(0, 0, 320, 26, '#fff', 0) + C(16, 13, 7, '#e8433f') + R(34, 10, 40, 6, '#333', 2) + [0, 1, 2, 3].map(i => R(150 + i * 40, 11, 28, 4, '#8aa0b8', 2)).join('') + R(0, 26, 320, 3, '#22b8cf', 0) +
+                    [0, 1, 2, 3].map(i => R(12, 42 + i * 70, 64, 54, ['#7cc5e8', '#f0b56a', '#9ad2a8', '#c9a7e8'][i], 3) + R(84, 44 + i * 70, 150, 6, '#1d3557', 2) + LN(84, 58 + i * 70, 150, 4, '#cfd6de', 9, 3)).join('') +
+                    R(246, 42, 64, 210, '#f1f5f9', 4) + LN(252, 54, 52, 10, '#c7d0da', 16, 4))
+            };
+
+            const projectsEl = $('#projects');
+            projectsEl.innerHTML = CONFIG.projects.map((p, i) => `
+  <article class="project rv" data-tilt-host>
+    <div class="laptop"><div class="laptop-in">
+      <div class="lid"><div class="screen" role="img" aria-label="Preview of ${esc(p.title)}">
+        <div class="bar"><i></i><i></i><i></i><span></span></div>
+        <div class="view">${SCREENS[p.screen]()}</div>
+        <span class="chip">${esc(p.stack)}</span>
+      </div></div>
+      <div class="base"></div>
+    </div></div>
+    <div class="meta">
+      <h3>${esc(p.title)}</h3>
+      ${p.url
+                    ? `<a class="btn btn-ok" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">Live Demo<span class="sr"> of ${esc(p.title)} (opens in a new tab)</span></a>`
+                    : `<span class="btn btn-off" aria-disabled="true">No demo yet</span>`}
+    </div>
+  </article>`).join('');
+
+            /* Contact map: stylised city map drawn inline */
+            function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } }
+            (function drawMap() {
+                const rnd = mulberry32(11); let s = '';
+                s += '<defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e3a41"/><stop offset="1" stop-color="#18595c"/></linearGradient></defs><rect width="600" height="420" fill="url(#mg)"/>';
+                for (let gx = 0; gx < 600; gx += 46) for (let gy = 0; gy < 420; gy += 40) {
+                    if (rnd() < .18) continue;
+                    s += `<rect x="${(gx + 4 + rnd() * 4).toFixed(1)}" y="${(gy + 4 + rnd() * 4).toFixed(1)}" width="${(26 + rnd() * 14).toFixed(1)}" height="${(22 + rnd() * 12).toFixed(1)}" rx="3" fill="rgba(160,230,225,${(.09 + rnd() * .12).toFixed(2)})"/>`;
+                }
+                s += '<path d="M60 262q40-44 100-22t80 42q-10 52-80 52t-100-72z" fill="rgba(96,206,128,.3)"/>';
+                s += '<path d="M-10 120C120 84 180 206 300 172S480 92 620 150" fill="none" stroke="#4aa3ff" stroke-opacity=".55" stroke-width="18" stroke-linecap="round"/>';
+                [64, 146, 232, 318, 392].forEach(y => s += `<path d="M0 ${y}H600" stroke="rgba(255,255,255,.2)" stroke-width="3"/>`);
+                [58, 150, 262, 372, 470, 548].forEach(x => s += `<path d="M${x} 0V420" stroke="rgba(255,255,255,.2)" stroke-width="3"/>`);
+                s += '<path d="M0 410L600 30" stroke="rgba(255,214,120,.35)" stroke-width="5"/>';
+                s += [0, .8, 1.6].map(d => `<circle class="ring" cx="300" cy="212" r="46" fill="none" stroke="#ff6a5a" stroke-width="2.5" style="animation-delay:${d}s"/>`).join('');
+                s += '<path d="M300 150c-17 0-30 13-30 30 0 24 30 58 30 58s30-34 30-58c0-17-13-30-30-30z" fill="#e8453c"/><circle cx="300" cy="180" r="11" fill="#fff"/>';
+                $('#map-art').outerHTML = `<svg viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">${s}</svg>`;
+            })();
+
+            /* 
+               Storm engine: rain + lightning (canvas) and roaming tech orbs (DOM)
+        */
+            const cv = $('#storm'), ctx = cv.getContext('2d');
+            let W = 0, H = 0, dpr = 1;
+            const drops = [], bolts = [];
+            const orbs = [];
+            const ptr = { x: -999, y: -999, on: false };
+            const RAIN = [['rgba(205,225,240,.16)', .8], ['rgba(205,225,240,.3)', 1], ['rgba(215,232,245,.52)', 1.2]];
+
+            const newDrop = scatter => ({ x: Math.random() * (W + 80) - 40, y: scatter ? Math.random() * H : -30, l: 8 + Math.random() * 16, v: 520 + Math.random() * 560, b: Math.floor(Math.random() * 3) });
+
+            function fit(force) {
+                const w = innerWidth, h = innerHeight;
+                if (!force && w === W && Math.abs(h - H) < 120 && cv.width) return;
+                dpr = Math.min(devicePixelRatio || 1, 1.5); W = w; H = h;
+                cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                const n = Math.min(240, Math.round(W * H / 9500));
+                while (drops.length < n) drops.push(newDrop(true));
+                drops.length = n;
+            }
+
+            function drawRain() {
+                RAIN.forEach(([col, lw], b) => {
+                    ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath();
+                    for (const d of drops) if (d.b === b) { ctx.moveTo(d.x, d.y); ctx.lineTo(d.x + d.l * .04, d.y + d.l); }
+                    ctx.stroke();
+                });
+            }
+
+            function bolt(x0, y0, x1, y1, spread, iters) {
+                let pts = [[x0, y0], [x1, y1]], d = spread;
+                for (let i = 0; i < iters; i++) {
+                    const out = [pts[0]];
+                    for (let j = 1; j < pts.length; j++) {
+                        const a = pts[j - 1], b = pts[j], dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1, off = (Math.random() - .5) * 2 * d;
+                        out.push([(a[0] + b[0]) / 2 + (-dy / len) * off, (a[1] + b[1]) / 2 + (dx / len) * off], b);
+                    }
+                    pts = out; d *= .55;
+                }
+                return pts;
+            }
+
+            let lastStrike = 0;
+            function strike(x) {
+                if (reduced) return;
+                const now = performance.now(); if (now - lastStrike < 350) return; lastStrike = now;
+                x = x == null ? W * (.12 + Math.random() * .76) : x;
+                const y1 = H * (.5 + Math.random() * .5);
+                const main = bolt(x, -10, x + (Math.random() - .5) * W * .16, y1, H * .09, 7);
+                const paths = [{ pts: main, w: 2.4 }];
+                const nb = 2 + Math.floor(Math.random() * 3);
+                for (let i = 0; i < nb; i++) {
+                    const k = Math.floor(main.length * (.15 + Math.random() * .6)), [bx, by] = main[k];
+                    const dir = Math.random() < .5 ? -1 : 1, bl = H * (.12 + Math.random() * .22);
+                    paths.push({ pts: bolt(bx, by, bx + dir * bl * (.5 + Math.random() * .6), by + bl, bl * .22, 5), w: 1.2 });
+                }
+                bolts.push({ paths, t0: now, life: 650 + Math.random() * 250, x });
+            }
+
+            function drawBolt(b, now) {
+                const t = (now - b.t0) / b.life; if (t >= 1) return false;
+                let a;
+                if (t < .08) a = 1; else if (t < .15) a = .15; else if (t < .27) a = 1; else if (t < .34) a = .35;
+                else a = Math.pow(1 - (t - .34) / .66, 1.6) * (.75 + Math.random() * .25);
+                if (t < .3) {
+                    const g = ctx.createRadialGradient(b.x, 0, 0, b.x, 0, H * .9);
+                    g.addColorStop(0, `rgba(170,205,255,${.16 * a})`); g.addColorStop(1, 'rgba(170,205,255,0)');
+                    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+                }
+                ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+                for (const p of b.paths) {
+                    for (const [lw, al, core] of [[p.w * 7, .07, 0], [p.w * 3.2, .2, 0], [p.w, 1, 1]]) {
+                        ctx.strokeStyle = core ? `rgba(245,250,255,${a * al})` : `rgba(130,180,255,${a * al})`;
+                        ctx.lineWidth = lw; ctx.beginPath();
+                        p.pts.forEach((pt, i) => i ? ctx.lineTo(pt[0], pt[1]) : ctx.moveTo(pt[0], pt[1]));
+                        ctx.stroke();
+                    }
+                }
+                return true;
+            }
+
+            function orbCount() { return W < 560 ? 8 : W < 1000 ? 12 : ICONS.length; }
+            function makeOrbs() {
+                const layer = $('#orbs'); layer.innerHTML = ''; orbs.length = 0;
+                const pool = ICONS.slice().sort(() => Math.random() - .5).slice(0, orbCount());
+                pool.forEach(ic => {
+                    const d = .6 + Math.random() * .6, size = Math.round(30 + d * 22);
+                    const el = document.createElement('div');
+                    el.className = 'orb';
+                    el.style.cssText = `--sz:${size}px;--bg-c:${ic.bg || '#04090d'};--glow:${ic.glow || '#1fe0d2'};opacity:${(.4 + .6 * (d - .6) / .6).toFixed(2)}`;
+                    if (d < .74) el.style.filter = 'blur(1.2px)';
+                    el.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ic.svg}</svg>`;
+                    layer.appendChild(el);
+                    const base = (10 + Math.random() * 18) * (.5 + d), ang = Math.random() * Math.PI * 2;
+                    orbs.push({
+                        el, size, base, x: Math.random() * Math.max(1, W - size), y: Math.random() * Math.max(1, H - size),
+                        vx: Math.cos(ang) * base, vy: Math.sin(ang) * base, ph: Math.random() * 6.28, fq: .5 + Math.random() * .7
+                    });
+                });
+                orbs.forEach(o => o.el.style.transform = `translate3d(${o.x}px,${o.y}px,0)`);
+            }
+
+            function stepOrbs(dt) {
+                for (const o of orbs) {
+                    o.ph += dt * o.fq;
+                    o.vx += (Math.random() - .5) * 8 * dt; o.vy += (Math.random() - .5) * 8 * dt;
+                    if (ptr.on) {
+                        const dx = o.x + o.size / 2 - ptr.x, dy = o.y + o.size / 2 - ptr.y, dist = Math.hypot(dx, dy), Rr = 150;
+                        if (dist < Rr && dist > .1) { const f = 1 - dist / Rr; o.vx += dx / dist * f * f * 1500 * dt; o.vy += dy / dist * f * f * 1500 * dt; }
+                    }
+                    const sp = Math.hypot(o.vx, o.vy) || 1;
+                    if (sp > o.base) { const k = o.base + (sp - o.base) * Math.pow(.05, dt); o.vx *= k / sp; o.vy *= k / sp; }
+                    else if (sp < o.base * .45) { o.vx *= 1.05; o.vy *= 1.05; }
+                    o.x += o.vx * dt; o.y += o.vy * dt;
+                    if (o.x < -8) { o.x = -8; o.vx = Math.abs(o.vx); } else if (o.x > W - o.size + 8) { o.x = W - o.size + 8; o.vx = -Math.abs(o.vx); }
+                    if (o.y < -8) { o.y = -8; o.vy = Math.abs(o.vy); } else if (o.y > H - o.size + 8) { o.y = H - o.size + 8; o.vy = -Math.abs(o.vy); }
+                    o.el.style.transform = `translate3d(${o.x.toFixed(1)}px,${(o.y + Math.sin(o.ph) * 5).toFixed(1)}px,0)`;
+                }
+            }
+
+            let raf = 0, last = performance.now(), nextStrike = last + 1600;
+            function frame(now) {
+                const dt = Math.min(.05, (now - last) / 1000); last = now;
+                ctx.clearRect(0, 0, W, H);
+                for (const d of drops) { d.y += d.v * dt; if (d.y > H + 30) { d.y = -30; d.x = Math.random() * (W + 80) - 40; } }
+                drawRain();
+                for (let i = bolts.length - 1; i >= 0; i--) if (!drawBolt(bolts[i], now)) bolts.splice(i, 1);
+                if (now > nextStrike) { strike(); if (Math.random() < .3) setTimeout(() => strike(), 160); nextStrike = now + 2400 + Math.random() * 4200; }
+                stepOrbs(dt);
+                raf = requestAnimationFrame(frame);
+            }
+
+            fit(true); makeOrbs();
+            if (reduced) { drawRain(); }            // one still frame, no motion
+            else {
+                raf = requestAnimationFrame(frame);
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) cancelAnimationFrame(raf);
+                    else { last = performance.now(); raf = requestAnimationFrame(frame); }
+                });
+            }
+
+            let rz; addEventListener('resize', () => {
+                clearTimeout(rz);
+                rz = setTimeout(() => { const before = orbs.length; fit(); if (orbCount() !== before) makeOrbs(); if (reduced) { ctx.clearRect(0, 0, W, H); drawRain(); } }, 150);
+            });
+
+            /* pointer: orbs shy away from the cursor, soft teal glow follows the mouse, clicking empty space calls a bolt */
+            const glow = $('#cursor-glow');
+            addEventListener('pointermove', e => {
+                ptr.x = e.clientX; ptr.y = e.clientY; ptr.on = true;
+                if (e.pointerType === 'mouse' && canHover) { glow.style.opacity = 1; glow.style.transform = `translate3d(${e.clientX}px,${e.clientY}px,0)`; }
+            }, { passive: true });
+            addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') setTimeout(() => ptr.on = false, 500); });
+            document.documentElement.addEventListener('mouseleave', () => { ptr.on = false; glow.style.opacity = 0; });
+            addEventListener('pointerdown', e => { if (!e.target.closest('a,button,input,textarea,label,.map')) strike(e.clientX); });
+
+            /* 3D tilt for avatar and laptops (mouse only) */
+            function tilt(host, target, max) {
+                host.addEventListener('pointermove', e => {
+                    if (e.pointerType !== 'mouse') return;
+                    const r = host.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+                    target.style.transform = `rotateY(${(px * max * 2).toFixed(2)}deg) rotateX(${(-py * max * 2).toFixed(2)}deg) translateY(-6px)`;
+                });
+                host.addEventListener('pointerleave', () => { target.style.transform = ''; });
+            }
+            function armTilt(root) {
+                $$('[data-tilt]', root).forEach(el => { if (!el._t) { el._t = 1; tilt(el, el, +el.dataset.tilt || 8); } });
+                $$('[data-tilt-host]', root).forEach(el => { if (!el._t) { el._t = 1; tilt(el, $('.laptop-in', el), 6); } });
+            }
+            armTilt(document);
+
+            /* map parallax */
+            const mapEl = $('#map');
+            mapEl.addEventListener('pointermove', e => {
+                if (e.pointerType !== 'mouse') return;
+                const r = mapEl.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+                $('svg', mapEl).style.transform = `translate(${(-px * 22).toFixed(1)}px,${(-py * 16).toFixed(1)}px)`;
+            });
+            mapEl.addEventListener('pointerleave', () => { $('svg', mapEl).style.transform = ''; });
+
+            /* 
+               Reveal on scroll
+        */
+            const io = new IntersectionObserver(entries => entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+            }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+
+            function armReveal(page) {
+                const grid = $('.projects', page);
+                const cols = grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 1;
+                $$('.rv', page).forEach((el, i) => {
+                    el.classList.remove('in');
+                    if (el.classList.contains('project')) el.style.setProperty('--d', ((i % cols) * .14).toFixed(2) + 's');
+                    io.observe(el);
+                });
+            }
+
+            /* 
+               Router: hash pages with an exit animation, lightning on every change
+        */
+            const LABELS = { home: 'Home', about: 'About', portfolio: 'Portfolio', contact: 'Contact' };
+            const pages = Object.fromEntries($$('.page').map(p => [p.dataset.page, p]));
+            const links = $$('[data-route]');
+            let current = null, pending = null;
+
+            const routeFromHash = () => { const r = location.hash.replace(/^#\/?/, ''); return pages[r] ? r : 'home'; };
+
+            function show(route, first) {
+                if (route === current) return;
+                if (pending) { clearTimeout(pending.t); pending.fn(); pending = null; }
+                const prev = current && pages[current], next = pages[route];
+                const enter = () => {
+                    if (prev) { prev.hidden = true; prev.classList.remove('leaving'); }
+                    next.hidden = false; scrollTo(0, 0);
+                    armReveal(next); armTilt(next);
+                    const h = $('.neon', next);
+                    if (!first && h) h.focus({ preventScroll: true });
+                    document.title = route === 'home' ? `${CONFIG.name} | ${CONFIG.role}` : `${LABELS[route]} | ${CONFIG.name}`;
+                    links.forEach(a => a.dataset.route === route ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+                    current = route; pending = null;
+                    if (!first) setTimeout(() => strike(), 200);
+                };
+                if (prev && !reduced) { prev.classList.add('leaving'); pending = { fn: enter, t: setTimeout(enter, 320) }; }
+                else enter();
+            }
+            addEventListener('hashchange', () => show(routeFromHash()));
+            show(routeFromHash(), true);
+
+            /* neon titles flicker now and then, like a tired sign */
+            if (!reduced) setInterval(() => {
+                const h = current && $('.neon', pages[current]);
+                if (h && Math.random() < .55) { h.classList.remove('flick'); void h.offsetWidth; h.classList.add('flick'); }
+            }, 5200);
+
+            /* 
+               Mobile menu
+        */
+            const burger = $('.burger'), nav = $('#nav');
+            function menu(open) {
+                nav.classList.toggle('open', open);
+                burger.setAttribute('aria-expanded', open);
+                burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            }
+            burger.addEventListener('click', () => menu(!nav.classList.contains('open')));
+            nav.addEventListener('click', e => { if (e.target.closest('a')) menu(false); });
+            addEventListener('keydown', e => { if (e.key === 'Escape') menu(false); });
+            addEventListener('pointerdown', e => { if (nav.classList.contains('open') && !e.target.closest('.site-header')) menu(false); });
+            matchMedia('(min-width:761px)').addEventListener('change', e => { if (e.matches) menu(false); });
+
+            /* 
+               Contact form
+        */
+            const form = $('#form'), statusEl = $('#status'), sendBtn = $('.send', form);
+            const rules = {
+                name: v => v.trim().length >= 2,
+                email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+                subject: v => v.trim().length >= 2,
+                message: v => v.trim().length >= 10
+            };
+            function check(input) {
+                const ok = rules[input.name](input.value), f = input.closest('.field');
+                if (ok) f.classList.remove('bad'); else { f.classList.remove('bad'); void f.offsetWidth; f.classList.add('bad'); }
+                input.setAttribute('aria-invalid', String(!ok));
+                return ok;
+            }
+            $$('input,textarea', form).forEach(i => i.addEventListener('input', () => { if (i.closest('.field').classList.contains('bad')) check(i); }));
+
+            form.addEventListener('submit', async e => {
+                e.preventDefault();
+                statusEl.className = 'status'; statusEl.textContent = '';
+                const fields = $$('input,textarea', form), results = fields.map(check);
+                if (results.includes(false)) { fields[results.indexOf(false)].focus(); statusEl.classList.add('bad'); statusEl.textContent = 'Fix the highlighted fields and send again.'; return; }
+                const data = Object.fromEntries(new FormData(form));
+                sendBtn.classList.add('busy'); $('.send-label', sendBtn).textContent = 'Sending';
+                try {
+                    if (CONFIG.formEndpoint) {
+                        const res = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                        if (!res.ok) throw new Error('bad status');
+                        statusEl.textContent = `Thanks, ${data.name.trim()}. Your message was sent.`;
+                    } else {
+                        const a = document.createElement('a');
+                        a.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.message + '\n\n' + data.name + ' (' + data.email + ')')}`;
+                        a.click();
+                        statusEl.textContent = `Thanks, ${data.name.trim()}. Your email app should open with the message ready. If it doesn’t, write to ${CONFIG.email}.`;
+                    }
+                    form.reset();
+                } catch (err) {
+                    statusEl.classList.add('bad'); statusEl.textContent = `The message didn’t send. Try again, or write to ${CONFIG.email}.`;
+                } finally {
+                    sendBtn.classList.remove('busy'); $('.send-label', sendBtn).textContent = 'Send Message';
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>
