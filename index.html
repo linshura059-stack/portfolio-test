@@ -8,15 +8,14 @@
     <meta name="theme-color" content="#000000">
     <meta name="description"
         content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
-    <title>Sok Sophea | Web Developer</title>
+    <title>Sok Sophea</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&family=Roboto:wght@400;500;700&family=Rubik+Wet+Paint&family=Ubuntu:wght@300;400;500;700&display=swap"
         rel="stylesheet">
     <style>
-        /* 
-        Tokens (the look is a fixed dark "storm" theme, so one palette is used)*/
+        /* Tokens (the look is a fixed dark "storm" theme, so one palette is used)*/
         :root {
             --bg: #02060b;
             --ink: #f4f7fa;
@@ -369,6 +368,11 @@
 
         .page.leaving {
             animation: pageOut .32s ease-in forwards
+        }
+
+        .home-section {
+            scroll-margin-top: var(--hdr);
+            margin-top: clamp(30px, 6vh, 70px)
         }
 
         /* neon title: letters ignite one by one, then ripple */
@@ -1138,8 +1142,7 @@
             }
         }
 
-        /* 
-   Responsive*/
+        /* Responsive*/
         @media (max-width:1024px) {
             .projects {
                 grid-template-columns: repeat(2, minmax(0, 1fr))
@@ -1316,72 +1319,74 @@
                 <ul>
                     <li style="--k:0"><a href="#/home" data-route="home">Home</a></li>
                     <li style="--k:1"><a href="#/about" data-route="about">About</a></li>
-                    <li style="--k:2"><a href="#/portfolio" data-route="portfolio">Portfolio</a></li>
-                    <li style="--k:3"><a href="#/contact" data-route="contact">Contact</a></li>
+                    <li style="--k:2"><a href="#portfolio" data-route="portfolio">Portfolio</a></li>
+                    <li style="--k:3"><a href="#contact" data-route="contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
+    
+
     <main id="main">
         <section class="page" data-page="home" hidden>
             <h1 class="neon" data-title=""></h1>
             <div class="wrap" data-slot="intro"></div>
+
+            <div id="portfolio" class="home-section">
+                <h2 class="neon" data-title="Portfolio"></h2>
+                <div class="wrap">
+                    <div class="projects" id="projects"></div>
+                </div>
+            </div>
+
+            <div id="contact" class="home-section">
+                <h2 class="neon" data-title="Contact"></h2>
+                <div class="wrap contact-grid">
+                    <form class="form" id="form" novalidate>
+                        <div class="field rv" style="--d:.05s">
+                            <label class="sr" for="f-name">Sok Sophea</label>
+                            <input id="f-name" name="name" type="text" placeholder="Sok Sophea" autocomplete="name">
+                            <p class="err">Enter your name.</p>
+                        </div>
+                        <div class="field rv" style="--d:.13s">
+                            <label class="sr" for="f-email">Your email</label>
+                            <input id="f-email" name="email" type="email" placeholder="Your email" autocomplete="email">
+                            <p class="err">Enter a valid email address, like name@example.com.</p>
+                        </div>
+                        <div class="field rv" style="--d:.21s">
+                            <label class="sr" for="f-subject">Subject</label>
+                            <input id="f-subject" name="subject" type="text" placeholder="Subject" autocomplete="off">
+                            <p class="err">Add a short subject.</p>
+                        </div>
+                        <div class="field rv" style="--d:.29s">
+                            <label class="sr" for="f-message">Your message</label>
+                            <textarea id="f-message" name="message" placeholder="Write your message here"
+                                rows="5"></textarea>
+                            <p class="err">Write at least 10 characters.</p>
+                        </div>
+                        <button class="send rv" style="--d:.37s" type="submit"><span class="send-label">Send
+                                Message</span></button>
+                        <p class="status" id="status" role="status" aria-live="polite"></p>
+                    </form>
+                    <div class="map rv" style="--d:.15s" id="map">
+                        <a class="open" id="maps-link" href="https://www.google.com/maps" target="_blank"
+                            rel="noopener noreferrer">Open in Maps
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+                            </svg>
+                        </a>
+                        <span class="place" data-bind="location">Your City, Country</span>
+                        <span id="map-art"></span>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section class="page" data-page="about" hidden>
             <h1 class="neon" data-title="About me"></h1>
             <div class="wrap" data-slot="intro"></div>
-        </section>
-
-        <section class="page" data-page="portfolio" hidden>
-            <h1 class="neon" data-title="Portfolio"></h1>
-            <div class="wrap">
-                <div class="projects" id="projects"></div>
-            </div>
-        </section>
-
-        <section class="page" data-page="contact" hidden>
-            <h1 class="neon" data-title="Contact"></h1>
-            <div class="wrap contact-grid">
-                <form class="form" id="form" novalidate>
-                    <div class="field rv" style="--d:.05s">
-                        <label class="sr" for="f-name">Sok Sophea</label>
-                        <input id="f-name" name="name" type="text" placeholder="Sok Sophea" autocomplete="name">
-                        <p class="err">Enter your name.</p>
-                    </div>
-                    <div class="field rv" style="--d:.13s">
-                        <label class="sr" for="f-email">Your email</label>
-                        <input id="f-email" name="email" type="email" placeholder="Your email" autocomplete="email">
-                        <p class="err">Enter a valid email address, like name@example.com.</p>
-                    </div>
-                    <div class="field rv" style="--d:.21s">
-                        <label class="sr" for="f-subject">Subject</label>
-                        <input id="f-subject" name="subject" type="text" placeholder="Subject" autocomplete="off">
-                        <p class="err">Add a short subject.</p>
-                    </div>
-                    <div class="field rv" style="--d:.29s">
-                        <label class="sr" for="f-message">Your message</label>
-                        <textarea id="f-message" name="message" placeholder="Write your message here"
-                            rows="5"></textarea>
-                        <p class="err">Write at least 10 characters.</p>
-                    </div>
-                    <button class="send rv" style="--d:.37s" type="submit"><span class="send-label">Send
-                            Message</span></button>
-                    <p class="status" id="status" role="status" aria-live="polite"></p>
-                </form>
-                <div class="map rv" style="--d:.15s" id="map">
-                    <a class="open" id="maps-link" href="https://www.google.com/maps" target="_blank"
-                        rel="noopener noreferrer">Open in Maps
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
-                        </svg>
-                    </a>
-                    <span class="place" data-bind="location">Your City, Country</span>
-                    <span id="map-art"></span>
-                </div>
-            </div>
         </section>
     </main>
 
@@ -1399,8 +1404,8 @@
                 <ul>
                     <li><a href="#/home">Home</a></li>
                     <li><a href="#/about">About</a></li>
-                    <li><a href="#/portfolio">Portfolio</a></li>
-                    <li><a href="#/contact">Contact</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
             <div>
@@ -1451,10 +1456,7 @@
     <script>
         (() => {
             'use strict';
-
-            /* 
-               CONFIG: edit this block to make the site yours
-        */
+            /* CONFIG: edit this block to make the site yours */
             const CONFIG = {
                 name: 'Sok Sophea',
                 role: 'Web Developer',
@@ -1464,7 +1466,7 @@
                 githubUrl: 'https://github.com/',
                 location: 'Your City, Country',
                 mapsUrl: 'https://www.google.com/maps',
-                formEndpoint: '',   // e.g. 'https://formspree.io/f/xxxx'. If empty, the form opens the visitor's email app instead.
+                formEndpoint: '',
                 intro: 'I am an Information Technology student at the National Technical Training Institute (NTTI), currently in the first semester of my second year pursuing an Associate Degree in Information Technology.',
                 journey: 'My journey in technology has evolved from simple curiosity into a passion for creating clean, beautiful, and functional applications using modern web technologies.',
                 whatIDo: 'I build responsive and interactive interfaces using <strong>React.js</strong> and develop robust backend systems with <strong>Laravel</strong>. I create comprehensive digital experiences by combining clean architecture with modern UI/UX design principles.',
@@ -1484,9 +1486,8 @@
             const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
             const canHover = matchMedia('(hover:hover)').matches;
 
-            /* 
-               Content binding
-        */
+            /*  Content binding*/
+
             $$('[data-bind]').forEach(el => { if (CONFIG[el.dataset.bind] != null) el.textContent = CONFIG[el.dataset.bind]; });
             $('#l-mail').href = 'mailto:' + CONFIG.email;
             $('#l-tel').href = 'tel:' + CONFIG.phone.replace(/[^\d+]/g, '');
@@ -1531,9 +1532,7 @@
             }
             $$('.neon').forEach(h => buildTitle(h, h.dataset.title || `I'm ${CONFIG.name} ${CONFIG.role}`));
 
-            /* 
-               Tech icons (simple original glyphs, drawn inline so nothing is fetched)
-        */
+            /* Tech icons (simple original glyphs, drawn inline so nothing is fetched) */
             const ICONS = [
                 { n: 'react', glow: '#61dafb', svg: '<g fill="none" stroke="#61dafb" stroke-width="1.2"><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></g><circle cx="12" cy="12" r="1.8" fill="#61dafb"/>' },
                 { n: 'html', glow: '#e44d26', svg: '<path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="#e44d26"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#f16529"/><text x="12" y="16" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">5</text>' },
@@ -1554,9 +1553,7 @@
                 { n: 'node', glow: '#5fa04e', svg: '<path d="M12 2l8.5 5v10L12 22l-8.5-5V7z" fill="#5fa04e"/><path d="M12 7l4.2 2.5v5L12 17l-4.2-2.5v-5z" fill="#1a2a17"/>' }
             ];
 
-            /* 
-               Portfolio: CSS/SVG website mockups inside laptop frames
-        */
+            /*  Portfolio: CSS/SVG website mockups inside laptop frames  */
             const R = (x, y, w, h, f, rx = 2) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${f}"/>`;
             const C = (x, y, r, f) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${f}"/>`;
             const T = (x, y, s, f, t, w = 700, a = 'start') => `<text x="${x}" y="${y}" font-size="${s}" font-weight="${w}" fill="${f}" text-anchor="${a}" font-family="Arial,Helvetica,sans-serif">${t}</text>`;
@@ -1655,9 +1652,7 @@
                 $('#map-art').outerHTML = `<svg viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">${s}</svg>`;
             })();
 
-            /* 
-               Storm engine: rain + lightning (canvas) and roaming tech orbs (DOM)
-        */
+            /*    Storm engine: rain + lightning (canvas) and roaming tech orbs (DOM)  */
             const cv = $('#storm'), ctx = cv.getContext('2d');
             let W = 0, H = 0, dpr = 1;
             const drops = [], bolts = [];
@@ -1838,9 +1833,7 @@
             });
             mapEl.addEventListener('pointerleave', () => { $('svg', mapEl).style.transform = ''; });
 
-            /* 
-               Reveal on scroll
-        */
+            /*   Reveal on scroll  */
             const io = new IntersectionObserver(entries => entries.forEach(e => {
                 if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
             }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
@@ -1855,36 +1848,65 @@
                 });
             }
 
-            /* 
-               Router: hash pages with an exit animation, lightning on every change
-        */
+            /*   Router: hash pages with an exit animation, lightning on every change.
+                 Portfolio and Contact aren't separate pages: they're sections inside
+                 Home (#portfolio, #contact), so their nav links stay on Home and
+                 scroll to the matching element ID instead of switching pages. */
             const LABELS = { home: 'Home', about: 'About', portfolio: 'Portfolio', contact: 'Contact' };
+            const SECTION_IDS = ['portfolio', 'contact'];
             const pages = Object.fromEntries($$('.page').map(p => [p.dataset.page, p]));
             const links = $$('[data-route]');
             let current = null, pending = null;
 
-            const routeFromHash = () => { const r = location.hash.replace(/^#\/?/, ''); return pages[r] ? r : 'home'; };
+            const KNOWN = Object.keys(LABELS);
+            const hashKey = () => { const r = location.hash.replace(/^#\/?/, ''); return KNOWN.includes(r) ? r : 'home'; };
 
-            function show(route, first) {
-                if (route === current) return;
+            function highlightNav(key) {
+                links.forEach(a => a.dataset.route === key ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+            }
+
+            function scrollToTarget(anchorId, first) {
+                if (anchorId) {
+                    const el = document.getElementById(anchorId);
+                    if (el) { requestAnimationFrame(() => el.scrollIntoView({ behavior: (first || reduced) ? 'auto' : 'smooth', block: 'start' })); return; }
+                }
+                scrollTo(0, 0);
+            }
+
+            function show(key, first) {
+                const route = pages[key] ? key : 'home';
+                const anchor = SECTION_IDS.includes(key) ? key : null;
+                const focusTarget = () => anchor ? $(`#${anchor} .neon`) : $('.neon', pages[route]);
+                const settle = () => {
+                    document.title = key === 'home' ? `${CONFIG.name} | ${CONFIG.role}` : `${LABELS[key]} | ${CONFIG.name}`;
+                    highlightNav(key);
+                };
+
+                if (route === current) {
+                    scrollToTarget(anchor, first);
+                    const h = focusTarget();
+                    if (!first && h) h.focus({ preventScroll: true });
+                    settle();
+                    return;
+                }
                 if (pending) { clearTimeout(pending.t); pending.fn(); pending = null; }
                 const prev = current && pages[current], next = pages[route];
                 const enter = () => {
                     if (prev) { prev.hidden = true; prev.classList.remove('leaving'); }
-                    next.hidden = false; scrollTo(0, 0);
+                    next.hidden = false;
                     armReveal(next); armTilt(next);
-                    const h = $('.neon', next);
+                    scrollToTarget(anchor, first);
+                    const h = focusTarget();
                     if (!first && h) h.focus({ preventScroll: true });
-                    document.title = route === 'home' ? `${CONFIG.name} | ${CONFIG.role}` : `${LABELS[route]} | ${CONFIG.name}`;
-                    links.forEach(a => a.dataset.route === route ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+                    settle();
                     current = route; pending = null;
                     if (!first) setTimeout(() => strike(), 200);
                 };
                 if (prev && !reduced) { prev.classList.add('leaving'); pending = { fn: enter, t: setTimeout(enter, 320) }; }
                 else enter();
             }
-            addEventListener('hashchange', () => show(routeFromHash()));
-            show(routeFromHash(), true);
+            addEventListener('hashchange', () => show(hashKey()));
+            show(hashKey(), true);
 
             /* neon titles flicker now and then, like a tired sign */
             if (!reduced) setInterval(() => {
@@ -1892,9 +1914,7 @@
                 if (h && Math.random() < .55) { h.classList.remove('flick'); void h.offsetWidth; h.classList.add('flick'); }
             }, 5200);
 
-            /* 
-               Mobile menu
-        */
+            /* Mobile menu */
             const burger = $('.burger'), nav = $('#nav');
             function menu(open) {
                 nav.classList.toggle('open', open);
@@ -1907,9 +1927,7 @@
             addEventListener('pointerdown', e => { if (nav.classList.contains('open') && !e.target.closest('.site-header')) menu(false); });
             matchMedia('(min-width:761px)').addEventListener('change', e => { if (e.matches) menu(false); });
 
-            /* 
-               Contact form
-        */
+            /* Contact form */
             const form = $('#form'), statusEl = $('#status'), sendBtn = $('.send', form);
             const rules = {
                 name: v => v.trim().length >= 2,
