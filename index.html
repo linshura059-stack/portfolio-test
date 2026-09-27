@@ -9,6 +9,7 @@
     <meta name="description"
         content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
     <title>Sok Sophea</title>
+    <link rel="icon" type="image/jpeg" href="assets/react.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -525,6 +526,96 @@
             font-weight: 700
         }
 
+        /* ---------- Education timeline ---------- */
+        .edu {
+            margin-top: clamp(46px, 8vh, 84px)
+        }
+
+        .edu h3 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: clamp(28px, 5vh, 48px);
+            text-align: center
+        }
+
+        .edu-track {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 0 clamp(4px, 2vw, 28px)
+        }
+
+        .edu-track::before {
+            content: "";
+            position: absolute;
+            left: clamp(20px, 6vw, 50px);
+            right: clamp(20px, 6vw, 50px);
+            top: 26px;
+            height: 3px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--neon) 0%, #ffb23e 26%, #c400ff 55%, #ff2a9d 78%, var(--neon) 100%);
+            box-shadow: 0 0 12px rgba(255, 90, 46, .45);
+            z-index: 0
+        }
+
+        .edu-item {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .65rem
+        }
+
+        .edu-dot {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #ff5a2e, #ff2a9d);
+            box-shadow: 0 0 0 4px var(--bg), 0 0 16px 2px rgba(255, 90, 46, .55), 0 0 34px rgba(196, 0, 255, .35);
+            transition: transform .35s var(--ease), box-shadow .35s
+        }
+
+        .edu-item:hover .edu-dot {
+            transform: translateY(-4px) scale(1.06);
+            box-shadow: 0 0 0 4px var(--bg), 0 0 22px 4px rgba(255, 90, 46, .7), 0 0 46px rgba(196, 0, 255, .5)
+        }
+
+        .edu-dot svg {
+            width: 52%;
+            height: 52%;
+            fill: #fff
+        }
+
+        .edu-label {
+            font-size: clamp(.72rem, 1.6vw, .92rem);
+            color: var(--ink-dim);
+            text-align: center;
+            line-height: 1.3
+        }
+
+        @media (max-width:640px) {
+            .edu-track::before {
+                left: clamp(16px, 8vw, 24px);
+                right: clamp(16px, 8vw, 24px);
+                top: 20px
+            }
+
+            .edu-dot {
+                width: 40px;
+                height: 40px
+            }
+
+            .edu-label {
+                font-size: .68rem
+            }
+        }
+
         /* ---------- Portfolio ---------- */
         .projects {
             display: grid;
@@ -897,45 +988,6 @@
             transform-box: fill-box;
             transform-origin: center;
             animation: ping 2.6s ease-out infinite
-        }
-
-        /* ---------- Music ---------- */
-        .music-wrap {
-            display: flex;
-            justify-content: center
-        }
-
-        .music-card {
-            width: min(720px, 100%);
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1.5px solid rgba(127, 243, 234, .6);
-            box-shadow: 0 0 24px rgba(25, 224, 210, .28);
-            background: #05141a
-        }
-
-        .music-frame-wrap {
-            position: relative;
-            aspect-ratio: 16/9;
-            background: #000
-        }
-
-        .music-frame-wrap iframe {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            border: 0
-        }
-
-        .music-caption {
-            padding: .9rem 1.1rem;
-            font-size: .95rem;
-            color: var(--ink-dim)
-        }
-
-        .music-caption strong {
-            color: #fff
         }
 
         /* 
@@ -1359,8 +1411,7 @@
                     <li style="--k:0"><a href="#/home" data-route="home">Home</a></li>
                     <li style="--k:1"><a href="#/about" data-route="about">About</a></li>
                     <li style="--k:2"><a href="#portfolio" data-route="portfolio">Portfolio</a></li>
-                    <li style="--k:3"><a href="#music" data-route="music">Music</a></li>
-                    <li style="--k:4"><a href="#contact" data-route="contact">Contact</a></li>
+                    <li style="--k:3"><a href="#contact" data-route="contact">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -1377,21 +1428,6 @@
                 <h2 class="neon" data-title="Portfolio"></h2>
                 <div class="wrap">
                     <div class="projects" id="projects"></div>
-                </div>
-            </div>
-
-            <div id="music" class="home-section">
-                <h2 class="neon" data-title="Music"></h2>
-                <div class="wrap music-wrap">
-                    <div class="music-card rv">
-                        <div class="music-frame-wrap">
-                            <iframe src="https://www.youtube-nocookie.com/embed/9KhI7duJvLE"
-                                title="YouTube video player" loading="lazy"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        </div>
-                        <p class="music-caption">Currently on repeat: <strong>Stay With Me</strong></p>
-                    </div>
                 </div>
             </div>
 
@@ -1460,7 +1496,6 @@
                     <li><a href="#/home">Home</a></li>
                     <li><a href="#/about">About</a></li>
                     <li><a href="#portfolio">Portfolio</a></li>
-                    <li><a href="#music">Music</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
@@ -1525,7 +1560,14 @@
                 formEndpoint: '',
                 intro: 'I am an Information Technology student at the National Technical Training Institute (NTTI), currently in the first semester of my second year pursuing an Associate Degree in Information Technology.',
                 journey: 'My journey in technology has evolved from simple curiosity into a passion for creating clean, beautiful, and functional applications using modern web technologies.',
+                experience: 'Currently, I am also working as an intern Backend and Frontend Developer at Somnab Technology, where I continue to gain practical experience in website development. Through this internship, I am developing my skills in both frontend and backend technologies while learning how to build responsive, functional, and user-friendly web applications.',
                 whatIDo: 'I build responsive and interactive interfaces using <strong>React.js</strong> and develop robust backend systems with <strong>Laravel</strong>. I create comprehensive digital experiences by combining clean architecture with modern UI/UX design principles.',
+                education: [
+                    { label: 'Primary School' },
+                    { label: 'Secondary School' },
+                    { label: 'High School' },
+                    { label: 'University' }
+                ],
                 projects: [
                     { title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', url: '' },
                     { title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', url: '' },
@@ -1554,6 +1596,21 @@
 
             const AVATAR = `<img src="assets/sok-sophea-profile.png" alt="Portrait of ${esc(CONFIG.name)}" loading="eager" decoding="async">`;
 
+            /* graduation-cap glyph used for every education-timeline node */
+            const GRAD_CAP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3L1 9l11 6 9-4.9V17h2V9z"/><path d="M5 11.2V16c0 1.9 3.1 3.4 7 3.4s7-1.5 7-3.4v-4.8l-7 3.8z"/></svg>';
+
+            const eduHTML = () => `
+  <div class="edu rv" style="--d:.66s">
+    <h3>Education</h3>
+    <div class="edu-track">
+      ${CONFIG.education.map(e => `
+        <div class="edu-item">
+          <span class="edu-dot">${GRAD_CAP}</span>
+          <span class="edu-label">${esc(e.label)}</span>
+        </div>`).join('')}
+    </div>
+  </div>`;
+
             const introHTML = () => `
   <div class="intro">
     <div class="avatar rv" style="--d:.05s" data-tilt="8">
@@ -1564,10 +1621,13 @@
       <p class="lede rv" style="--d:.2s">${esc(CONFIG.intro)}</p>
       <h3 class="rv" style="--d:.3s">My Journey</h3>
       <p class="sm rv" style="--d:.36s">${esc(CONFIG.journey)}</p>
-      <h3 class="rv" style="--d:.44s">What I Do</h3>
-      <p class="sm rv" style="--d:.5s">${CONFIG.whatIDo}</p>
+      <h3 class="rv" style="--d:.42s">Experience</h3>
+      <p class="sm rv" style="--d:.48s">${esc(CONFIG.experience)}</p>
+      <h3 class="rv" style="--d:.54s">What I Do</h3>
+      <p class="sm rv" style="--d:.6s">${CONFIG.whatIDo}</p>
     </div>
-  </div>`;
+  </div>
+  ${eduHTML()}`;
             $$('[data-slot="intro"]').forEach(el => el.innerHTML = introHTML());
 
             /* neon titles: split into words/letters so each letter can ignite and ripple */
@@ -1905,12 +1965,11 @@
             }
 
             /*   Router: hash pages with an exit animation, lightning on every change.
-                 Portfolio, Music and Contact aren't separate pages: they're sections
-                 inside Home (#portfolio, #music, #contact), so their nav links stay
-                 on Home and scroll to the matching element ID instead of switching
-                 pages. */
-            const LABELS = { home: 'Home', about: 'About', portfolio: 'Portfolio', music: 'Music', contact: 'Contact' };
-            const SECTION_IDS = ['portfolio', 'music', 'contact'];
+                 Portfolio and Contact aren't separate pages: they're sections inside
+                 Home (#portfolio, #contact), so their nav links stay on Home and
+                 scroll to the matching element ID instead of switching pages. */
+            const LABELS = { home: 'Home', about: 'About', portfolio: 'Portfolio', contact: 'Contact' };
+            const SECTION_IDS = ['portfolio', 'contact'];
             const pages = Object.fromEntries($$('.page').map(p => [p.dataset.page, p]));
             const links = $$('[data-route]');
             let current = null, pending = null;
