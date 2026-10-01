@@ -1571,7 +1571,7 @@
                 projects: [
                     { title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', url: '' },
                     { title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', url: '' },
-                    { title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', url: 'https://example.com' },
+                    { title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', url: 'https://phoneshop-deploy.vercel.app/' },
                     { title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', url: '' },
                     { title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', url: 'https://example.com' },
                     { title: 'Health News', stack: 'React JS + API', screen: 'blog', url: 'https://example.com' }
@@ -1585,6 +1585,7 @@
             const canHover = matchMedia('(hover:hover)').matches;
 
             /*  Content binding*/
+
 
             $$('[data-bind]').forEach(el => { if (CONFIG[el.dataset.bind] != null) el.textContent = CONFIG[el.dataset.bind]; });
             $('#l-mail').href = 'mailto:' + CONFIG.email;
