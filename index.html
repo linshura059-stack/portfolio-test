@@ -628,10 +628,18 @@
         }
 
         .skill-cell {
-            display: block
+            display: block;
+            perspective: 900px;
+            perspective-origin: 50% 40%
         }
 
         .skill {
+            --rx: 0deg;
+            --ry: 0deg;
+            --ty: 0px;
+            --gx: 50%;
+            --gy: 30%;
+            position: relative;
             height: 100%;
             aspect-ratio: 1 / .97;
             display: flex;
@@ -643,24 +651,61 @@
             border: 1.5px solid rgba(25, 224, 210, .5);
             border-radius: 18px;
             box-shadow: 0 0 14px rgba(25, 224, 210, .5), inset 0 0 14px rgba(25, 224, 210, .12);
-            transition: transform .35s var(--ease), box-shadow .35s, border-color .35s
+            transform: translateY(var(--ty)) rotateX(var(--rx)) rotateY(var(--ry));
+            transform-style: preserve-3d;
+            will-change: transform;
+            transition: transform .6s var(--ease), box-shadow .35s, border-color .35s
+        }
+
+        .skill.live {
+            transition: transform .12s linear, box-shadow .35s, border-color .35s
         }
 
         .skill:hover {
-            transform: translateY(-6px);
+            --ty: -6px;
             border-color: var(--line);
             box-shadow: 0 0 22px rgba(25, 224, 210, .9), 0 0 48px rgba(25, 224, 210, .4), inset 0 0 16px rgba(25, 224, 210, .2)
         }
 
+        /* soft light that follows the pointer across the card */
+        .skill::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, .2), transparent 55%);
+            opacity: 0;
+            transition: opacity .35s;
+            transform: translateZ(1px)
+        }
+
+        .skill:hover::after {
+            opacity: 1
+        }
+
+        /* the logo floats above the card and sways in 3D; each one starts at a different phase */
         .skill svg {
             width: clamp(34px, 4.2vw, 60px);
             height: auto;
-            aspect-ratio: 1
+            aspect-ratio: 1;
+            transform: translateZ(34px);
+            transform-style: preserve-3d;
+            filter: drop-shadow(0 10px 8px rgba(0, 0, 0, .55));
+            animation: logoFloat 5.4s ease-in-out infinite;
+            animation-delay: calc(var(--i, 0) * -.7s);
+            transition: filter .4s
+        }
+
+        .skill:hover svg {
+            filter: drop-shadow(0 16px 12px rgba(0, 0, 0, .6)) drop-shadow(0 0 10px rgba(25, 224, 210, .45))
         }
 
         .skill span {
             font: 500 clamp(.78rem, 1.2vw, 1rem) 'Ubuntu', sans-serif;
-            color: #fff
+            color: #fff;
+            transform: translateZ(18px);
+            text-shadow: 0 3px 6px rgba(0, 0, 0, .6)
         }
 
         @media (max-width:1024px) {
@@ -1288,6 +1333,18 @@
             }
         }
 
+        @keyframes logoFloat {
+
+            0%,
+            100% {
+                transform: translateZ(30px) translateY(0) rotateY(-18deg) rotateX(7deg)
+            }
+
+            50% {
+                transform: translateZ(50px) translateY(-5px) rotateY(18deg) rotateX(-7deg)
+            }
+        }
+
         @keyframes peek {
             from {
                 transform: translateY(0)
@@ -1442,6 +1499,11 @@
             #sky::before,
             #sky::after {
                 animation: none
+            }
+
+            .skill svg {
+                animation: none;
+                transform: translateZ(24px)
             }
         }
     </style>
@@ -1693,7 +1755,7 @@
     <h2 class="neon" data-title="Skills"></h2>
     <div class="skills">
       ${SKILLS.map((s, i) => `
-        <div class="skill-cell rv" style="--d:${(i * .07).toFixed(2)}s">
+        <div class="skill-cell rv" style="--d:${(i * .07).toFixed(2)}s;--i:${i}">
           <div class="skill">
             <svg viewBox="0 0 24 24" aria-hidden="true">${s.svg}</svg>
             <span>${esc(s.n)}</span>
@@ -2032,6 +2094,45 @@
             }
             armTilt(document);
 
+            /* skills: card tilts toward the pointer (the logo floats above it, so depth parallax is automatic),
+               and the logo does one smooth 3D turn each time the pointer enters */
+            function armSkills(root) {
+                $$('.skill-cell', root).forEach(cell => {
+                    if (cell._s) return; cell._s = 1;
+                    const card = $('.skill', cell), logo = $('svg', card);
+                    let spinning = null;
+                    cell.addEventListener('pointerenter', e => {
+                        if (e.pointerType !== 'mouse' || reduced) return;
+                        card.classList.add('live');
+                        if (spinning) return;
+                        spinning = logo.animate(
+                            [{ rotate: '0 1 0 0deg', scale: 1 }, { rotate: '0 1 0 180deg', scale: 1.22, offset: .5 }, { rotate: '0 1 0 360deg', scale: 1 }],
+                            { duration: 900, easing: 'cubic-bezier(.4,0,.2,1)' }
+                        );
+                        spinning.onfinish = spinning.oncancel = () => { spinning = null; };
+                    });
+                    cell.addEventListener('pointermove', e => {
+                        if (e.pointerType !== 'mouse' || reduced) return;
+                        const r = cell.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+                        card.style.setProperty('--ry', (px * 26).toFixed(2) + 'deg');
+                        card.style.setProperty('--rx', (-py * 26).toFixed(2) + 'deg');
+                        card.style.setProperty('--gx', ((px + .5) * 100).toFixed(1) + '%');
+                        card.style.setProperty('--gy', ((py + .5) * 100).toFixed(1) + '%');
+                    });
+                    cell.addEventListener('pointerleave', () => {
+                        card.classList.remove('live');
+                        card.style.setProperty('--ry', '0deg'); card.style.setProperty('--rx', '0deg');
+                    });
+                    /* touch / keyboard-less devices: tap spins the logo */
+                    cell.addEventListener('click', e => {
+                        if (reduced || spinning) return;
+                        spinning = logo.animate([{ rotate: '0 1 0 0deg' }, { rotate: '0 1 0 360deg' }], { duration: 800, easing: 'cubic-bezier(.4,0,.2,1)' });
+                        spinning.onfinish = spinning.oncancel = () => { spinning = null; };
+                    });
+                });
+            }
+            armSkills(document);
+
             /* map parallax */
             const mapEl = $('#map');
             mapEl.addEventListener('pointermove', e => {
@@ -2102,7 +2203,7 @@
                 const enter = () => {
                     if (prev) { prev.hidden = true; prev.classList.remove('leaving'); }
                     next.hidden = false;
-                    armReveal(next); armTilt(next);
+                    armReveal(next); armTilt(next); armSkills(next);
                     scrollToTarget(anchor, first);
                     const h = focusTarget();
                     if (!first && h) h.focus({ preventScroll: true });
