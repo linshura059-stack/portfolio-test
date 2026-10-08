@@ -185,9 +185,10 @@
         #orbs {
             position: fixed;
             inset: 0;
-            z-index: 40;
+            z-index: 2;
             pointer-events: none;
-            overflow: hidden
+            overflow: hidden;
+            opacity: 0;
         }
 
         .orb {
@@ -395,6 +396,8 @@
         .neon:focus {
             outline: none
         }
+
+
 
         .neon .w {
             display: inline-block;
@@ -652,7 +655,7 @@
             }
         }
 
-        /* ---------- Skills ---------- */
+        /* ---------- Skills / Premium 3D V2 ---------- */
         .skills-sec {
             margin-top: clamp(10px, 3vh, 30px)
         }
@@ -665,83 +668,179 @@
 
         .skill-cell {
             display: block;
-            perspective: 900px;
-            perspective-origin: 50% 40%
+            perspective: 1100px;
+            perspective-origin: 50% 40%;
+            transform-style: preserve-3d
         }
 
         .skill {
             --rx: 0deg;
             --ry: 0deg;
             --ty: 0px;
+            --mx: 0px;
+            --my: 0px;
             --gx: 50%;
-            --gy: 30%;
+            --gy: 50%;
             position: relative;
             height: 100%;
-            aspect-ratio: 1 / .97;
+            aspect-ratio: 1/.97;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 1.1rem;
-            background: linear-gradient(#0d141c, #090e14);
+            background: radial-gradient(circle at var(--gx) var(--gy), rgba(25, 224, 210, .14), transparent 38%), linear-gradient(145deg, #101a24, #060b11 72%);
             border: 1.5px solid rgba(25, 224, 210, .5);
             border-radius: 18px;
-            box-shadow: 0 0 14px rgba(25, 224, 210, .5), inset 0 0 14px rgba(25, 224, 210, .12);
-            transform: translateY(var(--ty)) rotateX(var(--rx)) rotateY(var(--ry));
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .45), 0 0 18px rgba(25, 224, 210, .28), inset 0 0 18px rgba(25, 224, 210, .08);
+            transform: translate3d(var(--mx), var(--my), 0) translateY(var(--ty)) rotateX(var(--rx)) rotateY(var(--ry));
             transform-style: preserve-3d;
             will-change: transform;
-            transition: transform .6s var(--ease), box-shadow .35s, border-color .35s
+            transition: transform .55s cubic-bezier(.2, .8, .2, 1), box-shadow .4s, border-color .35s;
         }
 
-        .skill.live {
-            transition: transform .12s linear, box-shadow .35s, border-color .35s
-        }
-
-        .skill:hover {
-            --ty: -6px;
+        .skill.live,
+        .skill.is-hover {
+            --ty: -9px;
             border-color: var(--line);
-            box-shadow: 0 0 22px rgba(25, 224, 210, .9), 0 0 48px rgba(25, 224, 210, .4), inset 0 0 16px rgba(25, 224, 210, .2)
+            box-shadow: 0 24px 45px rgba(0, 0, 0, .65), 0 0 22px rgba(25, 224, 210, .85), 0 0 60px rgba(25, 224, 210, .32), inset 0 0 22px rgba(25, 224, 210, .14)
         }
 
-        /* soft light that follows the pointer across the card */
         .skill::after {
             content: "";
             position: absolute;
-            inset: 0;
+            inset: -2px;
             border-radius: inherit;
             pointer-events: none;
-            background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, .2), transparent 55%);
+            background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, .24), rgba(25, 224, 210, .08) 18%, transparent 52%);
             opacity: 0;
             transition: opacity .35s;
-            transform: translateZ(1px)
+            transform: translateZ(2px)
         }
 
-        .skill:hover::after {
+        .skill:hover::after,
+        .skill.is-hover::after {
             opacity: 1
         }
 
-        /* the logo floats above the card and sways in 3D; each one starts at a different phase */
         .skill svg {
+            position: relative;
+            z-index: 5;
             width: clamp(34px, 4.2vw, 60px);
             height: auto;
             aspect-ratio: 1;
-            transform: translateZ(34px);
+            transform: translateZ(48px);
             transform-style: preserve-3d;
-            filter: drop-shadow(0 10px 8px rgba(0, 0, 0, .55));
-            animation: logoFloat 5.4s ease-in-out infinite;
-            animation-delay: calc(var(--i, 0) * -.7s);
-            transition: filter .4s
+            filter: drop-shadow(0 12px 9px rgba(0, 0, 0, .55)) drop-shadow(0 0 5px rgba(25, 224, 210, .25));
+            animation: premiumFloat 4.5s ease-in-out infinite;
+            animation-delay: calc(var(--i, 0)*-.45s);
+            transition: filter .4s, scale .4s cubic-bezier(.2, .8, .2, 1)
         }
 
-        .skill:hover svg {
-            filter: drop-shadow(0 16px 12px rgba(0, 0, 0, .6)) drop-shadow(0 0 10px rgba(25, 224, 210, .45))
+        .skill:hover svg,
+        .skill.is-hover svg {
+            scale: 1.14;
+            filter: drop-shadow(0 20px 15px rgba(0, 0, 0, .65)) drop-shadow(0 0 12px rgba(25, 224, 210, .75)) drop-shadow(0 0 30px rgba(25, 224, 210, .25))
         }
 
         .skill span {
+            position: relative;
+            z-index: 5;
             font: 500 clamp(.78rem, 1.2vw, 1rem) 'Ubuntu', sans-serif;
             color: #fff;
-            transform: translateZ(18px);
-            text-shadow: 0 3px 6px rgba(0, 0, 0, .6)
+            transform: translateZ(30px);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, .7), 0 0 8px rgba(25, 224, 210, .2);
+            transition: transform .4s, letter-spacing .4s, text-shadow .4s
+        }
+
+        .skill:hover span,
+        .skill.is-hover span {
+            transform: translateZ(38px);
+            letter-spacing: .04em;
+            text-shadow: 0 5px 12px rgba(0, 0, 0, .8), 0 0 12px rgba(25, 224, 210, .55)
+        }
+
+        .skill-orbit {
+            position: absolute;
+            width: 115px;
+            height: 115px;
+            border: 1px solid rgba(25, 224, 210, .35);
+            border-radius: 50%;
+            transform: translateZ(25px) rotateX(68deg);
+            box-shadow: 0 0 8px rgba(25, 224, 210, .35), inset 0 0 8px rgba(25, 224, 210, .15);
+            opacity: .45;
+            animation: orbitSpin 7s linear infinite;
+            pointer-events: none;
+            z-index: 1
+        }
+
+        .skill-orbit::before,
+        .skill-orbit::after {
+            content: "";
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #19e0d2;
+            box-shadow: 0 0 8px #19e0d2, 0 0 18px rgba(25, 224, 210, .8)
+        }
+
+        .skill-orbit::before {
+            top: -3px;
+            left: 50%
+        }
+
+        .skill-orbit::after {
+            bottom: 5px;
+            right: 8px
+        }
+
+        .skill.is-hover .skill-orbit {
+            opacity: 1;
+            animation-duration: 3s;
+            box-shadow: 0 0 12px rgba(25, 224, 210, .8), 0 0 30px rgba(25, 224, 210, .35)
+        }
+
+        .particle-field {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2
+        }
+
+        .skill-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #19e0d2;
+            box-shadow: 0 0 5px #19e0d2, 0 0 12px rgba(25, 224, 210, .8);
+            opacity: .18;
+            animation: particleFloat var(--pd, 3s) ease-in-out infinite;
+            animation-delay: var(--delay, 0s)
+        }
+
+        .skill.is-hover .skill-particle {
+            opacity: .9
+        }
+
+        .skill-shine {
+            position: absolute;
+            top: -80%;
+            left: -120%;
+            width: 55%;
+            height: 260%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .25), rgba(127, 243, 234, .35), transparent);
+            transform: rotate(25deg);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10
+        }
+
+        .skill.is-hover .skill-shine {
+            opacity: 1;
+            animation: shineSweep .9s cubic-bezier(.2, .7, .2, 1)
         }
 
         @media (max-width:1024px) {
@@ -1388,15 +1487,49 @@
             }
         }
 
-        @keyframes logoFloat {
+        @keyframes premiumFloat {
 
             0%,
             100% {
-                transform: translateZ(30px) translateY(0) rotateY(-18deg) rotateX(7deg)
+                transform: translateZ(45px) translateY(0) rotateY(-12deg) rotateX(5deg)
             }
 
             50% {
-                transform: translateZ(50px) translateY(-5px) rotateY(18deg) rotateX(-7deg)
+                transform: translateZ(65px) translateY(-8px) rotateY(12deg) rotateX(-5deg)
+            }
+        }
+
+        @keyframes orbitSpin {
+            from {
+                transform: translateZ(25px) rotateX(68deg) rotateZ(0deg)
+            }
+
+            to {
+                transform: translateZ(25px) rotateX(68deg) rotateZ(360deg)
+            }
+        }
+
+        @keyframes shineSweep {
+            0% {
+                left: -120%
+            }
+
+            100% {
+                left: 160%
+            }
+        }
+
+        @keyframes particleFloat {
+
+            0%,
+            100% {
+                transform: translate3d(0, 8px, 0) scale(.5);
+                opacity: .15
+            }
+
+            50% {
+                transform: translate3d(var(--px, 10px), var(--py, -20px), 25px) scale(1.35);
+                opacity: .9
             }
         }
 
@@ -1407,6 +1540,37 @@
 
             to {
                 transform: translateY(-44%)
+            }
+        }
+
+        @media (max-width:768px) {
+            .skill-orbit {
+                width: 90px;
+                height: 90px
+            }
+
+            .skill svg {
+                width: 44px
+            }
+
+            .skill {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, .5), 0 0 14px rgba(25, 224, 210, .25)
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+
+            .skill,
+            .skill svg,
+            .skill-orbit,
+            .skill-particle,
+            .skill-shine {
+                animation: none !important;
+                transition: none !important
+            }
+
+            .skill {
+                transform: none !important
             }
         }
 
@@ -2188,12 +2352,21 @@
       ${SKILLS.map((s, i) => `
         <div class="skill-cell rv" style="--d:${(i * .07).toFixed(2)}s;--i:${i}">
           <div class="skill">
+            <div class="skill-orbit"></div>
+            <div class="particle-field">
+              ${Array.from({ length: 9 }, (_, p) => `
+                <i class="skill-particle" style="left:${10 + ((p * 37 + i * 11) % 80)}%;top:${10 + ((p * 53 + i * 7) % 78)}%;--px:${(-15 + ((p * 17) % 30)).toFixed(1)}px;--py:${(-20 - ((p * 13) % 25)).toFixed(1)}px;--pd:${(2.2 + ((p * 7) % 18) / 10).toFixed(2)}s;--delay:${(-((p * 31 + i * 13) % 30) / 10).toFixed(2)}s"></i>
+              `).join('')}
+            </div>
+            <div class="skill-shine"></div>
             <svg viewBox="0 0 24 24" aria-hidden="true">${s.svg}</svg>
             <span>${esc(s.n)}</span>
           </div>
         </div>`).join('')}
     </div>
   </div>`;
+
+
 
             const introHTML = () => `
   <div class="intro">
@@ -2533,40 +2706,64 @@
                and the logo does one smooth 3D turn each time the pointer enters */
             function armSkills(root) {
                 $$('.skill-cell', root).forEach(cell => {
-                    if (cell._s) return; cell._s = 1;
+                    if (cell._premiumSkill) return;
+                    cell._premiumSkill = 1;
                     const card = $('.skill', cell), logo = $('svg', card);
+                    if (!card || !logo) return;
                     let spinning = null;
+                    let raf = null;
+                    let targetRX = 0, targetRY = 0, currentRX = 0, currentRY = 0;
+                    let targetMX = 0, targetMY = 0, currentMX = 0, currentMY = 0;
+                    const animateTilt = () => {
+                        currentRX += (targetRX - currentRX) * .14;
+                        currentRY += (targetRY - currentRY) * .14;
+                        currentMX += (targetMX - currentMX) * .16;
+                        currentMY += (targetMY - currentMY) * .16;
+                        card.style.setProperty('--rx', currentRX.toFixed(2) + 'deg');
+                        card.style.setProperty('--ry', currentRY.toFixed(2) + 'deg');
+                        card.style.setProperty('--mx', currentMX.toFixed(2) + 'px');
+                        card.style.setProperty('--my', currentMY.toFixed(2) + 'px');
+                        raf = requestAnimationFrame(animateTilt);
+                    };
+                    animateTilt();
                     cell.addEventListener('pointerenter', e => {
                         if (e.pointerType !== 'mouse' || reduced) return;
-                        card.classList.add('live');
+                        card.classList.add('live', 'is-hover');
                         if (spinning) return;
-                        spinning = logo.animate(
-                            [{ rotate: '0 1 0 0deg', scale: 1 }, { rotate: '0 1 0 180deg', scale: 1.22, offset: .5 }, { rotate: '0 1 0 360deg', scale: 1 }],
-                            { duration: 900, easing: 'cubic-bezier(.4,0,.2,1)' }
-                        );
-                        spinning.onfinish = spinning.oncancel = () => { spinning = null; };
+                        spinning = logo.animate([
+                            { transform: 'translateZ(48px) rotateY(0deg) scale(1)' },
+                            { transform: 'translateZ(75px) rotateY(180deg) scale(1.2)' },
+                            { transform: 'translateZ(48px) rotateY(360deg) scale(1)' }
+                        ], { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' });
+                        spinning.onfinish = spinning.oncancel = () => { spinning = null };
                     });
                     cell.addEventListener('pointermove', e => {
                         if (e.pointerType !== 'mouse' || reduced) return;
-                        const r = cell.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
-                        card.style.setProperty('--ry', (px * 26).toFixed(2) + 'deg');
-                        card.style.setProperty('--rx', (-py * 26).toFixed(2) + 'deg');
+                        const r = cell.getBoundingClientRect();
+                        const px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+                        targetRY = px * 28; targetRX = -py * 28;
+                        targetMX = px * 10; targetMY = py * 10;
                         card.style.setProperty('--gx', ((px + .5) * 100).toFixed(1) + '%');
                         card.style.setProperty('--gy', ((py + .5) * 100).toFixed(1) + '%');
                     });
                     cell.addEventListener('pointerleave', () => {
-                        card.classList.remove('live');
-                        card.style.setProperty('--ry', '0deg'); card.style.setProperty('--rx', '0deg');
+                        card.classList.remove('live', 'is-hover');
+                        targetRX = targetRY = targetMX = targetMY = 0;
+                        card.style.setProperty('--gx', '50%'); card.style.setProperty('--gy', '50%');
                     });
-                    /* touch / keyboard-less devices: tap spins the logo */
-                    cell.addEventListener('click', e => {
+                    cell.addEventListener('click', () => {
                         if (reduced || spinning) return;
-                        spinning = logo.animate([{ rotate: '0 1 0 0deg' }, { rotate: '0 1 0 360deg' }], { duration: 800, easing: 'cubic-bezier(.4,0,.2,1)' });
-                        spinning.onfinish = spinning.oncancel = () => { spinning = null; };
+                        spinning = logo.animate([
+                            { transform: 'translateZ(48px) rotateY(0deg)' },
+                            { transform: 'translateZ(70px) rotateY(360deg)' }
+                        ], { duration: 800, easing: 'cubic-bezier(.2,.8,.2,1)' });
+                        spinning.onfinish = spinning.oncancel = () => { spinning = null };
                     });
                 });
             }
             armSkills(document);
+
+
 
             /*   Reveal on scroll  */
             /* The hero heading starts fully clipped (clip-path), and a fully clipped element never counts as
