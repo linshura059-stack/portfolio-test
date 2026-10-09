@@ -1079,6 +1079,42 @@
             min-height: 140px
         }
 
+        /* Password field + accessible Show/Hide control */
+        .password-input-wrap {
+            position: relative;
+            width: 100%;
+        }
+
+        .field input#f-Password {
+            padding-right: 5rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: .65rem;
+            transform: translateY(-50%);
+            border: 0;
+            border-radius: 4px;
+            padding: .35rem .4rem;
+            min-width: 2.8rem;
+            background: transparent;
+            color: var(--teal);
+            font: 500 .9rem 'Ubuntu', sans-serif;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .password-toggle:hover {
+            color: #fff;
+            text-shadow: 0 0 8px var(--teal-glow);
+        }
+
+        .password-toggle:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
         .field input::placeholder,
         .field textarea::placeholder {
             color: #c6d1d6;
@@ -2160,10 +2196,24 @@
                             <p class="err">Enter a valid email address, like name@example.com.</p>
                         </div>
                         <div class="field rv" style="--d:.21s">
+                            <label class="sr" for="f-Password">Password</label>
+                            <div class="password-input-wrap">
+                                <input id="f-Password" name="Password" type="password" placeholder="Password"
+                                    autocomplete="new-password" aria-describedby="password-error">
+                                <button class="password-toggle" type="button" aria-controls="f-Password"
+                                    aria-label="Show password" aria-pressed="false">Show</button>
+                            </div>
+                            <p class="err" id="password-error">Password must be at least 8 characters.</p>
+                        </div>
+
+                        <div class="field rv" style="--d:.21s">
                             <label class="sr" for="f-subject">Subject</label>
                             <input id="f-subject" name="subject" type="text" placeholder="Subject" autocomplete="off">
                             <p class="err">Add a short subject.</p>
                         </div>
+
+
+
                         <div class="field rv" style="--d:.29s">
                             <label class="sr" for="f-message">Your message</label>
                             <textarea id="f-message" name="message" placeholder="Write your message here"
@@ -2702,30 +2752,49 @@
             }
             armTilt(document);
 
-            /* skills: card tilts toward the pointer (the logo floats above it, so depth parallax is automatic),
-               and the logo does one smooth 3D turn each time the pointer enters */
+            /* Skills: run the 3D tilt loop only while the card is moving.
+               The old version scheduled a permanent RAF loop for every skill card. */
             function armSkills(root) {
                 $$('.skill-cell', root).forEach(cell => {
                     if (cell._premiumSkill) return;
-                    cell._premiumSkill = 1;
                     const card = $('.skill', cell), logo = $('svg', card);
                     if (!card || !logo) return;
+                    cell._premiumSkill = 1;
+
                     let spinning = null;
-                    let raf = null;
+                    let raf = 0;
                     let targetRX = 0, targetRY = 0, currentRX = 0, currentRY = 0;
                     let targetMX = 0, targetMY = 0, currentMX = 0, currentMY = 0;
-                    const animateTilt = () => {
-                        currentRX += (targetRX - currentRX) * .14;
-                        currentRY += (targetRY - currentRY) * .14;
-                        currentMX += (targetMX - currentMX) * .16;
-                        currentMY += (targetMY - currentMY) * .16;
+                    const EPSILON = 0.05;
+
+                    function animateTilt() {
+                        raf = 0;
+                        currentRX += (targetRX - currentRX) * .16;
+                        currentRY += (targetRY - currentRY) * .16;
+                        currentMX += (targetMX - currentMX) * .18;
+                        currentMY += (targetMY - currentMY) * .18;
+
                         card.style.setProperty('--rx', currentRX.toFixed(2) + 'deg');
                         card.style.setProperty('--ry', currentRY.toFixed(2) + 'deg');
                         card.style.setProperty('--mx', currentMX.toFixed(2) + 'px');
                         card.style.setProperty('--my', currentMY.toFixed(2) + 'px');
-                        raf = requestAnimationFrame(animateTilt);
-                    };
-                    animateTilt();
+
+                        const stillMoving =
+                            Math.abs(targetRX - currentRX) > EPSILON ||
+                            Math.abs(targetRY - currentRY) > EPSILON ||
+                            Math.abs(targetMX - currentMX) > EPSILON ||
+                            Math.abs(targetMY - currentMY) > EPSILON;
+                        if (stillMoving && !document.hidden && !reduced) {
+                            raf = requestAnimationFrame(animateTilt);
+                        }
+                    }
+
+                    function requestTiltFrame() {
+                        if (!raf && !reduced && !document.hidden) {
+                            raf = requestAnimationFrame(animateTilt);
+                        }
+                    }
+
                     cell.addEventListener('pointerenter', e => {
                         if (e.pointerType !== 'mouse' || reduced) return;
                         card.classList.add('live', 'is-hover');
@@ -2735,29 +2804,39 @@
                             { transform: 'translateZ(75px) rotateY(180deg) scale(1.2)' },
                             { transform: 'translateZ(48px) rotateY(360deg) scale(1)' }
                         ], { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' });
-                        spinning.onfinish = spinning.oncancel = () => { spinning = null };
+                        spinning.onfinish = spinning.oncancel = () => { spinning = null; };
                     });
+
                     cell.addEventListener('pointermove', e => {
                         if (e.pointerType !== 'mouse' || reduced) return;
                         const r = cell.getBoundingClientRect();
-                        const px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
-                        targetRY = px * 28; targetRX = -py * 28;
-                        targetMX = px * 10; targetMY = py * 10;
+                        if (!r.width || !r.height) return;
+                        const px = (e.clientX - r.left) / r.width - .5;
+                        const py = (e.clientY - r.top) / r.height - .5;
+                        targetRY = px * 28;
+                        targetRX = -py * 28;
+                        targetMX = px * 10;
+                        targetMY = py * 10;
                         card.style.setProperty('--gx', ((px + .5) * 100).toFixed(1) + '%');
                         card.style.setProperty('--gy', ((py + .5) * 100).toFixed(1) + '%');
+                        requestTiltFrame();
                     });
+
                     cell.addEventListener('pointerleave', () => {
                         card.classList.remove('live', 'is-hover');
                         targetRX = targetRY = targetMX = targetMY = 0;
-                        card.style.setProperty('--gx', '50%'); card.style.setProperty('--gy', '50%');
+                        card.style.setProperty('--gx', '50%');
+                        card.style.setProperty('--gy', '50%');
+                        requestTiltFrame();
                     });
+
                     cell.addEventListener('click', () => {
                         if (reduced || spinning) return;
                         spinning = logo.animate([
                             { transform: 'translateZ(48px) rotateY(0deg)' },
                             { transform: 'translateZ(70px) rotateY(360deg)' }
                         ], { duration: 800, easing: 'cubic-bezier(.2,.8,.2,1)' });
-                        spinning.onfinish = spinning.oncancel = () => { spinning = null };
+                        spinning.onfinish = spinning.oncancel = () => { spinning = null; };
                     });
                 });
             }
@@ -2872,9 +2951,22 @@
             const rules = {
                 name: v => v.trim().length >= 2,
                 email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+                Password: v => v.length >= 8,
                 subject: v => v.trim().length >= 2,
                 message: v => v.trim().length >= 10
             };
+
+            // Toggle password visibility without submitting the form.
+            const passwordInput = $('#f-Password', form);
+            const passwordToggle = $('.password-toggle', form);
+            passwordToggle.addEventListener('click', () => {
+                const showPassword = passwordInput.type === 'password';
+                passwordInput.type = showPassword ? 'text' : 'password';
+                passwordToggle.textContent = showPassword ? 'Hide' : 'Show';
+                passwordToggle.setAttribute('aria-pressed', String(showPassword));
+                passwordToggle.setAttribute('aria-label', showPassword ? 'Hide password' : 'Show password');
+                passwordInput.focus({ preventScroll: true });
+            });
             function check(input) {
                 const ok = rules[input.name](input.value), f = input.closest('.field');
                 if (ok) f.classList.remove('bad'); else { f.classList.remove('bad'); void f.offsetWidth; f.classList.add('bad'); }
