@@ -8,7 +8,12 @@
     <meta name="theme-color" content="#000000">
     <meta name="description"
         content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
-    <title>Sok Sophea</title>
+    <title>Sok Sophea — Web Developer</title>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Sok Sophea — Web Developer">
+    <meta property="og:description"
+        content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
+    <meta name="twitter:card" content="summary">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2302060b'/%3E%3Crect x='3' y='3' width='58' height='58' rx='12' fill='none' stroke='%2319e0d2' stroke-width='3'/%3E%3Ctext x='32' y='44' font-size='34' font-weight='800' text-anchor='middle' fill='%23ff5a2e' font-family='Arial,sans-serif'%3ES%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -865,7 +870,7 @@
         .projects {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: clamp(34px, 4.5vw, 68px) clamp(20px, 3.6vw, 56px)
+            gap: clamp(42px, 5vw, 76px) clamp(24px, 3vw, 44px)
         }
 
         .project {
@@ -1079,42 +1084,6 @@
             min-height: 140px
         }
 
-        /* Password field + accessible Show/Hide control */
-        .password-input-wrap {
-            position: relative;
-            width: 100%;
-        }
-
-        .field input#f-Password {
-            padding-right: 5rem;
-        }
-
-        .password-toggle {
-            position: absolute;
-            top: 50%;
-            right: .65rem;
-            transform: translateY(-50%);
-            border: 0;
-            border-radius: 4px;
-            padding: .35rem .4rem;
-            min-width: 2.8rem;
-            background: transparent;
-            color: var(--teal);
-            font: 500 .9rem 'Ubuntu', sans-serif;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        .password-toggle:hover {
-            color: #fff;
-            text-shadow: 0 0 8px var(--teal-glow);
-        }
-
-        .password-toggle:focus-visible {
-            outline: 2px solid #fff;
-            outline-offset: 2px;
-        }
-
         .field input::placeholder,
         .field textarea::placeholder {
             color: #c6d1d6;
@@ -1309,7 +1278,7 @@
             padding: clamp(28px, 5vw, 46px) 0 1.2rem
         }
 
-        .foot h4 {
+        .foot h3 {
             font: 700 clamp(1.2rem, 2vw, 1.6rem)/1.2 'Roboto', sans-serif;
             margin-bottom: 1rem;
             color: #fff
@@ -1857,10 +1826,6 @@
             z-index: 3;
         }
 
-        .projects {
-            gap: clamp(42px, 5vw, 76px) clamp(24px, 3vw, 44px);
-        }
-
         .project-premium {
             position: relative;
             min-width: 0;
@@ -2027,6 +1992,7 @@
 
         .project-actions {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             gap: .7rem;
             margin-top: 1rem;
@@ -2051,6 +2017,25 @@
 
         .project-premium .btn-ok:hover {
             box-shadow: 0 12px 28px rgba(31, 157, 85, .30);
+        }
+
+        .project-premium .btn-code {
+            background: transparent;
+            color: var(--teal);
+            box-shadow: inset 0 0 0 1px rgba(127, 243, 234, .45);
+        }
+
+        .project-premium .btn-code:hover {
+            background: rgba(25, 224, 210, .12);
+            transform: translateY(-2px);
+            box-shadow: inset 0 0 0 1px rgba(127, 243, 234, .8), 0 8px 22px rgba(25, 224, 210, .18);
+        }
+
+        .project-visual-link {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         /* Keep decorative technology orbs away from content on mobile. */
@@ -2196,17 +2181,6 @@
                             <p class="err">Enter a valid email address, like name@example.com.</p>
                         </div>
                         <div class="field rv" style="--d:.21s">
-                            <label class="sr" for="f-Password">Password</label>
-                            <div class="password-input-wrap">
-                                <input id="f-Password" name="Password" type="password" placeholder="Password"
-                                    autocomplete="new-password" aria-describedby="password-error">
-                                <button class="password-toggle" type="button" aria-controls="f-Password"
-                                    aria-label="Show password" aria-pressed="false">Show</button>
-                            </div>
-                            <p class="err" id="password-error">Password must be at least 8 characters.</p>
-                        </div>
-
-                        <div class="field rv" style="--d:.21s">
                             <label class="sr" for="f-subject">Subject</label>
                             <input id="f-subject" name="subject" type="text" placeholder="Subject" autocomplete="off">
                             <p class="err">Add a short subject.</p>
@@ -2258,10 +2232,10 @@
         <div class="foot">
 
             <div>
-                <h4 data-bind="name">Sok Sophea</h4>
+                <h3 data-bind="name">Sok Sophea</h3>
             </div>
             <nav aria-label="Footer">
-                <h4>Pages</h4>
+                <h3>Pages</h3>
                 <ul>
                     <li><a href="#/home">Home</a></li>
                     <li><a href="#/about">About</a></li>
@@ -2270,7 +2244,7 @@
                 </ul>
             </nav>
             <div>
-                <h4>Service</h4>
+                <h3>Services</h3>
                 <ul>
                     <li>Web Development</li>
                     <li>Frontend Development</li>
@@ -2278,7 +2252,7 @@
                 </ul>
             </div>
             <div>
-                <h4>Contact</h4>
+                <h3>Contact</h3>
                 <ul class="contact">
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                             stroke-linejoin="round" aria-hidden="true">
@@ -2338,13 +2312,14 @@
                     { label: 'High School' },
                     { label: 'University' }
                 ],
+                /* url = live demo link, repo = source code link (e.g. GitHub). Fill in either or both. */
                 projects: [
-                    { title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', url: '', description: 'Admin dashboard for managing products, inventory, and business data.' },
-                    { title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', url: '', description: 'Travel-focused web application with structured content and backend data management.' },
-                    { title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', url: 'https://phoneshop-deploy.vercel.app/', description: 'Responsive phone-store interface designed for a clean and modern shopping experience.' },
-                    { title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', url: '', description: 'Motorbike showroom concept with product presentation and database-driven content.' },
-                    { title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', url: '', description: 'Interactive developer portfolio focused on modern UI, responsive layouts, and motion.' },
-                    { title: 'Health News', stack: 'React JS + API', screen: 'blog', url: '', description: 'News-style interface consuming API data with a clear, responsive reading experience.' }
+                    { title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', url: '', repo: '', description: 'Admin dashboard for managing products, inventory, and business data.' },
+                    { title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', url: '', repo: '', description: 'Travel-focused web application with structured content and backend data management.' },
+                    { title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', url: 'https://phoneshop-deploy.vercel.app/', repo: '', description: 'Responsive phone-store interface designed for a clean and modern shopping experience.' },
+                    { title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', url: '', repo: '', description: 'Motorbike showroom concept with product presentation and database-driven content.' },
+                    { title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', url: '', repo: '', description: 'Interactive developer portfolio focused on modern UI, responsive layouts, and motion.' },
+                    { title: 'Health News', stack: 'React JS + API', screen: 'blog', url: '', repo: '', description: 'News-style interface consuming API data with a clear, responsive reading experience.' }
                 ]
             };
 
@@ -2437,6 +2412,15 @@
   ${eduHTML()}
   ${skillsHTML()}`;
             $$('[data-slot="intro"]').forEach(el => el.innerHTML = introHTML());
+            /* if the portrait file is missing, show the initials instead of a broken image */
+            const initials = CONFIG.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+            $$('.photo img').forEach(img => img.addEventListener('error', () => {
+                const f = document.createElement('span');
+                f.textContent = initials;
+                f.setAttribute('aria-hidden', 'true');
+                f.style.cssText = 'display:grid;place-items:center;width:100%;height:100%;font:800 clamp(2.4rem,8vw,4rem)/1 Arial,sans-serif;color:#fff';
+                img.replaceWith(f);
+            }, { once: true }));
 
             /* neon titles: split into words/letters so each letter can ignite and ripple */
             function buildTitle(el, text) {
@@ -2542,27 +2526,30 @@
             };
 
             const projectsEl = $('#projects');
+            const projectLink = p => p.url || p.repo || '';
             projectsEl.innerHTML = CONFIG.projects.map((p, i) => `
   <article class="project project-premium rv" data-tilt-host>
     <div class="project-visual">
+      ${projectLink(p) ? `<a class="project-visual-link" href="${esc(projectLink(p))}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">` : ''}
       <div class="laptop"><div class="laptop-in">
         <div class="lid"><div class="screen" role="img" aria-label="Preview of ${esc(p.title)}">
           <div class="bar"><i></i><i></i><i></i><span></span></div>
           <div class="view">${SCREENS[p.screen]()}</div>
           <span class="chip">${esc(p.stack)}</span>
-          <div class="preview-action" aria-hidden="true">View project ↗</div>
+          ${projectLink(p) ? `<div class="preview-action" aria-hidden="true">${p.url ? 'View project' : 'View code'} ↗</div>` : ''}
         </div></div>
         <div class="base"></div>
       </div></div>
+      ${projectLink(p) ? '</a>' : ''}
     </div>
     <div class="project-copy">
       <div class="project-heading">
         <div>
-          <p class="project-index">0${i + 1} / PROJECT</p>
+          <p class="project-index">${String(i + 1).padStart(2, '0')} / PROJECT</p>
           <h3>${esc(p.title)}</h3>
         </div>
         <span class="project-status ${p.url ? 'is-live' : ''}">
-          <span></span>${p.url ? 'Live' : 'Concept'}
+          <span></span>${p.url ? 'Live' : p.repo ? 'Code' : 'Concept'}
         </span>
       </div>
       <p class="project-description">${esc(p.description || 'Web application project built with modern development tools.')}</p>
@@ -2570,12 +2557,15 @@
         ${esc(p.stack).split('+').map(tag => `<span>${esc(tag.trim())}</span>`).join('')}
       </div>
       <div class="project-actions">
-        ${p.url
-                    ? `<a class="btn btn-ok project-btn" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">
+        ${p.url ? `<a class="btn btn-ok project-btn" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">
                 <span>Live Demo</span><span aria-hidden="true">↗</span>
                 <span class="sr"> of ${esc(p.title)} (opens in a new tab)</span>
-             </a>`
-                    : `<span class="btn btn-off project-btn" aria-disabled="true"><span>Demo Coming Soon</span></span>`}
+             </a>` : ''}
+        ${p.repo ? `<a class="btn btn-code project-btn" href="${esc(p.repo)}" target="_blank" rel="noopener noreferrer">
+                <span>View Code</span><span aria-hidden="true">↗</span>
+                <span class="sr"> of ${esc(p.title)} (opens in a new tab)</span>
+             </a>` : ''}
+        ${!p.url && !p.repo ? `<span class="btn btn-off project-btn" aria-disabled="true"><span>Demo Coming Soon</span></span>` : ''}
       </div>
     </div>
   </article>`).join('');
@@ -2661,7 +2651,7 @@
                 return true;
             }
 
-            function orbCount() { return ICONS.length; }
+            function orbCount() { return W < 700 ? 8 : W < 1100 ? 14 : ICONS.length; }
             function makeOrbs() {
                 const layer = $('#orbs'); layer.innerHTML = ''; orbs.length = 0;
                 const pool = ICONS.slice().sort(() => Math.random() - .5).slice(0, orbCount());
@@ -2859,9 +2849,10 @@
             function armReveal(page) {
                 const grid = $('.projects', page);
                 const cols = grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 1;
-                $$('.rv', page).forEach((el, i) => {
+                let pi = 0;
+                $$('.rv', page).forEach(el => {
                     el.classList.remove('in');
-                    if (el.classList.contains('project')) el.style.setProperty('--d', ((i % cols) * .14).toFixed(2) + 's');
+                    if (el.classList.contains('project')) el.style.setProperty('--d', ((pi++ % cols) * .14).toFixed(2) + 's');
                     if (el.classList.contains('hello') && el.parentElement) { proxyOf.set(el.parentElement, el); io.observe(el.parentElement); return; }
                     io.observe(el);
                 });
@@ -2897,7 +2888,7 @@
                 const anchor = SECTION_IDS.includes(key) ? key : null;
                 const focusTarget = () => anchor ? $(`#${anchor} .neon`) : $('.neon', pages[route]);
                 const settle = () => {
-                    document.title = CONFIG.name;
+                    document.title = (key === 'home' ? '' : LABELS[key] + ' | ') + CONFIG.name + ' — ' + CONFIG.role;
                     highlightNav(key);
                 };
 
@@ -2924,7 +2915,7 @@
                 if (prev && !reduced) { prev.classList.add('leaving'); pending = { fn: enter, t: setTimeout(enter, 320) }; }
                 else enter();
             }
-            addEventListener('hashchange', () => show(hashKey()));
+            addEventListener('hashchange', () => { if (location.hash === '#main') return; show(hashKey()); });
             show(hashKey(), true);
 
             /* neon titles flicker now and then, like a tired sign */
@@ -2951,22 +2942,10 @@
             const rules = {
                 name: v => v.trim().length >= 2,
                 email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
-                Password: v => v.length >= 8,
                 subject: v => v.trim().length >= 2,
                 message: v => v.trim().length >= 10
             };
 
-            // Toggle password visibility without submitting the form.
-            const passwordInput = $('#f-Password', form);
-            const passwordToggle = $('.password-toggle', form);
-            passwordToggle.addEventListener('click', () => {
-                const showPassword = passwordInput.type === 'password';
-                passwordInput.type = showPassword ? 'text' : 'password';
-                passwordToggle.textContent = showPassword ? 'Hide' : 'Show';
-                passwordToggle.setAttribute('aria-pressed', String(showPassword));
-                passwordToggle.setAttribute('aria-label', showPassword ? 'Hide password' : 'Show password');
-                passwordInput.focus({ preventScroll: true });
-            });
             function check(input) {
                 const ok = rules[input.name](input.value), f = input.closest('.field');
                 if (ok) f.classList.remove('bad'); else { f.classList.remove('bad'); void f.offsetWidth; f.classList.add('bad'); }
@@ -2987,13 +2966,13 @@
                         const res = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
                         if (!res.ok) throw new Error('bad status');
                         statusEl.textContent = `Thanks, ${data.name.trim()}. Your message was sent.`;
+                        form.reset();
                     } else {
                         const a = document.createElement('a');
                         a.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.message + '\n\n' + data.name + ' (' + data.email + ')')}`;
                         a.click();
                         statusEl.textContent = `Thanks, ${data.name.trim()}. Your email app should open with the message ready. If it doesn’t, write to ${CONFIG.email}.`;
                     }
-                    form.reset();
                 } catch (err) {
                     statusEl.classList.add('bad'); statusEl.textContent = `The message didn’t send. Try again, or write to ${CONFIG.email}.`;
                 } finally {
