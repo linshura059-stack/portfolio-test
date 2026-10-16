@@ -190,10 +190,11 @@
         #orbs {
             position: fixed;
             inset: 0;
-            z-index: 2;
+            z-index: 8;
             pointer-events: none;
             overflow: hidden;
-            opacity: 0;
+            opacity: .98;
+            isolation: isolate;
         }
 
         .orb {
@@ -203,17 +204,20 @@
             width: var(--sz);
             height: var(--sz);
             border-radius: 50%;
-            background: var(--bg-c, #04090d);
+            background: var(--bg-c, #07131b);
             display: grid;
             place-items: center;
             will-change: transform;
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, .65), 0 0 9px 1px var(--glow), 0 0 22px 3px rgba(31, 224, 210, .22)
+            border: 1px solid rgba(255, 255, 255, .42);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, .78), 0 0 12px 2px var(--glow), 0 0 28px 5px color-mix(in srgb, var(--glow) 42%, transparent)
         }
 
         .orb svg {
-            width: 58%;
-            height: 58%;
-            display: block
+            width: 72%;
+            height: 72%;
+            display: block;
+            overflow: visible;
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, .35))
         }
 
         /* 
@@ -1804,11 +1808,11 @@
 
         @media (max-width: 640px) {
             #orbs {
-                opacity: .78;
+                opacity: .96;
             }
 
             .orb {
-                transform: scale(.78);
+                transform: scale(.9);
             }
         }
 
@@ -2651,16 +2655,16 @@
                 return true;
             }
 
-            function orbCount() { return W < 700 ? 8 : W < 1100 ? 14 : ICONS.length; }
+            function orbCount() { return ICONS.length; }
             function makeOrbs() {
                 const layer = $('#orbs'); layer.innerHTML = ''; orbs.length = 0;
                 const pool = ICONS.slice().sort(() => Math.random() - .5).slice(0, orbCount());
                 pool.forEach(ic => {
-                    const d = .6 + Math.random() * .6, size = Math.round(30 + d * 22);
+                    const d = .8 + Math.random() * .2, size = Math.round(42 + d * 18);
                     const el = document.createElement('div');
                     el.className = 'orb';
                     el.style.cssText = `--sz:${size}px;--bg-c:${ic.bg || '#04090d'};--glow:${ic.glow || '#1fe0d2'};opacity:${(.4 + .6 * (d - .6) / .6).toFixed(2)}`;
-                    if (d < .74) el.style.filter = 'blur(1.2px)';
+                    el.style.filter = 'none';
                     el.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ic.svg}</svg>`;
                     layer.appendChild(el);
                     const base = (10 + Math.random() * 18) * (.5 + d), ang = Math.random() * Math.PI * 2;
