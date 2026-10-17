@@ -5,14 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="color-scheme" content="dark">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="theme-color" content="#000000">
     <meta name="description"
-        content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
-    <title>Sok Sophea — Web Developer</title>
+        content="Personal portfolio of Sok Sophea showcasing projects, skills, education, and contact information.">
+    <title>Sok Sophea</title>
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Sok Sophea — Web Developer">
+    <meta property="og:title" content="Sok Sophea">
     <meta property="og:description"
-        content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
+        content="Personal portfolio of Sok Sophea showcasing projects, skills, education, and contact information.">
     <meta name="twitter:card" content="summary">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2302060b'/%3E%3Crect x='3' y='3' width='58' height='58' rx='12' fill='none' stroke='%2319e0d2' stroke-width='3'/%3E%3Ctext x='32' y='44' font-size='34' font-weight='800' text-anchor='middle' fill='%23ff5a2e' font-family='Arial,sans-serif'%3ES%3C/text%3E%3C/svg%3E">
@@ -2176,27 +2177,30 @@
                     <form class="form" id="form" novalidate>
                         <div class="field rv" style="--d:.05s">
                             <label class="sr" for="f-name">Your Name</label>
-                            <input id="f-name" name="name" type="text" placeholder="Your Name" autocomplete="name">
-                            <p class="err">Enter your name.</p>
+                            <input id="f-name" name="name" type="text" placeholder="Your Name" autocomplete="name"
+                                aria-describedby="err-name" required maxlength="100">
+                            <p class="err" id="err-name">Enter at least 2 characters for your name.</p>
                         </div>
                         <div class="field rv" style="--d:.13s">
                             <label class="sr" for="f-email">Your Email</label>
-                            <input id="f-email" name="email" type="email" placeholder="Your Email" autocomplete="email">
-                            <p class="err">Enter a valid email address, like name@example.com.</p>
+                            <input id="f-email" name="email" type="email" placeholder="Your Email" autocomplete="email"
+                                aria-describedby="err-email" required maxlength="254">
+                            <p class="err" id="err-email">Enter a valid email address, like name@example.com.</p>
                         </div>
                         <div class="field rv" style="--d:.21s">
                             <label class="sr" for="f-subject">Subject</label>
-                            <input id="f-subject" name="subject" type="text" placeholder="Subject" autocomplete="off">
-                            <p class="err">Add a short subject.</p>
+                            <input id="f-subject" name="subject" type="text" placeholder="Subject" autocomplete="off"
+                                aria-describedby="err-subject" required maxlength="160">
+                            <p class="err" id="err-subject">Add a subject with at least 2 characters.</p>
                         </div>
 
 
 
                         <div class="field rv" style="--d:.29s">
                             <label class="sr" for="f-message">Your message</label>
-                            <textarea id="f-message" name="message" placeholder="Write your message here"
-                                rows="5"></textarea>
-                            <p class="err">Write at least 10 characters.</p>
+                            <textarea id="f-message" name="message" placeholder="Write your message here" rows="5"
+                                aria-describedby="err-message" required maxlength="5000"></textarea>
+                            <p class="err" id="err-message">Write at least 10 characters.</p>
                         </div>
                         <button class="send rv" style="--d:.37s" type="submit"><span class="send-label">Send
                                 Message</span></button>
@@ -2288,8 +2292,9 @@
     </footer>
 
     <noscript>
-        <p style="position:relative;z-index:60;padding:1rem;text-align:center">This site needs JavaScript to show its
-            pages.</p>
+        <p style="position:relative;z-index:60;padding:1rem;text-align:center;background:#071017;color:#f4f7fa">This
+            interactive portfolio needs JavaScript enabled to display its projects and navigation. You can contact Sok
+            Sophea at <a href="mailto:sophea044056@gmail.com">sophea044056@gmail.com</a>.</p>
     </noscript>
 
     <script>
@@ -2298,7 +2303,6 @@
             /* CONFIG: edit this block to make the site yours */
             const CONFIG = {
                 name: 'Sok Sophea',
-                role: 'Web Developer',
                 email: 'sophea044056@gmail.com',
                 phone: '0969185182',
                 linkedinLabel: 'Sok Sophea', linkedinUrl: 'https://www.linkedin.com/',
@@ -2442,7 +2446,7 @@
                     if (wi < words.length - 1) el.appendChild(document.createTextNode(' '));
                 });
             }
-            $$('.neon').forEach(h => buildTitle(h, h.dataset.title || `I’m ${CONFIG.name} ${CONFIG.role}`));
+            $$('.neon').forEach(h => buildTitle(h, h.dataset.title || `I’m ${CONFIG.name}`));
 
             /* Tech icons (simple original glyphs, drawn inline so nothing is fetched) */
             const ICONS = [
@@ -2517,7 +2521,7 @@
                 },
                 folio: () => wrap(
                     R(0, 0, 320, 24, '#1b1f26', 0) + T(12, 16, 9, '#fff', 'SOK SOPHEA') + [0, 1, 2, 3].map(i => R(190 + i * 32, 10, 22, 4, '#8b95a5', 2)).join('') +
-                    T(160, 66, 12, '#fff', 'I’M SOK SOPHEA WEB DEVELOPER', 700, 'middle') +
+                    T(160, 66, 12, '#fff', 'I’M SOK SOPHEA', 700, 'middle') +
                     C(70, 124, 34, '#3ba0f5') + C(70, 114, 11, '#d9a072') + '<path d="M46 154q24-26 48 0z" fill="#141a29"/>' +
                     T(126, 108, 11, '#fff', 'HELLO!', 700) + LN(126, 120, 170, 6, '#8b95a5', 10, 4) +
                     R(0, 196, 320, 204, '#0f1216', 0) + [0, 1, 2].map(i => R(16 + i * 102, 214, 90, 64, '#1d2430', 5) + R(24 + i * 102, 224, 50, 5, '#3ba0f5', 2) + LN(24 + i * 102, 238, 72, 3, '#44506a', 9, 3)).join('') +
@@ -2842,15 +2846,16 @@
             /* The hero heading starts fully clipped (clip-path), and a fully clipped element never counts as
                "intersecting". So it is revealed through a proxy: its visible parent is observed instead. */
             const proxyOf = new Map();   // observed parent -> clipped heading
-            const io = new IntersectionObserver(entries => entries.forEach(e => {
+            const io = ('IntersectionObserver' in window) ? new IntersectionObserver(entries => entries.forEach(e => {
                 if (!e.isIntersecting) return;
                 const t = proxyOf.get(e.target) || e.target;
                 t.classList.add('in');
                 proxyOf.delete(e.target);
                 io.unobserve(e.target);
-            }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+            }), { threshold: .12, rootMargin: '0px 0px -6% 0px' }) : null;
 
             function armReveal(page) {
+                if (!io) { $$('.rv', page).forEach(el => el.classList.add('in')); return; }
                 const grid = $('.projects', page);
                 const cols = grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 1;
                 let pi = 0;
@@ -2892,7 +2897,7 @@
                 const anchor = SECTION_IDS.includes(key) ? key : null;
                 const focusTarget = () => anchor ? $(`#${anchor} .neon`) : $('.neon', pages[route]);
                 const settle = () => {
-                    document.title = (key === 'home' ? '' : LABELS[key] + ' | ') + CONFIG.name + ' — ' + CONFIG.role;
+                    document.title = (key === 'home' ? '' : LABELS[key] + ' | ') + CONFIG.name;
                     highlightNav(key);
                 };
 
@@ -2964,7 +2969,7 @@
                 const fields = $$('input,textarea', form), results = fields.map(check);
                 if (results.includes(false)) { fields[results.indexOf(false)].focus(); statusEl.classList.add('bad'); statusEl.textContent = 'Fix the highlighted fields and send again.'; return; }
                 const data = Object.fromEntries(new FormData(form));
-                sendBtn.classList.add('busy'); $('.send-label', sendBtn).textContent = 'Sending';
+                sendBtn.classList.add('busy'); sendBtn.disabled = true; $('.send-label', sendBtn).textContent = 'Sending';
                 try {
                     if (CONFIG.formEndpoint) {
                         const res = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
@@ -2975,12 +2980,12 @@
                         const a = document.createElement('a');
                         a.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.message + '\n\n' + data.name + ' (' + data.email + ')')}`;
                         a.click();
-                        statusEl.textContent = `Thanks, ${data.name.trim()}. Your email app should open with the message ready. If it doesn’t, write to ${CONFIG.email}.`;
+                        statusEl.textContent = `Your email app should open with the message ready. Please send it there; if it doesn’t open, email ${CONFIG.email} directly.`;
                     }
                 } catch (err) {
                     statusEl.classList.add('bad'); statusEl.textContent = `The message didn’t send. Try again, or write to ${CONFIG.email}.`;
                 } finally {
-                    sendBtn.classList.remove('busy'); $('.send-label', sendBtn).textContent = 'Send Message';
+                    sendBtn.classList.remove('busy'); sendBtn.disabled = false; $('.send-label', sendBtn).textContent = 'Send Message';
                 }
             });
         })();
