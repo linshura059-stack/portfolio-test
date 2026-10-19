@@ -2199,7 +2199,8 @@
                 0 28px 80px rgba(0, 0, 0, .38),
                 0 0 38px rgba(var(--pc), .24),
                 inset 0 2px 0 rgba(var(--pc), 1),
-                inset 0 1px 0 rgba(255, 255, 255, .05)
+                inset 0 1px 0 rgba(255, 255, 255, .05),
+                var(--nb-glow)
         }
 
         .projects .project:hover .laptop-in,
@@ -2236,6 +2237,7 @@
             .project-premium::after {
                 display: none
             }
+
         }
 
         /* =========================================================
@@ -2274,7 +2276,8 @@
                 0 26px 46px rgba(0, 0, 0, .65),
                 0 0 24px color-mix(in srgb, var(--c, #19e0d2) 85%, transparent),
                 0 0 64px color-mix(in srgb, var(--c, #19e0d2) 38%, transparent),
-                inset 0 0 24px color-mix(in srgb, var(--c, #19e0d2) 22%, transparent);
+                inset 0 0 24px color-mix(in srgb, var(--c, #19e0d2) 22%, transparent),
+                var(--nb-glow);
         }
 
         /* soft colour halo that breathes behind the icon */
@@ -2610,6 +2613,106 @@
             }
         }
 
+        /* =========================================================
+           NEON TRAVELLING BORDER (hover / keyboard focus)
+           One shared component: <span class="nb"><i></i></span> placed inside a card.
+           Used by: project cards, skill cards and the contact map.
+           - The ring is a conic-gradient "comet" (cyan > blue > purple > pink) on an
+             oversized square that only ROTATES, which is compositor-friendly.
+           - A mask cuts it down to a thin ring, so it follows the rounded corners and the
+             3D tilt exactly. It sits inside the border box: no layout shift, no size change.
+           - pointer-events:none and a z-index below the icons/text/buttons, so it never
+             covers or blocks content.
+           - The outer glow is --nb-glow, appended to each card's existing hover shadow.
+           ========================================================= */
+        :root {
+            --nb-w: 2px;
+            --nb-speed: 3.2s;
+            --nb-glow: 0 0 22px rgba(25, 224, 210, .22), 0 0 46px rgba(162, 77, 255, .22);
+            --nb-grad: conic-gradient(transparent 0 30%,
+                    #19e0d2 46%,
+                    #2a7bff 62%,
+                    #a24dff 80%,
+                    #ff3ea5 95%,
+                    #ffe3f4 100%);
+        }
+
+        .nb {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            border-radius: inherit;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .45s var(--glide, ease);
+            /* soft neon bloom on the inside edge (the card clips anything outside) */
+            filter: drop-shadow(0 0 5px rgba(162, 77, 255, .6)) drop-shadow(0 0 10px rgba(25, 224, 210, .28))
+        }
+
+        .nb i {
+            position: absolute;
+            inset: 0;
+            padding: var(--nb-w);
+            border-radius: inherit;
+            /* faint always-visible rail while hovering, so the comet has a track to run on */
+            background: rgba(127, 243, 234, .14);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)
+        }
+
+        .nb i::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 240%;
+            aspect-ratio: 1;
+            translate: -50% -50%;
+            background: var(--nb-grad);
+            animation: nbRun var(--nb-speed) linear infinite;
+            animation-play-state: paused
+        }
+
+        @keyframes nbRun {
+            to {
+                rotate: 360deg
+            }
+        }
+
+        /* reveal + run on hover or keyboard focus; it pauses (not resets) when the pointer leaves */
+        :is(.project-premium, .skill, .map):is(:hover, :focus-within, .is-hover)>.nb {
+            opacity: 1
+        }
+
+        :is(.project-premium, .skill, .map):is(:hover, :focus-within, .is-hover)>.nb i::before {
+            animation-play-state: running
+        }
+
+        /* the map had no hover shadow of its own: reuse its resting shadow plus the glow */
+        .map {
+            transition: box-shadow .45s var(--glide, ease)
+        }
+
+        .map:is(:hover, :focus-within) {
+            box-shadow: 0 22px 70px rgba(0, 0, 0, .34), 0 0 35px rgba(25, 224, 210, .07), var(--nb-glow)
+        }
+
+        /* the .nb sits one level under the card; keep the skill's inner 3D layers above it */
+        .skill>.nb {
+            z-index: 3
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            /* no travelling light: show a calm, static gradient ring instead */
+            .nb i::before {
+                animation: none;
+                rotate: 0deg;
+                background: conic-gradient(#19e0d2, #2a7bff, #a24dff, #ff3ea5, #19e0d2)
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
 
             .skill-cell.in .skill svg,
@@ -2716,6 +2819,7 @@
                         <p class="status" id="status" role="status" aria-live="polite"></p>
                     </form>
                     <div class="map rv" style="--d:.15s" id="map">
+                        <span class="nb" aria-hidden="true"><i></i></span>
                         <iframe id="map-frame"
                             title="Google Map showing National Technical Training Institute (NTTI), Phnom Penh, Cambodia"
                             src="https://www.google.com/maps?q=National+Technical+Training+Institute+NTTI+Phnom+Penh+Cambodia&hl=en&z=16&output=embed"
@@ -2901,6 +3005,7 @@
       ${SKILLS.map((s, i) => `
         <div class="skill-cell rv" style="--d:${(i * .07).toFixed(2)}s;--i:${i};--c:${s.c}">
           <div class="skill">
+            <span class="nb" aria-hidden="true"><i></i></span>
             <div class="skill-orbit"></div>
             <div class="particle-field">
               ${Array.from({ length: 9 }, (_, p) => `
@@ -3053,6 +3158,7 @@
             const projectLink = p => p.url || p.repo || '';
             projectsEl.innerHTML = CONFIG.projects.map((p, i) => `
   <article class="project project-premium rv" data-tilt-host style="--pc:${p.rgb || '25,224,210'}">
+    <span class="nb" aria-hidden="true"><i></i></span>
     <div class="project-visual">
       ${projectLink(p) ? `<a class="project-visual-link" href="${esc(projectLink(p))}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">` : ''}
       <div class="laptop"><div class="laptop-in">
