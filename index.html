@@ -1776,6 +1776,7 @@
             color: #eaffff;
             box-shadow: 0 10px 28px rgba(0, 0, 0, .25);
             backdrop-filter: blur(8px);
+            transition: transform .3s var(--ease), background .3s, border-color .3s;
         }
 
         .map .open:hover {
@@ -2118,6 +2119,122 @@
             .project-premium,
             .project-premium .preview-action {
                 transition: none;
+            }
+        }
+
+        /* ---------- Portfolio: 3D card tilt, lift and moving glare ----------
+           Uses the independent `rotate` / `translate` properties so it never fights
+           the scroll-reveal `transform`. The grid supplies the perspective. */
+        .projects {
+            perspective: 1400px;
+            perspective-origin: 50% 30%
+        }
+
+        .projects .project-premium {
+            --mx: 50%;
+            --my: 0%;
+            --gl: 0;
+            will-change: rotate, translate
+        }
+
+        .projects .project-premium.rv.in {
+            transition:
+                opacity .85s var(--ease) var(--d, 0s),
+                transform .95s var(--ease) var(--d, 0s),
+                rotate .22s ease-out,
+                translate .45s var(--ease),
+                border-color .45s ease,
+                box-shadow .45s ease,
+                background .45s ease
+        }
+
+        .projects .project-premium.rv.in:hover,
+        .projects .project-premium.rv.in:focus-within {
+            translate: 0 -10px;
+            --gl: 1
+        }
+
+        .project-premium::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            border-radius: inherit;
+            background: radial-gradient(360px circle at var(--mx) var(--my), rgba(150, 255, 245, .16), transparent 62%);
+            opacity: var(--gl);
+            transition: opacity .35s ease
+        }
+
+        .project-premium .project-copy {
+            transition: translate .45s var(--ease)
+        }
+
+        .project-premium:hover .project-copy {
+            translate: 0 -3px
+        }
+
+        /* ---------- Portfolio: every card glows in its own colour (--pc = r,g,b) ---------- */
+        .projects .project-premium {
+            --pc: 25, 224, 210;
+            border-color: rgba(var(--pc), .22);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, .26),
+                inset 0 2px 0 rgba(var(--pc), .75),
+                inset 0 1px 0 rgba(255, 255, 255, .035)
+        }
+
+        .projects .project-premium::before {
+            background: radial-gradient(420px 180px at 50% 0%, rgba(var(--pc), .16), transparent 65%)
+        }
+
+        .projects .project-premium::after {
+            background: radial-gradient(360px circle at var(--mx) var(--my), rgba(var(--pc), .22), transparent 62%)
+        }
+
+        .projects .project-premium:hover,
+        .projects .project-premium:focus-within {
+            border-color: rgba(var(--pc), .6);
+            box-shadow:
+                0 28px 80px rgba(0, 0, 0, .38),
+                0 0 38px rgba(var(--pc), .24),
+                inset 0 2px 0 rgba(var(--pc), 1),
+                inset 0 1px 0 rgba(255, 255, 255, .05)
+        }
+
+        .projects .project:hover .laptop-in,
+        .projects .project:focus-within .laptop-in {
+            filter: drop-shadow(0 12px 26px rgba(var(--pc), .45))
+        }
+
+        .projects .project-index {
+            color: rgb(var(--pc))
+        }
+
+        .projects .project-tags span {
+            border-color: rgba(var(--pc), .35);
+            background: rgba(var(--pc), .10);
+            color: rgb(var(--pc))
+        }
+
+        .projects .project-premium .btn-code {
+            color: rgb(var(--pc));
+            box-shadow: inset 0 0 0 1px rgba(var(--pc), .55)
+        }
+
+        .projects .project-premium .btn-code:hover {
+            background: rgba(var(--pc), .14);
+            box-shadow: inset 0 0 0 1px rgba(var(--pc), .9), 0 8px 22px rgba(var(--pc), .25)
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .projects .project-premium {
+                rotate: none !important;
+                translate: none !important
+            }
+
+            .project-premium::after {
+                display: none
             }
         }
 
@@ -2605,8 +2722,9 @@
                             width="100%" height="100%" style="border:0" loading="lazy" allowfullscreen
                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                         <a class="open" id="maps-link"
-                            href="https://www.google.com/maps/search/?api=1&query=National+Technical+Training+Institute+(NTTI),+Phnom+Penh,+Cambodia"
-                            target="_blank" rel="noopener noreferrer">Open in Maps
+                            href="https://www.google.com/maps/search/?api=1&query=National%20Technical%20Training%20Institute%20%28NTTI%29%2C%20Phnom%20Penh%2C%20Cambodia"
+                            target="_blank" rel="noopener noreferrer">Open in Maps<span class="sr"> (opens in a new
+                                tab)</span>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
@@ -2701,7 +2819,7 @@
                 linkedinLabel: 'Sok Sophea', linkedinUrl: 'https://www.linkedin.com/',
                 githubUrl: 'https://github.com/',
                 location: 'National Technical Training Institute (NTTI), Phnom Penh, Cambodia',
-                mapsUrl: 'https://www.google.com/maps/search/?api=1&query=National+Technical+Training+Institute+(NTTI),+Phnom+Penh,+Cambodia',
+                mapsUrl: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('National Technical Training Institute (NTTI), Phnom Penh, Cambodia').replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase()),
                 formEndpoint: '',
                 intro: 'I am an Information Technology student at the National Technical Training Institute (NTTI), currently in the first semester of my second year pursuing an Associate Degree in Information Technology.',
                 journey: 'My journey in technology has evolved from simple curiosity into a passion for creating clean, beautiful, and functional applications using modern web technologies.',
@@ -2715,12 +2833,12 @@
                 ],
                 /* url = live demo link, repo = source code link (e.g. GitHub). Fill in either or both. */
                 projects: [
-                    { title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', url: '', repo: '', description: 'Admin dashboard for managing products, inventory, and business data.' },
-                    { title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', url: '', repo: '', description: 'Travel-focused web application with structured content and backend data management.' },
-                    { title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', url: 'https://phoneshop-deploy.vercel.app/', repo: '', description: 'Responsive phone-store interface designed for a clean and modern shopping experience.' },
-                    { title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', url: '', repo: '', description: 'Motorbike showroom concept with product presentation and database-driven content.' },
-                    { title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', url: '', repo: '', description: 'Interactive developer portfolio focused on modern UI, responsive layouts, and motion.' },
-                    { title: 'Health News', stack: 'React JS + API', screen: 'blog', url: '', repo: '', description: 'News-style interface consuming API data with a clear, responsive reading experience.' }
+                    { title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', rgb: '25,224,210', url: '', repo: '', description: 'Admin dashboard for managing products, inventory, and business data.' },
+                    { title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', rgb: '255,159,64', url: '', repo: '', description: 'Travel-focused web application with structured content and backend data management.' },
+                    { title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', rgb: '180,138,255', url: 'https://phoneshop-deploy.vercel.app/', repo: '', description: 'Responsive phone-store interface designed for a clean and modern shopping experience.' },
+                    { title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', rgb: '255,82,82', url: '', repo: '', description: 'Motorbike showroom concept with product presentation and database-driven content.' },
+                    { title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', rgb: '255,214,51', url: '', repo: '', description: 'Interactive developer portfolio focused on modern UI, responsive layouts, and motion.' },
+                    { title: 'Health News', stack: 'React JS + API', screen: 'blog', rgb: '61,220,132', url: '', repo: '', description: 'News-style interface consuming API data with a clear, responsive reading experience.' }
                 ]
             };
 
@@ -2772,6 +2890,7 @@
                 { n: 'Laravel', c: '#ff3b30', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6a4d"/><stop offset="1" stop-color="#ff1f3d"/></linearGradient></defs><path d="M12 3l7 4v6l-7 4-7-4V7z" fill="#ff3b30" fill-opacity=".22" stroke="url(#@)" stroke-width="1.9" stroke-linejoin="round"/><path d="M5 7l7 4 7-4M12 11v6" fill="none" stroke="url(#@)" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/>' },
                 { n: 'MySQL', c: '#22b8ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5de0ff"/><stop offset="1" stop-color="#1c7ed6"/></linearGradient></defs><ellipse cx="12" cy="6" rx="8" ry="3" fill="#22b8ff" fill-opacity=".3"/><g fill="none" stroke="url(#@)" stroke-width="1.9" stroke-linecap="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>' },
                 { n: 'GitHub', c: '#b48aff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9a6ff"/></linearGradient></defs><path fill="url(#@)" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.500 11.500 0 0 1 6 0C17.300 4.700 18.300 5 18.300 5c.7 1.700.2 2.900.1 3.200.8.800 1.200 1.900 1.200 3.200 0 4.600-2.800 5.600-5.500 5.900.4.400.8 1.100.8 2.200v3.300c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
+                { n: 'GitLab', c: '#fc6d26', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9a4d"/><stop offset="1" stop-color="#e24329"/></linearGradient></defs><path fill="url(#@)" d="m23.6004 9.5927-.0337-.0862L20.3.9814a.851.851 0 0 0-.3362-.405.8748.8748 0 0 0-.9997.0539.8748.8748 0 0 0-.29.4399l-2.2055 6.748H7.5375l-2.2057-6.748a.8573.8573 0 0 0-.29-.4412.8748.8748 0 0 0-.9997-.0537.8585.8585 0 0 0-.3362.4049L.4332 9.5015l-.0325.0862a6.0657 6.0657 0 0 0 2.0119 7.0105l.0113.0087.03.0213 4.976 3.7264 2.462 1.8633 1.4995 1.1321a1.0085 1.0085 0 0 0 1.2197 0l1.4995-1.1321 2.4619-1.8633 5.006-3.7489.0125-.01a6.0682 6.0682 0 0 0 2.0094-7.003z"/>' },
                 { n: 'Vercel', c: '#6df7ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#5ff0ff"/></linearGradient></defs><path d="M12 4l9 16H3z" fill="url(#@)" stroke="url(#@)" stroke-width="1.2" stroke-linejoin="round"/>' }
             ];
 
@@ -2933,7 +3052,7 @@
             const projectsEl = $('#projects');
             const projectLink = p => p.url || p.repo || '';
             projectsEl.innerHTML = CONFIG.projects.map((p, i) => `
-  <article class="project project-premium rv" data-tilt-host>
+  <article class="project project-premium rv" data-tilt-host style="--pc:${p.rgb || '25,224,210'}">
     <div class="project-visual">
       ${projectLink(p) ? `<a class="project-visual-link" href="${esc(projectLink(p))}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">` : ''}
       <div class="laptop"><div class="laptop-in">
@@ -3141,9 +3260,23 @@
                 });
                 host.addEventListener('pointerleave', () => { target.style.transform = ''; });
             }
+            /* whole portfolio card leans toward the cursor; a soft glare follows it (mouse only) */
+            function cardTilt(card, max) {
+                if (reduced) return;
+                card.addEventListener('pointermove', e => {
+                    if (e.pointerType !== 'mouse') return;
+                    const r = card.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+                    const deg = Math.hypot(px, py) * max * 2;
+                    card.style.rotate = deg < .05 ? 'none' : `${(-py).toFixed(3)} ${px.toFixed(3)} 0 ${deg.toFixed(2)}deg`;
+                    card.style.setProperty('--mx', ((px + .5) * 100).toFixed(1) + '%');
+                    card.style.setProperty('--my', ((py + .5) * 100).toFixed(1) + '%');
+                });
+                card.addEventListener('pointerleave', () => { card.style.rotate = ''; });
+            }
             function armTilt(root) {
                 $$('[data-tilt]', root).forEach(el => { if (!el._t) { el._t = 1; tilt(el, el, +el.dataset.tilt || 8); } });
                 $$('[data-tilt-host]', root).forEach(el => { if (!el._t) { el._t = 1; tilt(el, $('.laptop-in', el), 6); } });
+                $$('[data-tilt-host]', root).forEach(el => { if (!el._c) { el._c = 1; cardTilt(el, 7); } });
             }
             armTilt(document);
 
