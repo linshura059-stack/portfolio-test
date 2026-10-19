@@ -8,12 +8,13 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="theme-color" content="#000000">
     <meta name="description"
-        content="Personal portfolio of Sok Sophea showcasing projects, skills, education, and contact information.">
+        content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
     <title>Sok Sophea</title>
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sok Sophea">
     <meta property="og:title" content="Sok Sophea">
     <meta property="og:description"
-        content="Personal portfolio of Sok Sophea showcasing projects, skills, education, and contact information.">
+        content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
     <meta name="twitter:card" content="summary">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2302060b'/%3E%3Crect x='3' y='3' width='58' height='58' rx='12' fill='none' stroke='%2319e0d2' stroke-width='3'/%3E%3Ctext x='32' y='44' font-size='34' font-weight='800' text-anchor='middle' fill='%23ff5a2e' font-family='Arial,sans-serif'%3ES%3C/text%3E%3C/svg%3E">
@@ -2119,6 +2120,397 @@
                 transition: none;
             }
         }
+
+        /* =========================================================
+           VIBRANT ICONS + SMOOTH MOTION
+           Skill cards, floating tech orbs, footer contact icons and
+           education dots. Sits last so it refines the rules above.
+           ========================================================= */
+        :root {
+            --spring: cubic-bezier(.34, 1.56, .64, 1);
+            --glide: cubic-bezier(.4, 0, .2, 1);
+        }
+
+        /* ---- Skill cards: every card glows in its own brand colour ---- */
+        .skill {
+            background:
+                radial-gradient(circle at var(--gx) var(--gy), color-mix(in srgb, var(--c, #19e0d2) 28%, transparent), transparent 42%),
+                radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--c, #19e0d2) 14%, transparent), transparent 62%),
+                linear-gradient(145deg, #111c28, #060b11 72%);
+            border-color: color-mix(in srgb, var(--c, #19e0d2) 62%, transparent);
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, .45),
+                0 0 20px color-mix(in srgb, var(--c, #19e0d2) 36%, transparent),
+                inset 0 0 20px color-mix(in srgb, var(--c, #19e0d2) 12%, transparent);
+            /* The lift uses the standalone `translate` property so it can ease on its own,
+               while the pointer tilt (already eased by the JS loop) is not smoothed twice. */
+            transform: translate3d(var(--mx), var(--my), 0) rotateX(var(--rx)) rotateY(var(--ry));
+            translate: 0 0;
+            transition: translate .6s var(--spring), box-shadow .5s var(--glide), border-color .4s var(--glide);
+        }
+
+        .skill.live,
+        .skill.is-hover {
+            translate: 0 -10px;
+            border-color: var(--c, #19e0d2);
+            box-shadow:
+                0 26px 46px rgba(0, 0, 0, .65),
+                0 0 24px color-mix(in srgb, var(--c, #19e0d2) 85%, transparent),
+                0 0 64px color-mix(in srgb, var(--c, #19e0d2) 38%, transparent),
+                inset 0 0 24px color-mix(in srgb, var(--c, #19e0d2) 22%, transparent);
+        }
+
+        /* soft colour halo that breathes behind the icon */
+        .skill::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            width: 64%;
+            aspect-ratio: 1;
+            translate: -50% -50%;
+            border-radius: 50%;
+            background: radial-gradient(circle, color-mix(in srgb, var(--c, #19e0d2) 60%, transparent), transparent 68%);
+            filter: blur(10px);
+            opacity: .5;
+            pointer-events: none;
+            z-index: 0;
+            animation: haloBreathe 4.8s ease-in-out infinite;
+            animation-delay: calc(var(--i, 0) * -.6s);
+        }
+
+        .skill svg {
+            animation: none;
+            filter:
+                saturate(1.45) brightness(1.1) drop-shadow(0 10px 8px rgba(0, 0, 0, .5)) drop-shadow(0 0 7px color-mix(in srgb, var(--c, #19e0d2) 70%, transparent)) drop-shadow(0 0 0 transparent);
+            transition: filter .5s var(--glide), scale .6s var(--spring);
+        }
+
+        /* Entrance pop and idle float only start once the card has scrolled in.
+           Both use standalone transform properties (scale / translate / rotate) so they
+           compose with the click-spin instead of snapping against it. */
+        .skill-cell.in .skill svg {
+            animation:
+                iconPop .9s var(--spring) calc(var(--i, 0) * .07s + .2s) backwards,
+                iconFloat 5.6s ease-in-out calc(var(--i, 0) * -.55s) infinite;
+        }
+
+        .skill:hover svg,
+        .skill.is-hover svg {
+            scale: 1.18;
+            filter:
+                saturate(1.75) brightness(1.2) drop-shadow(0 18px 14px rgba(0, 0, 0, .6)) drop-shadow(0 0 14px var(--c, #19e0d2)) drop-shadow(0 0 32px color-mix(in srgb, var(--c, #19e0d2) 60%, transparent));
+        }
+
+        .skill:hover span,
+        .skill.is-hover span {
+            color: color-mix(in srgb, var(--c, #19e0d2) 30%, #fff);
+            text-shadow: 0 5px 12px rgba(0, 0, 0, .8), 0 0 14px color-mix(in srgb, var(--c, #19e0d2) 75%, transparent);
+        }
+
+        .skill-orbit {
+            border-color: color-mix(in srgb, var(--c, #19e0d2) 60%, transparent);
+            box-shadow: 0 0 10px color-mix(in srgb, var(--c, #19e0d2) 45%, transparent), inset 0 0 10px color-mix(in srgb, var(--c, #19e0d2) 22%, transparent);
+            opacity: .55;
+            animation-duration: 8s;
+            transition: opacity .5s var(--glide), box-shadow .5s var(--glide);
+        }
+
+        .skill-orbit::before,
+        .skill-orbit::after {
+            background: var(--c, #19e0d2);
+            box-shadow: 0 0 8px var(--c, #19e0d2), 0 0 18px color-mix(in srgb, var(--c, #19e0d2) 80%, transparent);
+        }
+
+        /* Same duration on hover: changing it mid-spin makes the ring jump. */
+        .skill.is-hover .skill-orbit {
+            opacity: 1;
+            animation-duration: 8s;
+            box-shadow: 0 0 14px color-mix(in srgb, var(--c, #19e0d2) 85%, transparent), 0 0 32px color-mix(in srgb, var(--c, #19e0d2) 40%, transparent);
+        }
+
+        .skill-particle {
+            background: var(--c, #19e0d2);
+            box-shadow: 0 0 5px var(--c, #19e0d2), 0 0 12px color-mix(in srgb, var(--c, #19e0d2) 80%, transparent);
+        }
+
+        .skill-shine {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .24), color-mix(in srgb, var(--c, #19e0d2) 50%, transparent), transparent);
+        }
+
+        /* touch: give a tap some feedback too */
+        @media (hover:none) {
+            .skill-cell:active .skill {
+                translate: 0 -5px;
+                border-color: var(--c, #19e0d2);
+            }
+
+            .skill-cell:active .skill svg {
+                scale: 1.12;
+            }
+        }
+
+        /* ---- Floating tech orbs: tinted glass, glowing rim, soft ripple ---- */
+        .orb {
+            background:
+                radial-gradient(circle at 32% 26%, rgba(255, 255, 255, .26), transparent 46%),
+                var(--bg-c, #07131b);
+            border: 1.5px solid color-mix(in srgb, var(--glow) 70%, #fff 30%);
+            box-shadow:
+                0 0 0 2px rgba(0, 0, 0, .7),
+                0 0 14px 2px var(--glow),
+                0 0 34px 6px color-mix(in srgb, var(--glow) 50%, transparent),
+                inset 0 0 12px color-mix(in srgb, var(--glow) 38%, transparent);
+        }
+
+        .orb svg {
+            filter: saturate(1.4) brightness(1.1) drop-shadow(0 0 4px color-mix(in srgb, var(--glow) 85%, transparent));
+            animation: orbBreathe 4.2s ease-in-out infinite;
+            animation-delay: calc(var(--k, 0) * -.45s);
+        }
+
+        .orb::after {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            border: 1.5px solid var(--glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: orbRing 3.8s var(--glide) infinite;
+            animation-delay: calc(var(--k, 0) * -.37s);
+        }
+
+        /* ---- Footer contact icons: a colour each, springy hover ---- */
+        .foot .contact svg {
+            width: 19px;
+            height: 19px;
+            stroke-width: 2;
+            filter: drop-shadow(0 0 5px currentColor);
+            transition: scale .45s var(--spring), rotate .45s var(--spring), filter .4s var(--glide);
+        }
+
+        .foot .contact li:nth-child(1) svg {
+            color: #ff7a59
+        }
+
+        .foot .contact li:nth-child(2) svg {
+            color: #34e89e
+        }
+
+        .foot .contact li:nth-child(3) svg {
+            color: #4da3ff
+        }
+
+        .foot .contact li:nth-child(4) svg {
+            color: #b48aff
+        }
+
+        .foot .contact li:hover svg {
+            scale: 1.28;
+            rotate: -8deg;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .foot .contact li:nth-child(2):hover svg {
+            animation: phoneRing .7s ease-in-out;
+        }
+
+        /* ---- Education dots: gentle ripple, bobbing cap, springy hover ---- */
+        .edu-dot {
+            position: relative;
+            transition: transform .5s var(--spring), box-shadow .45s var(--glide);
+        }
+
+        .edu-dot::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 120, 80, .85);
+            opacity: 0;
+            pointer-events: none;
+            animation: eduPulse 3.2s var(--glide) infinite;
+        }
+
+        .edu-dot svg {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35));
+            animation: capBob 4s ease-in-out infinite;
+        }
+
+        .edu-item:nth-child(2) .edu-dot::after,
+        .edu-item:nth-child(2) .edu-dot svg {
+            animation-delay: -.8s
+        }
+
+        .edu-item:nth-child(3) .edu-dot::after,
+        .edu-item:nth-child(3) .edu-dot svg {
+            animation-delay: -1.6s
+        }
+
+        .edu-item:nth-child(4) .edu-dot::after,
+        .edu-item:nth-child(4) .edu-dot svg {
+            animation-delay: -2.4s
+        }
+
+        .edu-item:nth-child(5) .edu-dot::after,
+        .edu-item:nth-child(5) .edu-dot svg {
+            animation-delay: -3.2s
+        }
+
+        /* ---- "Open in Maps" arrow nudges out on hover ---- */
+        .map .open svg {
+            transition: translate .35s var(--spring);
+        }
+
+        .map .open:hover svg {
+            translate: 3px -3px;
+        }
+
+        /* ---- Keyframes (compositor-friendly: translate / scale / rotate / opacity only) ---- */
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                translate: 0 0 0;
+                rotate: y -8deg
+            }
+
+            50% {
+                translate: 0 -7px 14px;
+                rotate: y 8deg
+            }
+        }
+
+        @keyframes iconPop {
+            0% {
+                scale: .2;
+                opacity: 0
+            }
+
+            55% {
+                opacity: 1
+            }
+
+            100% {
+                scale: 1;
+                opacity: 1
+            }
+        }
+
+        @keyframes haloBreathe {
+
+            0%,
+            100% {
+                scale: .85;
+                opacity: .38
+            }
+
+            50% {
+                scale: 1.18;
+                opacity: .78
+            }
+        }
+
+        @keyframes orbBreathe {
+
+            0%,
+            100% {
+                scale: 1;
+                rotate: -4deg
+            }
+
+            50% {
+                scale: 1.1;
+                rotate: 4deg
+            }
+        }
+
+        @keyframes orbRing {
+            0% {
+                scale: 1;
+                opacity: 0
+            }
+
+            15% {
+                opacity: .6
+            }
+
+            100% {
+                scale: 1.75;
+                opacity: 0
+            }
+        }
+
+        @keyframes eduPulse {
+            0% {
+                scale: 1;
+                opacity: .7
+            }
+
+            80%,
+            100% {
+                scale: 1.65;
+                opacity: 0
+            }
+        }
+
+        @keyframes capBob {
+
+            0%,
+            100% {
+                translate: 0 0;
+                rotate: -4deg
+            }
+
+            50% {
+                translate: 0 -1.5px;
+                rotate: 4deg
+            }
+        }
+
+        @keyframes phoneRing {
+
+            0%,
+            100% {
+                rotate: 0deg
+            }
+
+            20% {
+                rotate: -16deg
+            }
+
+            40% {
+                rotate: 14deg
+            }
+
+            60% {
+                rotate: -9deg
+            }
+
+            80% {
+                rotate: 5deg
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .skill-cell.in .skill svg,
+            .skill::before,
+            .orb svg,
+            .orb::after,
+            .edu-dot svg,
+            .edu-dot::after,
+            .foot .contact li:nth-child(2):hover svg {
+                animation: none !important
+            }
+
+            .skill,
+            .skill.live,
+            .skill.is-hover {
+                translate: none !important
+            }
+        }
     </style>
     <noscript>
         <style>
@@ -2303,6 +2695,7 @@
             /* CONFIG: edit this block to make the site yours */
             const CONFIG = {
                 name: 'Sok Sophea',
+                role: 'Web Developer',
                 email: 'sophea044056@gmail.com',
                 phone: '0969185182',
                 linkedinLabel: 'Sok Sophea', linkedinUrl: 'https://www.linkedin.com/',
@@ -2365,17 +2758,21 @@
     </div>
   </div>`;
 
+            /* Each skill carries its brand colour (c). The card, halo, orbit ring and particles all glow in it.
+               "@" inside an svg string is swapped for a unique id at render time, so gradients never clash
+               when the same markup is rendered into more than one page. */
+            let skUid = 0;
             const SKILLS = [
-                { n: 'HTML', svg: '<path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="#e44d26"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#f16529"/><text x="12" y="16" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">5</text>' },
-                { n: 'CSS', svg: '<path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="#1572b6"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#33a9dc"/><text x="12" y="16" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">3</text>' },
-                { n: 'Bootstrap', svg: '<rect x="3" y="3" width="18" height="18" rx="4.5" fill="#7a1ff5"/><text x="12" y="17" font-size="13" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">B</text>' },
-                { n: 'JavaScript', svg: '<rect x="3" y="3" width="18" height="18" fill="#f7df1e"/><text x="20.5" y="19.5" font-size="9.5" font-weight="800" text-anchor="end" fill="#1a1a1a" font-family="Arial,sans-serif">JS</text>' },
-                { n: 'React', svg: '<g fill="none" stroke="#61dafb" stroke-width="1.1"><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></g><circle cx="12" cy="12" r="1.8" fill="#61dafb"/>' },
-                { n: 'PHP', svg: '<ellipse cx="12" cy="12" rx="11" ry="6.5" fill="#777bb4"/><text x="12" y="14.8" font-size="8" font-weight="700" font-style="italic" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">php</text>' },
-                { n: 'Laravel', svg: '<path d="M12 3l7 4v6l-7 4-7-4V7z" fill="none" stroke="#ff2d20" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 7l7 4 7-4M12 11v6" fill="none" stroke="#ff2d20" stroke-width="1.5" stroke-linejoin="round"/>' },
-                { n: 'MySQL', svg: '<g fill="none" stroke="#4aa3d8" stroke-width="1.5" stroke-linecap="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>' },
-                { n: 'GitHub', svg: '<path fill="#fff" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.500 11.500 0 0 1 6 0C17.300 4.700 18.300 5 18.300 5c.7 1.700.2 2.900.1 3.200.8.800 1.200 1.900 1.200 3.200 0 4.600-2.800 5.600-5.500 5.900.4.400.8 1.100.8 2.200v3.300c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
-                { n: 'Vercel', svg: '<path d="M12 4l9 16H3z" fill="#fff"/>' }
+                { n: 'HTML', c: '#ff6a2e', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a3d"/><stop offset="1" stop-color="#f0371a"/></linearGradient></defs><path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="url(#@)"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#ffb347" fill-opacity=".55"/><text x="12" y="16" font-size="9" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">5</text>' },
+                { n: 'CSS', c: '#2f9bff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3db4ff"/><stop offset="1" stop-color="#1257d6"/></linearGradient></defs><path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="url(#@)"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#7fd6ff" fill-opacity=".5"/><text x="12" y="16" font-size="9" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">3</text>' },
+                { n: 'Bootstrap', c: '#a35bff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c26bff"/><stop offset="1" stop-color="#6a1fe6"/></linearGradient></defs><rect x="3" y="3" width="18" height="18" rx="4.5" fill="url(#@)"/><text x="12" y="17" font-size="13" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">B</text>' },
+                { n: 'JavaScript', c: '#ffe033', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff04d"/><stop offset="1" stop-color="#ffc400"/></linearGradient></defs><rect x="3" y="3" width="18" height="18" rx="2" fill="url(#@)"/><text x="20.5" y="19.5" font-size="9.5" font-weight="800" text-anchor="end" fill="#1a1a1a" font-family="Arial,sans-serif">JS</text>' },
+                { n: 'React', c: '#4fe3ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7df9ff"/><stop offset="1" stop-color="#2d9bff"/></linearGradient></defs><g fill="none" stroke="url(#@)" stroke-width="1.4"><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></g><circle cx="12" cy="12" r="2" fill="#7df9ff"/>' },
+                { n: 'PHP', c: '#8f94ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9aeff"/><stop offset="1" stop-color="#5b5fd9"/></linearGradient></defs><ellipse cx="12" cy="12" rx="11" ry="6.5" fill="url(#@)"/><text x="12" y="14.8" font-size="8" font-weight="800" font-style="italic" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">php</text>' },
+                { n: 'Laravel', c: '#ff3b30', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6a4d"/><stop offset="1" stop-color="#ff1f3d"/></linearGradient></defs><path d="M12 3l7 4v6l-7 4-7-4V7z" fill="#ff3b30" fill-opacity=".22" stroke="url(#@)" stroke-width="1.9" stroke-linejoin="round"/><path d="M5 7l7 4 7-4M12 11v6" fill="none" stroke="url(#@)" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/>' },
+                { n: 'MySQL', c: '#22b8ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5de0ff"/><stop offset="1" stop-color="#1c7ed6"/></linearGradient></defs><ellipse cx="12" cy="6" rx="8" ry="3" fill="#22b8ff" fill-opacity=".3"/><g fill="none" stroke="url(#@)" stroke-width="1.9" stroke-linecap="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>' },
+                { n: 'GitHub', c: '#b48aff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9a6ff"/></linearGradient></defs><path fill="url(#@)" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.500 11.500 0 0 1 6 0C17.300 4.700 18.300 5 18.300 5c.7 1.700.2 2.900.1 3.200.8.800 1.200 1.900 1.200 3.200 0 4.600-2.800 5.600-5.500 5.900.4.400.8 1.100.8 2.200v3.300c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
+                { n: 'Vercel', c: '#6df7ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#5ff0ff"/></linearGradient></defs><path d="M12 4l9 16H3z" fill="url(#@)" stroke="url(#@)" stroke-width="1.2" stroke-linejoin="round"/>' }
             ];
 
             const skillsHTML = () => `
@@ -2383,7 +2780,7 @@
     <h2 class="neon" data-title="Skills"></h2>
     <div class="skills">
       ${SKILLS.map((s, i) => `
-        <div class="skill-cell rv" style="--d:${(i * .07).toFixed(2)}s;--i:${i}">
+        <div class="skill-cell rv" style="--d:${(i * .07).toFixed(2)}s;--i:${i};--c:${s.c}">
           <div class="skill">
             <div class="skill-orbit"></div>
             <div class="particle-field">
@@ -2392,7 +2789,7 @@
               `).join('')}
             </div>
             <div class="skill-shine"></div>
-            <svg viewBox="0 0 24 24" aria-hidden="true">${s.svg}</svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true">${s.svg.replace(/@/g, 'sk' + (skUid++))}</svg>
             <span>${esc(s.n)}</span>
           </div>
         </div>`).join('')}
@@ -2446,23 +2843,23 @@
                     if (wi < words.length - 1) el.appendChild(document.createTextNode(' '));
                 });
             }
-            $$('.neon').forEach(h => buildTitle(h, h.dataset.title || `I’m ${CONFIG.name}`));
+            $$('.neon').forEach(h => buildTitle(h, h.dataset.title || `I’m ${CONFIG.name} ${CONFIG.role}`));
 
             /* Tech icons (simple original glyphs, drawn inline so nothing is fetched) */
             const ICONS = [
-                { n: 'react', glow: '#61dafb', svg: '<g fill="none" stroke="#61dafb" stroke-width="1.2"><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></g><circle cx="12" cy="12" r="1.8" fill="#61dafb"/>' },
+                { n: 'react', glow: '#61dafb', svg: '<g fill="none" stroke="#61dafb" stroke-width="1.5"><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></g><circle cx="12" cy="12" r="1.8" fill="#61dafb"/>' },
                 { n: 'html', glow: '#e44d26', svg: '<path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="#e44d26"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#f16529"/><text x="12" y="16" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">5</text>' },
                 { n: 'css', glow: '#2f8fe0', svg: '<path d="M4 3h16l-1.4 16L12 21l-6.6-2z" fill="#1572b6"/><path d="M12 5v14.4l5.2-1.5L18.4 5z" fill="#33a9dc"/><text x="12" y="16" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">3</text>' },
                 { n: 'js', glow: '#f7df1e', bg: '#f7df1e', svg: '<text x="12" y="16.5" font-size="11" font-weight="800" text-anchor="middle" fill="#1a1a1a" font-family="Arial,sans-serif">JS</text>' },
                 { n: 'ts', glow: '#3178c6', bg: '#3178c6', svg: '<text x="12" y="16.5" font-size="11" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">TS</text>' },
                 { n: 'bs', glow: '#7a1ff5', bg: '#7a1ff5', svg: '<text x="12" y="17" font-size="13" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">B</text>' },
-                { n: 'laravel', glow: '#ff2d20', svg: '<path d="M12 3l7 4v6l-7 4-7-4V7z" fill="none" stroke="#ff2d20" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 7l7 4 7-4M12 11v6" fill="none" stroke="#ff2d20" stroke-width="1.6" stroke-linejoin="round"/>' },
+                { n: 'laravel', glow: '#ff2d20', svg: '<path d="M12 3l7 4v6l-7 4-7-4V7z" fill="#ff2d20" fill-opacity=".2" stroke="#ff4a3d" stroke-width="2" stroke-linejoin="round"/><path d="M5 7l7 4 7-4M12 11v6" fill="none" stroke="#ff4a3d" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' },
                 { n: 'php', glow: '#8892bf', bg: '#4f5b93', svg: '<text x="12" y="15.5" font-size="8.5" font-weight="700" font-style="italic" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">php</text>' },
                 { n: 'mongo', glow: '#47a248', svg: '<path d="M12 1.5c.4 2.200 4.800 4.600 4.800 10.300 0 3.600-2 5.600-4 6.400L12.200 22h-.4l-.6-3.800c-2-.8-4-2.800-4-6.400C7.200 6.100 11.600 3.700 12 1.500z" fill="#47a248"/><path d="M12 5v16" stroke="#d7f0d2" stroke-width=".9" stroke-linecap="round"/>' },
                 { n: 'figma', glow: '#a259ff', svg: '<rect x="8" y="2" width="4" height="6" rx="2" fill="#f24e1e"/><rect x="12" y="2" width="4" height="6" rx="2" fill="#ff7262"/><rect x="8" y="8" width="4" height="6" rx="2" fill="#a259ff"/><circle cx="14" cy="11" r="3" fill="#1abcfe"/><rect x="8" y="14" width="4" height="6" rx="2" fill="#0acf83"/>' },
-                { n: 'next', glow: '#ffffff', bg: '#000', svg: '<circle cx="12" cy="12" r="10" fill="#fff"/><text x="12" y="16.6" font-size="12" font-weight="800" text-anchor="middle" fill="#000" font-family="Arial,sans-serif">N</text>' },
-                { n: 'github', glow: '#ffffff', bg: '#0d1117', svg: '<path fill="#fff" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.500 11.500 0 0 1 6 0C17.300 4.700 18.300 5 18.300 5c.7 1.700.2 2.900.1 3.200.8.800 1.200 1.900 1.200 3.200 0 4.600-2.800 5.600-5.500 5.900.4.400.8 1.100.8 2.200v3.300c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
-                { n: 'vercel', glow: '#ffffff', bg: '#000', svg: '<path d="M12 4l9 16H3z" fill="#fff"/>' },
+                { n: 'next', glow: '#ff5cd6', bg: '#000', svg: '<circle cx="12" cy="12" r="10" fill="#fff"/><text x="12" y="16.6" font-size="12" font-weight="800" text-anchor="middle" fill="#000" font-family="Arial,sans-serif">N</text>' },
+                { n: 'github', glow: '#b48aff', bg: '#0d1117', svg: '<path fill="#fff" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.500 11.500 0 0 1 6 0C17.300 4.700 18.300 5 18.300 5c.7 1.700.2 2.900.1 3.200.8.800 1.200 1.900 1.200 3.200 0 4.600-2.800 5.600-5.500 5.900.4.400.8 1.100.8 2.200v3.300c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
+                { n: 'vercel', glow: '#6df7ff', bg: '#000', svg: '<path d="M12 4l9 16H3z" fill="#fff"/>' },
                 { n: 'gitlab', glow: '#fc6d26', svg: '<path d="M12 21.500L2.500 14.200l1.900-5.900 1.900 5.900h11.400l1.900-5.900 1.900 5.900z" fill="#e24329"/><path d="M12 21.500L6.300 14.200h11.400z" fill="#fc6d26"/><path d="M4.400 8.300L6.300 2.500l1.900 5.800zM19.600 8.300l-1.900-5.800-1.900 5.800z" fill="#fca326"/>' },
                 { n: 'vue', glow: '#41b883', svg: '<path d="M2 4h4l6 10 6-10h4L12 21z" fill="#41b883"/><path d="M6 4h3.2L12 9l2.8-5H18l-6 10z" fill="#35495e"/>' },
                 { n: 'api', glow: '#84ff2f', bg: '#84ff2f', svg: '<text x="12" y="16" font-size="9.5" font-weight="800" text-anchor="middle" fill="#0d1a05" font-family="Arial,sans-serif">{…}</text>' },
@@ -2521,7 +2918,7 @@
                 },
                 folio: () => wrap(
                     R(0, 0, 320, 24, '#1b1f26', 0) + T(12, 16, 9, '#fff', 'SOK SOPHEA') + [0, 1, 2, 3].map(i => R(190 + i * 32, 10, 22, 4, '#8b95a5', 2)).join('') +
-                    T(160, 66, 12, '#fff', 'I’M SOK SOPHEA', 700, 'middle') +
+                    T(160, 66, 12, '#fff', 'I’M SOK SOPHEA WEB DEVELOPER', 700, 'middle') +
                     C(70, 124, 34, '#3ba0f5') + C(70, 114, 11, '#d9a072') + '<path d="M46 154q24-26 48 0z" fill="#141a29"/>' +
                     T(126, 108, 11, '#fff', 'HELLO!', 700) + LN(126, 120, 170, 6, '#8b95a5', 10, 4) +
                     R(0, 196, 320, 204, '#0f1216', 0) + [0, 1, 2].map(i => R(16 + i * 102, 214, 90, 64, '#1d2430', 5) + R(24 + i * 102, 224, 50, 5, '#3ba0f5', 2) + LN(24 + i * 102, 238, 72, 3, '#44506a', 9, 3)).join('') +
@@ -2663,11 +3060,11 @@
             function makeOrbs() {
                 const layer = $('#orbs'); layer.innerHTML = ''; orbs.length = 0;
                 const pool = ICONS.slice().sort(() => Math.random() - .5).slice(0, orbCount());
-                pool.forEach(ic => {
+                pool.forEach((ic, k) => {
                     const d = .8 + Math.random() * .2, size = Math.round(42 + d * 18);
                     const el = document.createElement('div');
                     el.className = 'orb';
-                    el.style.cssText = `--sz:${size}px;--bg-c:${ic.bg || '#04090d'};--glow:${ic.glow || '#1fe0d2'};opacity:${(.4 + .6 * (d - .6) / .6).toFixed(2)}`;
+                    el.style.cssText = `--sz:${size}px;--k:${k};--bg-c:${ic.bg || `color-mix(in srgb, ${ic.glow || '#1fe0d2'} 18%, #050b12)`};--glow:${ic.glow || '#1fe0d2'};opacity:${(.4 + .6 * (d - .6) / .6).toFixed(2)}`;
                     el.style.filter = 'none';
                     el.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ic.svg}</svg>`;
                     layer.appendChild(el);
@@ -2798,10 +3195,9 @@
                         card.classList.add('live', 'is-hover');
                         if (spinning) return;
                         spinning = logo.animate([
-                            { transform: 'translateZ(48px) rotateY(0deg) scale(1)' },
-                            { transform: 'translateZ(75px) rotateY(180deg) scale(1.2)' },
-                            { transform: 'translateZ(48px) rotateY(360deg) scale(1)' }
-                        ], { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' });
+                            { transform: 'translateZ(48px) rotateY(0deg)' },
+                            { transform: 'translateZ(48px) rotateY(360deg)' }
+                        ], { duration: 1000, easing: 'cubic-bezier(.45,.05,.2,1)' });
                         spinning.onfinish = spinning.oncancel = () => { spinning = null; };
                     });
 
@@ -2832,8 +3228,8 @@
                         if (reduced || spinning) return;
                         spinning = logo.animate([
                             { transform: 'translateZ(48px) rotateY(0deg)' },
-                            { transform: 'translateZ(70px) rotateY(360deg)' }
-                        ], { duration: 800, easing: 'cubic-bezier(.2,.8,.2,1)' });
+                            { transform: 'translateZ(48px) rotateY(720deg)' }
+                        ], { duration: 1100, easing: 'cubic-bezier(.45,.05,.2,1)' });
                         spinning.onfinish = spinning.oncancel = () => { spinning = null; };
                     });
                 });
