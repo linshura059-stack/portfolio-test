@@ -3267,11 +3267,8 @@
                 return true;
             }
 
-            /* fewer orbs on small screens: <=640px -> 8, <=1024px -> 12, larger -> every icon */
+            /* every icon is shown on every screen size */
             function orbCount() {
-                const w = innerWidth;
-                if (w <= 640) return Math.min(8, ICONS.length);
-                if (w <= 1024) return Math.min(12, ICONS.length);
                 return ICONS.length;
             }
             function makeOrbs() {
