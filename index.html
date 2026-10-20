@@ -3229,42 +3229,90 @@
                 return pts;
             }
 
+            /* Lightning, modelled on the reference video. Each strike has three stages:
+               1) stepped leader: a thin cyan-blue bolt races down the sky,
+               2) return stroke: a thick white-hot channel flares with a web of branches, lights the clouds
+                  and the ground, with a quick double-pulse,
+               3) afterglow: the channel cools to a thin, flickering electric-blue thread (about a second). */
             let lastStrike = 0;
             function strike(x) {
                 if (reduced) return;
                 const now = performance.now(); if (now - lastStrike < 120) return; lastStrike = now;
                 x = x == null ? W * (.12 + Math.random() * .76) : x;
-                const y1 = H * (.5 + Math.random() * .5);
-                const main = bolt(x, -10, x + (Math.random() - .5) * W * .16, y1, H * .09, 7);
-                const paths = [{ pts: main, w: 2.4 }];
-                const nb = 2 + Math.floor(Math.random() * 3);
+                const y1 = H * (.55 + Math.random() * .45);
+                const x1 = x + (Math.random() - .5) * W * .2;
+                const main = bolt(x, -10, x1, y1, H * .16, 6);
+                const paths = [{ pts: main, w: 6.5, at: 0 }];
+                const nb = 6 + Math.floor(Math.random() * 4);
                 for (let i = 0; i < nb; i++) {
-                    const k = Math.floor(main.length * (.15 + Math.random() * .6)), [bx, by] = main[k];
-                    const dir = Math.random() < .5 ? -1 : 1, bl = H * (.12 + Math.random() * .22);
-                    paths.push({ pts: bolt(bx, by, bx + dir * bl * (.5 + Math.random() * .6), by + bl, bl * .22, 5), w: 1.2 });
+                    const kf = .08 + Math.random() * .7, k = Math.floor(main.length * kf), [bx, by] = main[k];
+                    const dir = Math.random() < .5 ? -1 : 1, bl = H * (.14 + Math.random() * .3);
+                    const bp = bolt(bx, by, bx + dir * bl * (.45 + Math.random() * .9), by + bl * (.5 + Math.random() * .7), bl * .24, 5);
+                    paths.push({ pts: bp, w: 1.8 + Math.random() * .8, at: kf });
+                    if (Math.random() < .55) {      // fine twigs off the branches
+                        const [sx, sy] = bp[Math.floor(bp.length * (.25 + Math.random() * .5))];
+                        const d2 = Math.random() < .5 ? -1 : 1, sl = bl * (.3 + Math.random() * .4);
+                        paths.push({ pts: bolt(sx, sy, sx + d2 * sl * .8, sy + sl * .9, sl * .25, 4), w: 1.1, at: Math.min(.95, kf + .04) });
+                    }
                 }
-                bolts.push({ paths, t0: now, life: 150 + Math.random() * 70, x });
+                const lead = 60 + Math.random() * 30;
+                bolts.push({ paths, t0: now, lead, life: lead + 880 + Math.random() * 260, x, ex: x1, ey: y1 });
+            }
+
+            const lerp = (u, v, t) => u + (v - u) * t;
+            function tracePath(pts, frac) {
+                const n = Math.max(2, Math.floor(frac * (pts.length - 1)) + 1);
+                ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+                for (let i = 1; i < n; i++) ctx.lineTo(pts[i][0], pts[i][1]);
             }
 
             function drawBolt(b, now) {
-                const t = (now - b.t0) / b.life; if (t >= 1) return false;
-                let a;
-                if (t < .18) a = 1; else if (t < .28) a = .25; else if (t < .52) a = 1; else if (t < .6) a = .4;
-                else a = Math.pow(1 - (t - .6) / .4, 2) * (.8 + Math.random() * .2);
-                if (t < .55) {
-                    const g = ctx.createRadialGradient(b.x, 0, 0, b.x, 0, H * .9);
-                    g.addColorStop(0, `rgba(190,215,255,${.2 * a})`); g.addColorStop(1, 'rgba(190,215,255,0)');
+                const el = now - b.t0; if (el >= b.life) return false;
+                let reveal = 1, a, wf, mix, boost = 0;
+                if (el < b.lead) {                                     // 1) leader
+                    reveal = Math.pow(el / b.lead, .85);
+                    a = .6 + Math.random() * .3; wf = .3; mix = 1;
+                } else {
+                    const e = el - b.lead, T = b.life - b.lead;
+                    if (e < 55) { a = 1; boost = 1; }                  // 2) return stroke, double pulse
+                    else if (e < 105) a = .3;
+                    else if (e < 185) { a = 1; boost = .8; }
+                    else if (e < 235) a = .4;
+                    else a = null;
+                    if (a === null) {                                  // 3) afterglow
+                        const d = (e - 235) / (T - 235);
+                        a = Math.pow(1 - d, 1.7) * (.7 + Math.random() * .3);
+                        if (Math.random() < .12) a *= .35;             // crackle
+                        wf = 1 - .68 * d; mix = Math.min(1, .25 + d);
+                    } else { wf = 1; mix = 0; }
+                }
+                ctx.save();
+                ctx.globalCompositeOperation = 'lighter';
+                if (boost) {                                           // light up the clouds and the ground
+                    const g = ctx.createRadialGradient(b.x, 0, 0, b.x, 0, H * 1.05);
+                    g.addColorStop(0, `rgba(185,215,255,${.3 * boost * a})`); g.addColorStop(.45, `rgba(110,160,235,${.08 * boost * a})`); g.addColorStop(1, 'rgba(110,160,235,0)');
                     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+                    ctx.fillStyle = `rgba(120,160,225,${.05 * boost * a})`; ctx.fillRect(0, 0, W, H);
+                    const r = 90 + 60 * boost, g2 = ctx.createRadialGradient(b.ex, b.ey, 0, b.ex, b.ey, r);
+                    g2.addColorStop(0, `rgba(235,246,255,${.55 * a})`); g2.addColorStop(1, 'rgba(120,170,255,0)');
+                    ctx.fillStyle = g2; ctx.fillRect(b.ex - r, b.ey - r, r * 2, r * 2);
                 }
                 ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+                const cr = lerp(255, 150, mix), cg = lerp(255, 225, mix), cb = 255;
                 for (const p of b.paths) {
-                    for (const [lw, al, core] of [[p.w * 4, .12, 0], [p.w * 1.8, .4, 0], [p.w * .9, 1, 1]]) {
-                        ctx.strokeStyle = core ? `rgba(255,255,255,${a * al})` : `rgba(140,190,255,${a * al})`;
-                        ctx.lineWidth = lw; ctx.beginPath();
-                        p.pts.forEach((pt, i) => i ? ctx.lineTo(pt[0], pt[1]) : ctx.moveTo(pt[0], pt[1]));
+                    const f = p.at === 0 ? reveal : Math.min(1, Math.max(0, (reveal - p.at) / .25));
+                    if (f <= 0) continue;
+                    tracePath(p.pts, f);
+                    const w = p.w * wf;
+                    for (const [m, col, al] of [
+                        [9, '70,130,255', .06], [5, '100,165,255', .13], [2.8, '150,205,255', .3],
+                        [1.5, `${cr | 0},${cg | 0},${cb}`, .8], [.75, '255,255,255', 1]]) {
+                        ctx.strokeStyle = `rgba(${col},${(a * al).toFixed(3)})`;
+                        ctx.lineWidth = Math.max(.6, w * m);
                         ctx.stroke();
                     }
                 }
+                ctx.restore();
                 return true;
             }
 
@@ -3317,7 +3365,7 @@
                 for (const d of drops) { d.y += d.v * dt; if (d.y > H + 30) { d.y = -30; d.x = Math.random() * (W + 80) - 40; } }
                 drawRain();
                 for (let i = bolts.length - 1; i >= 0; i--) if (!drawBolt(bolts[i], now)) bolts.splice(i, 1);
-                if (now > nextStrike) { strike(); if (Math.random() < .4) setTimeout(() => strike(), 60); nextStrike = now + 900 + Math.random() * 1800; }
+                if (now > nextStrike) { strike(); if (Math.random() < .35) setTimeout(() => strike(), 140); nextStrike = now + 1100 + Math.random() * 2200; }
                 stepOrbs(dt);
                 raf = requestAnimationFrame(frame);
             }
