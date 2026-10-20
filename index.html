@@ -3190,24 +3190,25 @@
             const drops = [], bolts = [];
             const orbs = [];
             const ptr = { x: -999, y: -999, on: false };
-            const RAIN = [['rgba(205,225,240,.16)', .8], ['rgba(205,225,240,.3)', 1], ['rgba(215,232,245,.52)', 1.2]];
+            const RAIN = [['rgba(215,232,246,.3)', .9], ['rgba(222,238,250,.55)', 1.2], ['rgba(235,246,255,.9)', 1.5]];
 
-            const newDrop = scatter => ({ x: Math.random() * (W + 80) - 40, y: scatter ? Math.random() * H : -30, l: 8 + Math.random() * 16, v: 520 + Math.random() * 560, b: Math.floor(Math.random() * 3) });
+            const newDrop = scatter => ({ x: Math.random() * (W + 80) - 40, y: scatter ? Math.random() * H : -30, l: 14 + Math.random() * 22, v: 760 + Math.random() * 640, b: Math.floor(Math.random() * 3) });
 
             function fit(force) {
                 const w = innerWidth, h = innerHeight;
                 if (!force && w === W && Math.abs(h - H) < 120 && (reduced || cv.width)) return;
                 W = w; H = h;
                 if (reduced) return;               // reduced motion: only track the viewport size (orbs need it), skip the canvas
-                dpr = Math.min(devicePixelRatio || 1, 1.5);
+                dpr = Math.min(devicePixelRatio || 1, 2);
                 cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                const n = Math.min(240, Math.round(W * H / 9500));
+                const n = Math.min(300, Math.round(W * H / 8000));
                 while (drops.length < n) drops.push(newDrop(true));
                 drops.length = n;
             }
 
             function drawRain() {
+                ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
                 RAIN.forEach(([col, lw], b) => {
                     ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath();
                     for (const d of drops) if (d.b === b) { ctx.moveTo(d.x, d.y); ctx.lineTo(d.x + d.l * .04, d.y + d.l); }
@@ -3231,7 +3232,7 @@
             let lastStrike = 0;
             function strike(x) {
                 if (reduced) return;
-                const now = performance.now(); if (now - lastStrike < 350) return; lastStrike = now;
+                const now = performance.now(); if (now - lastStrike < 120) return; lastStrike = now;
                 x = x == null ? W * (.12 + Math.random() * .76) : x;
                 const y1 = H * (.5 + Math.random() * .5);
                 const main = bolt(x, -10, x + (Math.random() - .5) * W * .16, y1, H * .09, 7);
@@ -3242,23 +3243,23 @@
                     const dir = Math.random() < .5 ? -1 : 1, bl = H * (.12 + Math.random() * .22);
                     paths.push({ pts: bolt(bx, by, bx + dir * bl * (.5 + Math.random() * .6), by + bl, bl * .22, 5), w: 1.2 });
                 }
-                bolts.push({ paths, t0: now, life: 650 + Math.random() * 250, x });
+                bolts.push({ paths, t0: now, life: 150 + Math.random() * 70, x });
             }
 
             function drawBolt(b, now) {
                 const t = (now - b.t0) / b.life; if (t >= 1) return false;
                 let a;
-                if (t < .08) a = 1; else if (t < .15) a = .15; else if (t < .27) a = 1; else if (t < .34) a = .35;
-                else a = Math.pow(1 - (t - .34) / .66, 1.6) * (.75 + Math.random() * .25);
-                if (t < .3) {
+                if (t < .18) a = 1; else if (t < .28) a = .25; else if (t < .52) a = 1; else if (t < .6) a = .4;
+                else a = Math.pow(1 - (t - .6) / .4, 2) * (.8 + Math.random() * .2);
+                if (t < .55) {
                     const g = ctx.createRadialGradient(b.x, 0, 0, b.x, 0, H * .9);
-                    g.addColorStop(0, `rgba(170,205,255,${.16 * a})`); g.addColorStop(1, 'rgba(170,205,255,0)');
+                    g.addColorStop(0, `rgba(190,215,255,${.2 * a})`); g.addColorStop(1, 'rgba(190,215,255,0)');
                     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
                 }
                 ctx.lineJoin = 'round'; ctx.lineCap = 'round';
                 for (const p of b.paths) {
-                    for (const [lw, al, core] of [[p.w * 7, .07, 0], [p.w * 3.2, .2, 0], [p.w, 1, 1]]) {
-                        ctx.strokeStyle = core ? `rgba(245,250,255,${a * al})` : `rgba(130,180,255,${a * al})`;
+                    for (const [lw, al, core] of [[p.w * 4, .12, 0], [p.w * 1.8, .4, 0], [p.w * .9, 1, 1]]) {
+                        ctx.strokeStyle = core ? `rgba(255,255,255,${a * al})` : `rgba(140,190,255,${a * al})`;
                         ctx.lineWidth = lw; ctx.beginPath();
                         p.pts.forEach((pt, i) => i ? ctx.lineTo(pt[0], pt[1]) : ctx.moveTo(pt[0], pt[1]));
                         ctx.stroke();
@@ -3309,14 +3310,14 @@
                 }
             }
 
-            let raf = 0, last = performance.now(), nextStrike = last + 1600;
+            let raf = 0, last = performance.now(), nextStrike = last + 600;
             function frame(now) {
                 const dt = Math.min(.05, (now - last) / 1000); last = now;
                 ctx.clearRect(0, 0, W, H);
                 for (const d of drops) { d.y += d.v * dt; if (d.y > H + 30) { d.y = -30; d.x = Math.random() * (W + 80) - 40; } }
                 drawRain();
                 for (let i = bolts.length - 1; i >= 0; i--) if (!drawBolt(bolts[i], now)) bolts.splice(i, 1);
-                if (now > nextStrike) { strike(); if (Math.random() < .3) setTimeout(() => strike(), 160); nextStrike = now + 2400 + Math.random() * 4200; }
+                if (now > nextStrike) { strike(); if (Math.random() < .4) setTimeout(() => strike(), 60); nextStrike = now + 900 + Math.random() * 1800; }
                 stepOrbs(dt);
                 raf = requestAnimationFrame(frame);
             }
