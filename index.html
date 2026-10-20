@@ -15,7 +15,15 @@
     <meta property="og:title" content="Sok Sophea">
     <meta property="og:description"
         content="Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.">
-    <meta name="twitter:card" content="summary">
+    <!-- TODO: replace https://your-domain.example/ with your real, final site URL.
+         It is used by og:url, og:image, twitter:image and the canonical link (crawlers need absolute URLs). -->
+    <meta property="og:url" content="https://your-domain.example/">
+    <meta property="og:image" content="https://your-domain.example/assets/og-cover.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://your-domain.example/assets/og-cover.png">
+    <link rel="canonical" href="https://your-domain.example/">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2302060b'/%3E%3Crect x='3' y='3' width='58' height='58' rx='12' fill='none' stroke='%2319e0d2' stroke-width='3'/%3E%3Ctext x='32' y='44' font-size='34' font-weight='800' text-anchor='middle' fill='%23ff5a2e' font-family='Arial,sans-serif'%3ES%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -744,8 +752,6 @@
             transform: translateZ(48px);
             transform-style: preserve-3d;
             filter: drop-shadow(0 12px 9px rgba(0, 0, 0, .55)) drop-shadow(0 0 5px rgba(25, 224, 210, .25));
-            animation: premiumFloat 4.5s ease-in-out infinite;
-            animation-delay: calc(var(--i, 0)*-.45s);
             transition: filter .4s, scale .4s cubic-bezier(.2, .8, .2, 1)
         }
 
@@ -781,7 +787,7 @@
             transform: translateZ(25px) rotateX(68deg);
             box-shadow: 0 0 8px rgba(25, 224, 210, .35), inset 0 0 8px rgba(25, 224, 210, .15);
             opacity: .45;
-            animation: orbitSpin 7s linear infinite;
+            animation: orbitSpin 8s linear infinite;
             pointer-events: none;
             z-index: 1
         }
@@ -809,7 +815,6 @@
 
         .skill.is-hover .skill-orbit {
             opacity: 1;
-            animation-duration: 3s;
             box-shadow: 0 0 12px rgba(25, 224, 210, .8), 0 0 30px rgba(25, 224, 210, .35)
         }
 
@@ -1190,26 +1195,34 @@
             min-width: 0
         }
 
+        /* Contact map: ONE unified rule set (replaces the old base rules + the "Premium NTTI Google Maps" overrides) */
         .map {
             position: relative;
             width: 100%;
             max-width: 100%;
-            border-radius: 22px;
             overflow: hidden;
             /* responsive height: grows with the viewport, stretches to match the form on desktop */
             min-height: clamp(300px, 52vw, 460px);
-            background: #0b1a22;
-            border: 1.5px solid rgba(127, 243, 234, .6);
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, .05), 0 0 24px rgba(25, 224, 210, .28), 0 18px 44px rgba(0, 0, 0, .5)
+            border: 1px solid rgba(127, 243, 234, .22);
+            border-radius: 22px;
+            background: #071017;
+            box-shadow: 0 22px 70px rgba(0, 0, 0, .34), 0 0 35px rgba(25, 224, 210, .07);
+            transition: box-shadow .45s var(--glide, ease)
+        }
+
+        .map:is(:hover, :focus-within) {
+            box-shadow: 0 22px 70px rgba(0, 0, 0, .34), 0 0 35px rgba(25, 224, 210, .07), var(--nb-glow)
         }
 
         .map iframe {
             position: absolute;
             inset: 0;
+            display: block;
             width: 100%;
             height: 100%;
+            min-height: 390px;
             border: 0;
-            display: block
+            filter: saturate(.82) contrast(1.04)
         }
 
         .map::after {
@@ -1227,36 +1240,57 @@
             position: absolute;
             top: 12px;
             left: 12px;
-            z-index: 3;
+            z-index: 5;
             display: inline-flex;
             align-items: center;
             gap: .45rem;
             min-height: 40px;
-            background: #fff;
-            color: #1a5fd0;
+            background: rgba(5, 15, 20, .90);
+            color: #eaffff;
             border-radius: 4px;
             padding: .45rem .85rem;
             font: 500 .9rem 'Roboto', sans-serif;
             text-decoration: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .4)
+            box-shadow: 0 10px 28px rgba(0, 0, 0, .25);
+            backdrop-filter: blur(8px);
+            transition: transform .3s var(--ease), background .3s
         }
 
         .map .open:hover {
-            background: #eef4ff
+            background: rgba(11, 29, 35, .96);
+            transform: translateY(-2px)
+        }
+
+        /* "Open in Maps" arrow nudges out on hover */
+        .map .open svg {
+            transition: translate .35s var(--spring)
+        }
+
+        .map .open:hover svg {
+            translate: 3px -3px
         }
 
         .map .place {
             position: absolute;
             left: 12px;
             bottom: 12px;
-            z-index: 3;
-            background: rgba(0, 0, 0, .6);
+            z-index: 5;
+            max-width: min(90%, 520px);
+            background: rgba(3, 10, 14, .82);
             color: #fff;
             font-size: .88rem;
             padding: .35rem .75rem;
+            border: 1px solid rgba(255, 255, 255, .08);
             border-radius: 999px;
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px)
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px)
+        }
+
+        @media (max-width: 640px) {
+            .map iframe {
+                min-height: 320px
+            }
         }
 
         .ring {
@@ -1498,18 +1532,6 @@
             }
         }
 
-        @keyframes premiumFloat {
-
-            0%,
-            100% {
-                transform: translateZ(45px) translateY(0) rotateY(-12deg) rotateX(5deg)
-            }
-
-            50% {
-                transform: translateZ(65px) translateY(-8px) rotateY(12deg) rotateX(-5deg)
-            }
-        }
-
         @keyframes orbitSpin {
             from {
                 transform: translateZ(25px) rotateX(68deg) rotateZ(0deg)
@@ -1569,22 +1591,6 @@
             }
         }
 
-        @media (prefers-reduced-motion:reduce) {
-
-            .skill,
-            .skill svg,
-            .skill-orbit,
-            .skill-particle,
-            .skill-shine {
-                animation: none !important;
-                transition: none !important
-            }
-
-            .skill {
-                transform: none !important
-            }
-        }
-
         /* Responsive*/
         @media (max-width:1024px) {
             .projects {
@@ -1617,12 +1623,10 @@
 
         @media (max-width:480px) {
             .map {
-                min-height: 320px;
-                border-radius: 18px
+                min-height: 320px
             }
 
             .map .place {
-                max-width: calc(100% - 24px);
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis
@@ -1725,78 +1729,6 @@
 
             .foot {
                 grid-template-columns: 1fr
-            }
-        }
-
-        @media (prefers-reduced-motion:reduce) {
-
-            *,
-            *::before,
-            *::after {
-                animation-duration: .001ms !important;
-                animation-iteration-count: 1 !important;
-                animation-delay: 0s !important;
-                transition-duration: .001ms !important;
-                transition-delay: 0s !important
-            }
-
-            #sky::before,
-            #sky::after {
-                animation: none
-            }
-
-            .skill svg {
-                animation: none;
-                transform: translateZ(24px)
-            }
-        }
-
-        /* Premium NTTI Google Maps */
-        .map {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(127, 243, 234, .22) !important;
-            border-radius: 22px !important;
-            background: #071017;
-            box-shadow: 0 22px 70px rgba(0, 0, 0, .34), 0 0 35px rgba(25, 224, 210, .07);
-        }
-
-        .map iframe {
-            display: block;
-            width: 100%;
-            min-height: 390px;
-            border: 0 !important;
-            filter: saturate(.82) contrast(1.04);
-        }
-
-        .map .open {
-            z-index: 5;
-            border-color: rgba(127, 243, 234, .28);
-            background: rgba(5, 15, 20, .90);
-            color: #eaffff;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, .25);
-            backdrop-filter: blur(8px);
-            transition: transform .3s var(--ease), background .3s, border-color .3s;
-        }
-
-        .map .open:hover {
-            border-color: rgba(127, 243, 234, .55);
-            background: rgba(11, 29, 35, .96);
-            transform: translateY(-2px);
-        }
-
-        .map .place {
-            z-index: 5;
-            max-width: min(90%, 520px);
-            border: 1px solid rgba(255, 255, 255, .08);
-            background: rgba(3, 10, 14, .82);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
-            backdrop-filter: blur(8px);
-        }
-
-        @media (max-width: 640px) {
-            .map iframe {
-                min-height: 320px;
             }
         }
 
@@ -2089,10 +2021,6 @@
                 height: 48px !important;
                 transform: scale(.78);
             }
-
-            #orbs .orb .icon {
-                font-size: 18px;
-            }
         }
 
         @media (max-width: 380px) {
@@ -2111,14 +2039,6 @@
 
             .project-btn {
                 width: 100%;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-
-            .project-premium,
-            .project-premium .preview-action {
-                transition: none;
             }
         }
 
@@ -2228,18 +2148,6 @@
             box-shadow: inset 0 0 0 1px rgba(var(--pc), .9), 0 8px 22px rgba(var(--pc), .25)
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .projects .project-premium {
-                rotate: none !important;
-                translate: none !important
-            }
-
-            .project-premium::after {
-                display: none
-            }
-
-        }
-
         /* =========================================================
            VIBRANT ICONS + SMOOTH MOTION
            Skill cards, floating tech orbs, footer contact icons and
@@ -2332,7 +2240,6 @@
             border-color: color-mix(in srgb, var(--c, #19e0d2) 60%, transparent);
             box-shadow: 0 0 10px color-mix(in srgb, var(--c, #19e0d2) 45%, transparent), inset 0 0 10px color-mix(in srgb, var(--c, #19e0d2) 22%, transparent);
             opacity: .55;
-            animation-duration: 8s;
             transition: opacity .5s var(--glide), box-shadow .5s var(--glide);
         }
 
@@ -2342,10 +2249,9 @@
             box-shadow: 0 0 8px var(--c, #19e0d2), 0 0 18px color-mix(in srgb, var(--c, #19e0d2) 80%, transparent);
         }
 
-        /* Same duration on hover: changing it mid-spin makes the ring jump. */
+        /* Duration is set once (8s) on .skill-orbit: changing it on hover would make the ring jump. */
         .skill.is-hover .skill-orbit {
             opacity: 1;
-            animation-duration: 8s;
             box-shadow: 0 0 14px color-mix(in srgb, var(--c, #19e0d2) 85%, transparent), 0 0 32px color-mix(in srgb, var(--c, #19e0d2) 40%, transparent);
         }
 
@@ -2476,15 +2382,6 @@
         .edu-item:nth-child(5) .edu-dot::after,
         .edu-item:nth-child(5) .edu-dot svg {
             animation-delay: -3.2s
-        }
-
-        /* ---- "Open in Maps" arrow nudges out on hover ---- */
-        .map .open svg {
-            transition: translate .35s var(--spring);
-        }
-
-        .map .open:hover svg {
-            translate: 3px -3px;
         }
 
         /* ---- Keyframes (compositor-friendly: translate / scale / rotate / opacity only) ---- */
@@ -2689,32 +2586,54 @@
             animation-play-state: running
         }
 
-        /* the map had no hover shadow of its own: reuse its resting shadow plus the glow */
-        .map {
-            transition: box-shadow .45s var(--glide, ease)
-        }
-
-        .map:is(:hover, :focus-within) {
-            box-shadow: 0 22px 70px rgba(0, 0, 0, .34), 0 0 35px rgba(25, 224, 210, .07), var(--nb-glow)
-        }
-
         /* the .nb sits one level under the card; keep the skill's inner 3D layers above it */
         .skill>.nb {
             z-index: 3
         }
 
+        /* =========================================================
+           REDUCED MOTION: one consolidated block, kept last so it wins the cascade
+           ========================================================= */
         @media (prefers-reduced-motion: reduce) {
 
-            /* no travelling light: show a calm, static gradient ring instead */
-            .nb i::before {
-                animation: none;
-                rotate: 0deg;
-                background: conic-gradient(#19e0d2, #2a7bff, #a24dff, #ff3ea5, #19e0d2)
+            /* global: collapse every animation and transition */
+            *,
+            *::before,
+            *::after {
+                animation-duration: .001ms !important;
+                animation-iteration-count: 1 !important;
+                animation-delay: 0s !important;
+                transition-duration: .001ms !important;
+                transition-delay: 0s !important
             }
-        }
 
-        @media (prefers-reduced-motion: reduce) {
+            #sky::before,
+            #sky::after {
+                animation: none
+            }
 
+            /* skill cards: no tilt, lift, float, halo or sweeps */
+            .skill,
+            .skill svg,
+            .skill-orbit,
+            .skill-particle,
+            .skill-shine {
+                animation: none !important;
+                transition: none !important
+            }
+
+            .skill,
+            .skill.live,
+            .skill.is-hover {
+                transform: none !important;
+                translate: none !important
+            }
+
+            .skill svg {
+                transform: translateZ(24px)
+            }
+
+            /* looping decorative animations */
             .skill-cell.in .skill svg,
             .skill::before,
             .orb svg,
@@ -2725,10 +2644,26 @@
                 animation: none !important
             }
 
-            .skill,
-            .skill.live,
-            .skill.is-hover {
+            /* portfolio cards: no tilt, lift or glare */
+            .projects .project-premium {
+                rotate: none !important;
                 translate: none !important
+            }
+
+            .project-premium,
+            .project-premium .preview-action {
+                transition: none
+            }
+
+            .project-premium::after {
+                display: none
+            }
+
+            /* neon border: calm static gradient ring instead of the travelling light */
+            .nb i::before {
+                animation: none;
+                rotate: 0deg;
+                background: conic-gradient(#19e0d2, #2a7bff, #a24dff, #ff3ea5, #19e0d2)
             }
         }
     </style>
@@ -2920,10 +2855,15 @@
                 role: 'Web Developer',
                 email: 'sophea044056@gmail.com',
                 phone: '0969185182',
-                linkedinLabel: 'Sok Sophea', linkedinUrl: 'https://www.linkedin.com/',
+                linkedinLabel: 'Sok Sophea',
+                // TODO: Replace with the URL of your own LinkedIn profile.
+                linkedinUrl: 'https://www.linkedin.com/',
+                // TODO: Replace with the URL of your own GitHub profile.
                 githubUrl: 'https://github.com/',
                 location: 'National Technical Training Institute (NTTI), Phnom Penh, Cambodia',
                 mapsUrl: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('National Technical Training Institute (NTTI), Phnom Penh, Cambodia').replace(/[()]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase()),
+                // TODO: Insert your form-handling endpoint URL here (the service that receives the POST).
+                // While it stays empty, the contact form falls back to opening the visitor's email app (mailto).
                 formEndpoint: '',
                 intro: 'I am an Information Technology student at the National Technical Training Institute (NTTI), currently in the first semester of my second year pursuing an Associate Degree in Information Technology.',
                 journey: 'My journey in technology has evolved from simple curiosity into a passion for creating clean, beautiful, and functional applications using modern web technologies.',
@@ -2937,12 +2877,54 @@
                 ],
                 /* url = live demo link, repo = source code link (e.g. GitHub). Fill in either or both. */
                 projects: [
-                    { title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', rgb: '25,224,210', url: '', repo: '', description: 'Admin dashboard for managing products, inventory, and business data.' },
-                    { title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', rgb: '255,159,64', url: '', repo: '', description: 'Travel-focused web application with structured content and backend data management.' },
-                    { title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', rgb: '180,138,255', url: 'https://phoneshop-deploy.vercel.app/', repo: '', description: 'Responsive phone-store interface designed for a clean and modern shopping experience.' },
-                    { title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', rgb: '255,82,82', url: '', repo: '', description: 'Motorbike showroom concept with product presentation and database-driven content.' },
-                    { title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', rgb: '255,214,51', url: '', repo: '', description: 'Interactive developer portfolio focused on modern UI, responsive layouts, and motion.' },
-                    { title: 'Health News', stack: 'React JS + API', screen: 'blog', rgb: '61,220,132', url: '', repo: '', description: 'News-style interface consuming API data with a clear, responsive reading experience.' }
+                    {
+                        title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', rgb: '25,224,210',
+                        // TODO: Insert the live demo URL of this project. Leave '' until it exists.
+                        url: '',
+                        // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
+                        repo: '',
+                        description: 'Admin dashboard for managing products, inventory, and business data.'
+                    },
+                    {
+                        title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', rgb: '255,159,64',
+                        // TODO: Insert the live demo URL of this project. Leave '' until it exists.
+                        url: '',
+                        // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
+                        repo: '',
+                        description: 'Travel-focused web application with structured content and backend data management.'
+                    },
+                    {
+                        title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', rgb: '180,138,255',
+                        // TODO: Confirm or replace the live demo URL of this project.
+                        url: 'https://phoneshop-deploy.vercel.app/',
+                        // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
+                        repo: '',
+                        description: 'Responsive phone-store interface designed for a clean and modern shopping experience.'
+                    },
+                    {
+                        title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', rgb: '255,82,82',
+                        // TODO: Insert the live demo URL of this project. Leave '' until it exists.
+                        url: '',
+                        // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
+                        repo: '',
+                        description: 'Motorbike showroom concept with product presentation and database-driven content.'
+                    },
+                    {
+                        title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', rgb: '255,214,51',
+                        // TODO: Insert the live demo URL of this project. Leave '' until it exists.
+                        url: '',
+                        // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
+                        repo: '',
+                        description: 'Interactive developer portfolio focused on modern UI, responsive layouts, and motion.'
+                    },
+                    {
+                        title: 'Health News', stack: 'React JS + API', screen: 'blog', rgb: '61,220,132',
+                        // TODO: Insert the live demo URL of this project. Leave '' until it exists.
+                        url: '',
+                        // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
+                        repo: '',
+                        description: 'News-style interface consuming API data with a clear, responsive reading experience.'
+                    }
                 ]
             };
 
@@ -2993,11 +2975,13 @@
                 { n: 'PHP', c: '#8f94ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9aeff"/><stop offset="1" stop-color="#5b5fd9"/></linearGradient></defs><ellipse cx="12" cy="12" rx="11" ry="6.5" fill="url(#@)"/><text x="12" y="14.8" font-size="8" font-weight="800" font-style="italic" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">php</text>' },
                 { n: 'Laravel', c: '#ff3b30', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6a4d"/><stop offset="1" stop-color="#ff1f3d"/></linearGradient></defs><path d="M12 3l7 4v6l-7 4-7-4V7z" fill="#ff3b30" fill-opacity=".22" stroke="url(#@)" stroke-width="1.9" stroke-linejoin="round"/><path d="M5 7l7 4 7-4M12 11v6" fill="none" stroke="url(#@)" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/>' },
                 { n: 'MySQL', c: '#22b8ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5de0ff"/><stop offset="1" stop-color="#1c7ed6"/></linearGradient></defs><ellipse cx="12" cy="6" rx="8" ry="3" fill="#22b8ff" fill-opacity=".3"/><g fill="none" stroke="url(#@)" stroke-width="1.9" stroke-linecap="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>' },
-                { n: 'GitHub', c: '#b48aff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9a6ff"/></linearGradient></defs><path fill="url(#@)" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.500 11.500 0 0 1 6 0C17.300 4.700 18.300 5 18.300 5c.7 1.700.2 2.900.1 3.200.8.800 1.200 1.900 1.200 3.200 0 4.600-2.800 5.600-5.500 5.900.4.400.8 1.100.8 2.200v3.300c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
+                { n: 'GitHub', c: '#b48aff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9a6ff"/></linearGradient></defs><path fill="url(#@)" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
                 { n: 'GitLab', c: '#fc6d26', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9a4d"/><stop offset="1" stop-color="#e24329"/></linearGradient></defs><path fill="url(#@)" d="m23.6004 9.5927-.0337-.0862L20.3.9814a.851.851 0 0 0-.3362-.405.8748.8748 0 0 0-.9997.0539.8748.8748 0 0 0-.29.4399l-2.2055 6.748H7.5375l-2.2057-6.748a.8573.8573 0 0 0-.29-.4412.8748.8748 0 0 0-.9997-.0537.8585.8585 0 0 0-.3362.4049L.4332 9.5015l-.0325.0862a6.0657 6.0657 0 0 0 2.0119 7.0105l.0113.0087.03.0213 4.976 3.7264 2.462 1.8633 1.4995 1.1321a1.0085 1.0085 0 0 0 1.2197 0l1.4995-1.1321 2.4619-1.8633 5.006-3.7489.0125-.01a6.0682 6.0682 0 0 0 2.0094-7.003z"/>' },
                 { n: 'Vercel', c: '#6df7ff', svg: '<defs><linearGradient id="@" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#5ff0ff"/></linearGradient></defs><path d="M12 4l9 16H3z" fill="url(#@)" stroke="url(#@)" stroke-width="1.2" stroke-linejoin="round"/>' }
             ];
 
+            /* 5 particles per skill card (was 9); none at all when the visitor prefers reduced motion */
+            const PARTICLES = reduced ? 0 : 5;
             const skillsHTML = () => `
   <div class="skills-sec">
     <h2 class="neon" data-title="Skills"></h2>
@@ -3008,7 +2992,7 @@
             <span class="nb" aria-hidden="true"><i></i></span>
             <div class="skill-orbit"></div>
             <div class="particle-field">
-              ${Array.from({ length: 9 }, (_, p) => `
+              ${Array.from({ length: PARTICLES }, (_, p) => `
                 <i class="skill-particle" style="left:${10 + ((p * 37 + i * 11) % 80)}%;top:${10 + ((p * 53 + i * 7) % 78)}%;--px:${(-15 + ((p * 17) % 30)).toFixed(1)}px;--py:${(-20 - ((p * 13) % 25)).toFixed(1)}px;--pd:${(2.2 + ((p * 7) % 18) / 10).toFixed(2)}s;--delay:${(-((p * 31 + i * 13) % 30) / 10).toFixed(2)}s"></i>
               `).join('')}
             </div>
@@ -3082,7 +3066,7 @@
                 { n: 'mongo', glow: '#47a248', svg: '<path d="M12 1.5c.4 2.200 4.800 4.600 4.800 10.300 0 3.600-2 5.600-4 6.400L12.200 22h-.4l-.6-3.800c-2-.8-4-2.800-4-6.400C7.200 6.100 11.600 3.700 12 1.500z" fill="#47a248"/><path d="M12 5v16" stroke="#d7f0d2" stroke-width=".9" stroke-linecap="round"/>' },
                 { n: 'figma', glow: '#a259ff', svg: '<rect x="8" y="2" width="4" height="6" rx="2" fill="#f24e1e"/><rect x="12" y="2" width="4" height="6" rx="2" fill="#ff7262"/><rect x="8" y="8" width="4" height="6" rx="2" fill="#a259ff"/><circle cx="14" cy="11" r="3" fill="#1abcfe"/><rect x="8" y="14" width="4" height="6" rx="2" fill="#0acf83"/>' },
                 { n: 'next', glow: '#ff5cd6', bg: '#000', svg: '<circle cx="12" cy="12" r="10" fill="#fff"/><text x="12" y="16.6" font-size="12" font-weight="800" text-anchor="middle" fill="#000" font-family="Arial,sans-serif">N</text>' },
-                { n: 'github', glow: '#b48aff', bg: '#0d1117', svg: '<path fill="#fff" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.500 11.500 0 0 1 6 0C17.300 4.700 18.300 5 18.300 5c.7 1.700.2 2.900.1 3.200.8.800 1.200 1.900 1.200 3.200 0 4.600-2.800 5.600-5.500 5.900.4.400.8 1.100.8 2.200v3.300c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
+                { n: 'github', glow: '#b48aff', bg: '#0d1117', svg: '<path fill="#fff" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>' },
                 { n: 'vercel', glow: '#6df7ff', bg: '#000', svg: '<path d="M12 4l9 16H3z" fill="#fff"/>' },
                 { n: 'gitlab', glow: '#fc6d26', svg: '<path d="M12 21.500L2.500 14.200l1.900-5.900 1.900 5.900h11.400l1.900-5.900 1.900 5.900z" fill="#e24329"/><path d="M12 21.500L6.300 14.200h11.400z" fill="#fc6d26"/><path d="M4.400 8.300L6.300 2.500l1.900 5.800zM19.600 8.300l-1.900-5.800-1.900 5.800z" fill="#fca326"/>' },
                 { n: 'vue', glow: '#41b883', svg: '<path d="M2 4h4l6 10 6-10h4L12 21z" fill="#41b883"/><path d="M6 4h3.2L12 9l2.8-5H18l-6 10z" fill="#35495e"/>' },
@@ -3201,7 +3185,7 @@
   </article>`).join('');
 
             /*    Storm engine: rain + lightning (canvas) and roaming tech orbs (DOM)  */
-            const cv = $('#storm'), ctx = cv.getContext('2d');
+            const cv = $('#storm'), ctx = reduced ? null : cv.getContext('2d');   // reduced motion: no rain canvas
             let W = 0, H = 0, dpr = 1;
             const drops = [], bolts = [];
             const orbs = [];
@@ -3212,8 +3196,10 @@
 
             function fit(force) {
                 const w = innerWidth, h = innerHeight;
-                if (!force && w === W && Math.abs(h - H) < 120 && cv.width) return;
-                dpr = Math.min(devicePixelRatio || 1, 1.5); W = w; H = h;
+                if (!force && w === W && Math.abs(h - H) < 120 && (reduced || cv.width)) return;
+                W = w; H = h;
+                if (reduced) return;               // reduced motion: only track the viewport size (orbs need it), skip the canvas
+                dpr = Math.min(devicePixelRatio || 1, 1.5);
                 cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
                 const n = Math.min(240, Math.round(W * H / 9500));
@@ -3281,7 +3267,13 @@
                 return true;
             }
 
-            function orbCount() { return ICONS.length; }
+            /* fewer orbs on small screens: <=640px -> 8, <=1024px -> 12, larger -> every icon */
+            function orbCount() {
+                const w = innerWidth;
+                if (w <= 640) return Math.min(8, ICONS.length);
+                if (w <= 1024) return Math.min(12, ICONS.length);
+                return ICONS.length;
+            }
             function makeOrbs() {
                 const layer = $('#orbs'); layer.innerHTML = ''; orbs.length = 0;
                 const pool = ICONS.slice().sort(() => Math.random() - .5).slice(0, orbCount());
@@ -3333,7 +3325,7 @@
             }
 
             fit(true); makeOrbs();
-            if (reduced) { drawRain(); }            // one still frame, no motion
+            if (reduced) { cv.hidden = true; }      // reduced motion: no rain and no lightning canvas at all
             else {
                 raf = requestAnimationFrame(frame);
                 document.addEventListener('visibilitychange', () => {
@@ -3342,9 +3334,10 @@
                 });
             }
 
+            /* rebuild the orbs whenever the responsive orb count changes (resize / rotation) */
             let rz; addEventListener('resize', () => {
                 clearTimeout(rz);
-                rz = setTimeout(() => { const before = orbs.length; fit(); if (orbCount() !== before) makeOrbs(); if (reduced) { ctx.clearRect(0, 0, W, H); drawRain(); } }, 150);
+                rz = setTimeout(() => { fit(); if (orbCount() !== orbs.length) makeOrbs(); }, 150);
             });
 
             /* pointer: orbs shy away from the cursor, soft teal glow follows the mouse, clicking empty space calls a bolt */
