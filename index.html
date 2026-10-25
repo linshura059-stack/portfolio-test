@@ -2148,6 +2148,133 @@
             box-shadow: inset 0 0 0 1px rgba(var(--pc), .9), 0 8px 22px rgba(var(--pc), .25)
         }
 
+
+        /* ---------- Portfolio: grouped tech badges + demo status row ---------- */
+        .project-stack-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: .8rem 1rem;
+            margin-top: .9rem
+        }
+
+        .tech-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: .45rem 0;
+            min-width: 0
+        }
+
+        .tech {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: 0 .5rem;
+            font: 500 .74rem 'Ubuntu', sans-serif;
+            color: #dbe7ee;
+            white-space: nowrap;
+            transition: transform .3s var(--ease), color .3s
+        }
+
+        .tech:first-child {
+            padding-left: 0
+        }
+
+        .tech+.tech {
+            border-left: 1px solid rgba(255, 255, 255, .16)
+        }
+
+        .tech-ico {
+            display: inline-flex;
+            width: 20px;
+            height: 20px;
+            flex: none
+        }
+
+        .tech-ico svg {
+            width: 100%;
+            height: 100%;
+            display: block
+        }
+
+        .project-premium:hover .tech {
+            color: #fff
+        }
+
+        .tech:hover {
+            transform: translateY(-2px)
+        }
+
+        .project-stack-row .project-actions {
+            margin-top: 0;
+            flex: none
+        }
+
+        @media (max-width:640px) {
+            .project-stack-row {
+                align-items: flex-start
+            }
+        }
+
+
+        /* Compact single-row layout: badges left, demo button right (matches mockup) */
+        @media (min-width:641px) {
+            .project-stack-row {
+                flex-wrap: nowrap;
+                gap: .5rem
+            }
+
+            .project-stack-row .tech-list {
+                flex: 1 1 auto;
+                flex-wrap: nowrap;
+                gap: 0
+            }
+
+            .project-stack-row .tech {
+                padding: 0 .38rem;
+                gap: .3rem;
+                font-size: .66rem
+            }
+
+            .project-stack-row .tech-ico {
+                width: 15px;
+                height: 15px
+            }
+
+            .project-stack-row .project-btn {
+                min-height: 32px;
+                padding: .3rem .7rem;
+                font-size: .72rem;
+                border-radius: 8px;
+                white-space: nowrap
+            }
+        }
+
+        @media (min-width:641px) and (max-width:1024px) {
+            .project-stack-row .tech-list {
+                flex-wrap: wrap;
+                row-gap: .4rem
+            }
+
+            .project-stack-row {
+                flex-wrap: wrap
+            }
+        }
+
+        @media (min-width:641px) {
+            .project-stack-row.many {
+                flex-wrap: wrap
+            }
+
+            .project-stack-row.many .tech-list {
+                flex-wrap: wrap;
+                row-gap: .4rem
+            }
+        }
+
         /* =========================================================
            VIBRANT ICONS + SMOOTH MOTION
            Skill cards, floating tech orbs, footer contact icons and
@@ -2857,7 +2984,7 @@
                 phone: '0969185182',
                 linkedinLabel: 'Sok Sophea',
                 // TODO: Replace with the URL of your own LinkedIn profile.
-                linkedinUrl: 'https://www.linkedin.com/',
+                linkedinUrl: 'https://www.linkedin.com/in/sophea-sok-497501438?utm_source=share_via&utm_content=profile&utm_medium=member_android',
                 // TODO: Replace with the URL of your own GitHub profile.
                 githubUrl: 'https://github.com/',
                 location: 'National Technical Training Institute (NTTI), Phnom Penh, Cambodia',
@@ -2878,7 +3005,7 @@
                 /* url = live demo link, repo = source code link (e.g. GitHub). Fill in either or both. */
                 projects: [
                     {
-                        title: 'Inventory Dashboard', stack: 'Laravel + MySQL', screen: 'dashboard', rgb: '25,224,210',
+                        title: 'Inventory Dashboard', stack: 'Laravel + MySQL + Bootstrap 5', screen: 'dashboard', rgb: '25,224,210',
                         // TODO: Insert the live demo URL of this project. Leave '' until it exists.
                         url: '',
                         // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
@@ -2886,15 +3013,15 @@
                         description: 'Admin dashboard for managing products, inventory, and business data.'
                     },
                     {
-                        title: 'Travel Guide', stack: 'Laravel + MySQL', screen: 'travel', rgb: '255,159,64',
+                        title: 'Travel Guide', stack: 'React.js + TypeScript + Bootstrap 5', screen: 'travel', rgb: '255,159,64',
                         // TODO: Insert the live demo URL of this project. Leave '' until it exists.
                         url: '',
                         // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
                         repo: '',
-                        description: 'Travel-focused web application with structured content and backend data management.'
+                        description: 'Travel-focused web application for exploring destinations, built with a modern frontend.'
                     },
                     {
-                        title: 'Phone Store', stack: 'HTML + CSS + Bootstrap', screen: 'shop', rgb: '180,138,255',
+                        title: 'Phone Store', stack: 'HTML + CSS + JavaScript + Bootstrap 5', screen: 'shop', rgb: '180,138,255',
                         // TODO: Confirm or replace the live demo URL of this project.
                         url: 'https://phoneshop-deploy.vercel.app/',
                         // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
@@ -2902,15 +3029,15 @@
                         description: 'Responsive phone-store interface designed for a clean and modern shopping experience.'
                     },
                     {
-                        title: 'Motorbike Showroom', stack: 'PHP + MySQL', screen: 'moto', rgb: '255,82,82',
+                        title: 'Bike Rental System', stack: 'PHP + MySQL + Bootstrap 5', screen: 'moto', rgb: '255,82,82',
                         // TODO: Insert the live demo URL of this project. Leave '' until it exists.
                         url: '',
                         // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
                         repo: '',
-                        description: 'Motorbike showroom concept with product presentation and database-driven content.'
+                        description: 'Bike rental system with bike listings, easy booking and database-driven content.'
                     },
                     {
-                        title: 'Personal Portfolio', stack: 'React JS', screen: 'folio', rgb: '255,214,51',
+                        title: 'My Portfolio', stack: 'React.js + Laravel + Bootstrap 5', screen: 'folio', rgb: '255,214,51',
                         // TODO: Insert the live demo URL of this project. Leave '' until it exists.
                         url: '',
                         // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
@@ -2918,12 +3045,12 @@
                         description: 'Interactive developer portfolio focused on modern UI, responsive layouts, and motion.'
                     },
                     {
-                        title: 'Health News', stack: 'React JS + API', screen: 'blog', rgb: '61,220,132',
+                        title: 'Task Management System', stack: 'JavaScript + React.js + Bootstrap 5', screen: 'blog', rgb: '61,220,132',
                         // TODO: Insert the live demo URL of this project. Leave '' until it exists.
                         url: '',
                         // TODO: Insert the source-code repository URL of this project (e.g. its GitHub repo). Leave '' until it exists.
                         repo: '',
-                        description: 'News-style interface consuming API data with a clear, responsive reading experience.'
+                        description: 'Task dashboard for tracking projects, priorities and progress.'
                     }
                 ]
             };
@@ -3138,6 +3265,19 @@
                     R(246, 42, 64, 210, '#f1f5f9', 4) + LN(252, 54, 52, 10, '#c7d0da', 16, 4))
             };
 
+            const TECH = {
+                'laravel': '<svg viewBox="0 0 24 24"><path fill="#ff2d20" d="M23.6 5.6 19 3a.6.6 0 0 0-.6 0l-4 2.3-.1.1V9L10.6 11V6.7l-.1-.1L6.4 4.2a.6.6 0 0 0-.6 0L1.2 6.8a.6.6 0 0 0-.3.5v10.2c0 .2.1.4.3.5l9.2 5.3a.6.6 0 0 0 .6 0l9.2-5.3 4-2.3a.6.6 0 0 0 .3-.5V6.1a.6.6 0 0 0-.9-.5zM6.1 5.3l3.2 1.8-3.2 1.9L2.9 7.100zM2.100 8.100 5.500 10v4.200l-3.400-2zm8 12.600-6.100-3.500V13l6.100 3.500zm.5-5.100-3.400-2V9.600l3.400 2zm8.200-6.800 3.200 1.800L18.800 12l-3.200-1.800zM11 20.700v-4.100l6.100-3.500v4.100zm9.100-8.400-3.400 2V10l3.400-2z"/></svg>',
+                'mysql': '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3" fill="#4aa3df"/><path fill="#2f7fb8" d="M4 6v5c0 1.700 3.600 3 8 3s8-1.300 8-3V6c0 1.700-3.600 3-8 3S4 7.700 4 6z"/><path fill="#1f5f8f" d="M4 12v5c0 1.700 3.600 3 8 3s8-1.300 8-3v-5c0 1.700-3.600 3-8 3s-8-1.300-8-3z"/></svg>',
+                'react.js': '<svg viewBox="-12 -12 24 24"><g fill="none" stroke="#61dafb" stroke-width="1.2"><ellipse rx="10" ry="4"/><ellipse rx="10" ry="4" transform="rotate(60)"/><ellipse rx="10" ry="4" transform="rotate(120)"/></g><circle r="1.8" fill="#61dafb"/></svg>',
+                'html': '<svg viewBox="0 0 24 24"><path fill="#e44d26" d="M3 2h18l-1.600 18L12 22l-7.400-2z"/><path fill="#fff" d="M7.500 8h9l-.2 2H9.700l.2 2h6.200l-.5 5-3.600 1-3.600-1-.2-3h2l.1 1.400 1.700.5 1.700-.5.2-2H7.900z"/></svg>',
+                'css': '<svg viewBox="0 0 24 24"><path fill="#1572b6" d="M3 2h18l-1.600 18L12 22l-7.400-2z"/><path fill="#fff" d="M7.500 8h9l-.2 2H9.700l.2 2h6.200l-.5 5-3.600 1-3.600-1-.2-3h2l.1 1.400 1.700.5 1.700-.5.2-2H7.900z"/></svg>',
+                'typescript': '<svg viewBox="0 0 24 24"><rect width="22" height="22" x="1" y="1" rx="3" fill="#3178c6"/><text x="12" y="17.500" font-size="11" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">TS</text></svg>',
+                'javascript': '<svg viewBox="0 0 24 24"><rect width="22" height="22" x="1" y="1" rx="3" fill="#f7df1e"/><text x="12" y="17.500" font-size="11" font-weight="800" text-anchor="middle" fill="#222" font-family="Arial,sans-serif">JS</text></svg>',
+                'bootstrap 5': '<svg viewBox="0 0 24 24"><rect width="22" height="22" x="1" y="1" rx="5" fill="#7952b3"/><text x="12" y="17.500" font-size="14" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">B</text></svg>',
+                'php': '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="11" ry="7" fill="#777bb4"/><text x="12" y="15" font-size="8.500" font-weight="800" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif">php</text></svg>'
+            };
+            const techIcon = t => TECH[t.toLowerCase()] || `<svg viewBox="0 0 24 24"><rect width="22" height="22" x="1" y="1" rx="5" fill="#19e0d2"/><text x="12" y="16.500" font-size="12" font-weight="800" text-anchor="middle" fill="#021016" font-family="Arial,sans-serif">${esc(t.charAt(0).toUpperCase())}</text></svg>`;
+
             const projectsEl = $('#projects');
             const projectLink = p => p.url || p.repo || '';
             projectsEl.innerHTML = CONFIG.projects.map((p, i) => `
@@ -3162,24 +3302,21 @@
           <p class="project-index">${String(i + 1).padStart(2, '0')} / PROJECT</p>
           <h3>${esc(p.title)}</h3>
         </div>
-        <span class="project-status ${p.url ? 'is-live' : ''}">
-          <span></span>${p.url ? 'Live' : p.repo ? 'Code' : 'Concept'}
-        </span>
       </div>
       <p class="project-description">${esc(p.description || 'Web application project built with modern development tools.')}</p>
-      <div class="project-tags" aria-label="Technology stack">
-        ${esc(p.stack).split('+').map(tag => `<span>${esc(tag.trim())}</span>`).join('')}
-      </div>
-      <div class="project-actions">
-        ${p.url ? `<a class="btn btn-ok project-btn" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">
-                <span>Live Demo</span><span aria-hidden="true">↗</span>
-                <span class="sr"> of ${esc(p.title)} (opens in a new tab)</span>
-             </a>` : ''}
-        ${p.repo ? `<a class="btn btn-code project-btn" href="${esc(p.repo)}" target="_blank" rel="noopener noreferrer">
-                <span>View Code</span><span aria-hidden="true">↗</span>
-                <span class="sr"> of ${esc(p.title)} (opens in a new tab)</span>
-             </a>` : ''}
-        ${!p.url && !p.repo ? `<span class="btn btn-off project-btn" aria-disabled="true"><span>Demo Coming Soon</span></span>` : ''}
+      <div class="project-stack-row${p.stack.split('+').length > 3 ? ' many' : ''}">
+        <ul class="tech-list" aria-label="Technology stack">
+          ${p.stack.split('+').map(t => t.trim()).map(t => `<li class="tech"><span class="tech-ico" aria-hidden="true">${techIcon(t)}</span><span class="tech-name">${esc(t)}</span></li>`).join('')}
+        </ul>
+        <div class="project-actions">
+          ${p.url ? `<a class="btn btn-ok project-btn" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">
+                  <span>Live Demo</span><span class="sr"> of ${esc(p.title)} (opens in a new tab)</span>
+               </a>` : ''}
+          ${p.repo ? `<a class="btn btn-code project-btn" href="${esc(p.repo)}" target="_blank" rel="noopener noreferrer">
+                  <span>View Code</span><span class="sr"> of ${esc(p.title)} (opens in a new tab)</span>
+               </a>` : ''}
+          ${!p.url && !p.repo ? `<span class="btn btn-off project-btn" aria-disabled="true"><span>No demo yet</span></span>` : ''}
+        </div>
       </div>
     </div>
   </article>`).join('');
