@@ -1,0 +1,8 @@
+{
+  "name": "Sok Sophea",
+  "description": "Portfolio of a web developer: React and Laravel projects, an about page, and a contact form.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
