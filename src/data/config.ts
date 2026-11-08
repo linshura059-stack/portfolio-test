@@ -52,8 +52,9 @@ export const CONFIG = {
       title: 'Inventory Dashboard',
       stack: 'Laravel + MySQL + Bootstrap 5',
       screen: 'dashboard',
+      image:'/assets/Inventory Dashboard.png',
       rgb: '25,224,210',
-      url: '',
+      url: 'https://loan-ruddy-omega.vercel.app/',
       repo: '',
       description: 'Admin dashboard for managing products, inventory, and business data.'
     },
@@ -62,6 +63,7 @@ export const CONFIG = {
       stack: 'React.js + TypeScript + Bootstrap 5',
       screen: 'travel',
       rgb: '255,159,64',
+      image:'/assets/Travel Guide.png',
       url: '',
       repo: '',
       description: 'Travel-focused web application for exploring destinations, built with a modern frontend.'
@@ -77,13 +79,14 @@ export const CONFIG = {
       description: 'Responsive phone-store interface designed for a clean and modern shopping experience.'
     },
     {
-      title: 'Bike Rental System',
+      title: 'Car Rental System',
       stack: 'PHP + MySQL + Bootstrap 5',
       screen: 'moto',
+      image:'/assets/Car Rental System.png',
       rgb: '255,82,82',
       url: '',
       repo: '',
-      description: 'Bike rental system with bike listings, easy booking and database-driven content.'
+      description: 'Car Rental System with bike listings, easy booking and database-driven content.'
     },
     {
       title: 'My Portfolio',
