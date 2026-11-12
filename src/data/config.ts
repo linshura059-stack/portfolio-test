@@ -102,6 +102,7 @@ export const CONFIG = {
       title: 'Task Management System',
       stack: 'JavaScript + React.js + Bootstrap 5',
       screen: 'blog',
+      image: '/assets/Task Management System.png',
       rgb: '61,220,132',
       url: '',
       repo: '',
