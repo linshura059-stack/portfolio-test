@@ -57,6 +57,7 @@ export const ProjectsSection: React.FC = () => {
   }, []);
 
   const projectLink = (p: ProjectItem) => p.url || p.repo || '';
+  const isExternalLink = (href: string) => /^https?:\/\//i.test(href);
 
   return (
     <div id="portfolio" className="home-section" ref={containerRef}>
@@ -65,9 +66,46 @@ export const ProjectsSection: React.FC = () => {
         <div className="projects" id="projects">
           {CONFIG.projects.map((p: ProjectItem, i: number) => {
             const link = projectLink(p);
+            const external = isExternalLink(link);
             const screenRenderer = SCREENS[p.screen];
             const screenSvg = screenRenderer ? screenRenderer() : '';
             const stackItems = p.stack.split('+').map(t => t.trim());
+            const showRepo = Boolean(p.repo && p.title !== 'My Portfolio');
+
+            const laptopPreview = (
+              <div className="laptop">
+                <div className="laptop-in">
+                  <div className="lid">
+                    <div className="screen" role="img" aria-label={`Preview of ${p.title}`}>
+                      <div className="bar">
+                        <i />
+                        <i />
+                        <i />
+                        <span />
+                      </div>
+                      <div className="view">
+                        {p.image ? (
+                          <img
+                            src={p.image}
+                            alt={`Preview of ${p.title}`}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div dangerouslySetInnerHTML={{ __html: screenSvg }} />
+                        )}
+                      </div>
+                      <span className="chip">{p.stack}</span>
+                      {link && (
+                        <div className="preview-action" aria-hidden="true">
+                          {p.url ? 'View project' : 'View code'}{external ? ' ↗' : ''}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="base" />
+                </div>
+              </div>
+            );
 
             return (
               <article
@@ -84,82 +122,15 @@ export const ProjectsSection: React.FC = () => {
                     <a
                       className="project-visual-link"
                       href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target={external ? '_blank' : undefined}
+                      rel={external ? 'noopener noreferrer' : undefined}
                       tabIndex={-1}
-                      aria-hidden="true"
+                      aria-label={`Open ${p.title}`}
                     >
-                      <div className="laptop">
-                        <div className="laptop-in">
-                          <div className="lid">
-                            <div className="screen" role="img" aria-label={`Preview of ${p.title}`}>
-                              <div className="bar">
-                                <i />
-                                <i />
-                                <i />
-                                <span />
-                              </div>
-                              <div className="view">
-                                {p.image ? (
-                                  <img
-                                    src={p.image}
-                                    alt={`Preview of ${p.title}`}
-                                    loading="lazy"
-                                    style={{
-                                      display: 'block',
-                                      width: '100%',
-                                      height: 'auto',
-                                      transition: 'transform 3.2s cubic-bezier(.35, .1, .2, 1)'
-                                    }}
-                                  />
-                                ) : (
-                                  <div dangerouslySetInnerHTML={{ __html: screenSvg }} />
-                                )}
-                              </div>
-                              <span className="chip">{p.stack}</span>
-                              <div className="preview-action" aria-hidden="true">
-                                {p.url ? 'View project' : 'View code'} ↗
-                              </div>
-                            </div>
-                          </div>
-                          <div className="base" />
-                        </div>
-                      </div>
+                      {laptopPreview}
                     </a>
                   ) : (
-                    <div className="laptop">
-                      <div className="laptop-in">
-                        <div className="lid">
-                          <div className="screen" role="img" aria-label={`Preview of ${p.title}`}>
-                            <div className="bar">
-                              <i />
-                              <i />
-                              <i />
-                              <span />
-                            </div>
-                            <div className="view">
-                              {p.image ? (
-                                <img
-                                  src={p.image}
-                                  alt={`Preview of ${p.title}`}
-                                  loading="lazy"
-                                  style={{
-                                    display: 'block',
-                                    width: '100%',
-                                    height: 'auto',
-                                    transition: 'transform 3.2s cubic-bezier(.35, .1, .2, 1)'
-                                  }}
-                                />
-                              ) : (
-                                <div dangerouslySetInnerHTML={{ __html: screenSvg }} />
-                              )}
-                            </div>
-                            <span className="chip">{p.stack}</span>
-                          </div>
-                        </div>
-                        <div className="base" />
-                      </div>
-                    </div>
+                    laptopPreview
                   )}
                 </div>
 
@@ -193,14 +164,16 @@ export const ProjectsSection: React.FC = () => {
                         <a
                           className="btn btn-ok project-btn"
                           href={p.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          target={isExternalLink(p.url) ? '_blank' : undefined}
+                          rel={isExternalLink(p.url) ? 'noopener noreferrer' : undefined}
                         >
                           <span>Live Demo</span>
-                          <span className="sr"> of {p.title} (opens in a new tab)</span>
+                          {isExternalLink(p.url) && (
+                            <span className="sr"> of {p.title} (opens in a new tab)</span>
+                          )}
                         </a>
                       )}
-                      {p.repo && p.title !== 'My Portfolio' && (
+                      {showRepo && (
                         <a
                           className="btn btn-code project-btn"
                           href={p.repo}
@@ -211,7 +184,7 @@ export const ProjectsSection: React.FC = () => {
                           <span className="sr"> of {p.title} (opens in a new tab)</span>
                         </a>
                       )}
-                      {!p.url && !p.repo && (
+                      {!p.url && !showRepo && (
                         <span className="btn btn-off project-btn" aria-disabled="true">
                           <span>No demo yet</span>
                         </span>

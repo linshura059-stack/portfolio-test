@@ -929,6 +929,15 @@
             transition: transform 3.2s cubic-bezier(.35, .1, .2, 1)
         }
 
+        .view img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            transition: transform .65s var(--ease)
+        }
+
         .chip {
             position: absolute;
             top: 50%;
@@ -973,6 +982,11 @@
             .project:hover .view svg,
             .project:focus-within .view svg {
                 transform: translateY(-44%)
+            }
+
+            .project:hover .view img,
+            .project:focus-within .view img {
+                transform: scale(1.04)
             }
 
             .project:hover .chip,
@@ -1815,6 +1829,9 @@
         .project-copy {
             position: relative;
             z-index: 2;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             padding: 1rem clamp(1rem, 1.6vw, 1.35rem) 0;
         }
 
@@ -2126,7 +2143,8 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: .8rem 1rem;
-            margin-top: .9rem
+            margin-top: auto;
+            padding-top: 1rem
         }
 
         .tech-list {
@@ -2190,23 +2208,27 @@
         }
 
 
-        /* Compact single-row layout: badges left, demo button right (matches mockup) */
+        /* Compact row layout: wraps cleanly when stack + action exceed card width */
         @media (min-width:641px) {
             .project-stack-row {
-                flex-wrap: nowrap;
-                gap: .5rem
+                flex-wrap: wrap;
+                gap: .65rem .75rem
             }
 
             .project-stack-row .tech-list {
-                flex: 1 1 auto;
-                flex-wrap: nowrap;
-                gap: 0
+                flex: 1 1 200px;
+                flex-wrap: wrap;
+                row-gap: .4rem
             }
 
             .project-stack-row .tech {
                 padding: 0 .38rem;
                 gap: .3rem;
-                font-size: .66rem
+                font-size: .68rem
+            }
+
+            .project-stack-row .tech:first-child {
+                padding-left: 0
             }
 
             .project-stack-row .tech-ico {
@@ -2220,28 +2242,6 @@
                 font-size: .72rem;
                 border-radius: 8px;
                 white-space: nowrap
-            }
-        }
-
-        @media (min-width:641px) and (max-width:1024px) {
-            .project-stack-row .tech-list {
-                flex-wrap: wrap;
-                row-gap: .4rem
-            }
-
-            .project-stack-row {
-                flex-wrap: wrap
-            }
-        }
-
-        @media (min-width:641px) {
-            .project-stack-row.many {
-                flex-wrap: wrap
-            }
-
-            .project-stack-row.many .tech-list {
-                flex-wrap: wrap;
-                row-gap: .4rem
             }
         }
 

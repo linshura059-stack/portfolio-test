@@ -86,7 +86,7 @@ export const CONFIG = {
       rgb: '255,82,82',
       url: '',
       repo: '',
-      description: 'Car Rental System with bike listings, easy booking and database-driven content.'
+      description: 'Car Rental System with car listings, easy booking and database-driven content.'
     },
     {
       title: 'My Portfolio',
