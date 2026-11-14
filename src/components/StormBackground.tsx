@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { ICONS, OrbIcon } from '../data/config';
+import { ICONS } from '../data/config';
 
 interface Drop {
   x: number;
@@ -60,19 +60,25 @@ export const StormBackground: React.FC = () => {
     const orbs: Orb[] = [];
     const ptr = { x: -999, y: -999, on: false };
 
-    const RAIN: [string, number][] = [
-      ['rgba(215,232,246,.3)', 0.9],
-      ['rgba(222,238,250,.55)', 1.2],
-      ['rgba(235,246,255,.9)', 1.5]
+    const RAIN_SLOPE = 0.055;
+    const RAIN: { col: string; tip?: string; lw: number; lMin: number; lSpan: number; vMin: number; vSpan: number }[] = [
+      { col: 'rgba(195,224,248,.28)', lw: 0.9, lMin: 12, lSpan: 6, vMin: 480, vSpan: 120 },
+      { col: 'rgba(214,236,252,.46)', tip: 'rgba(232,246,255,.78)', lw: 1.25, lMin: 18, lSpan: 8, vMin: 650, vSpan: 160 },
+      { col: 'rgba(226,243,255,.60)', tip: 'rgba(245,251,255,.95)', lw: 1.6, lMin: 24, lSpan: 10, vMin: 850, vSpan: 190 }
     ];
 
-    const newDrop = (scatter: boolean): Drop => ({
-      x: Math.random() * (W + 80) - 40,
-      y: scatter ? Math.random() * H : -30,
-      l: 14 + Math.random() * 22,
-      v: 760 + Math.random() * 640,
-      b: Math.floor(Math.random() * 3)
-    });
+    const newDrop = (scatter: boolean): Drop => {
+      const b = Math.floor(Math.random() * 3);
+      const spec = RAIN[b];
+      const l = spec.lMin + Math.random() * spec.lSpan;
+      return {
+        x: Math.random() * (W + 120) - 80,
+        y: scatter ? Math.random() * H : -l - Math.random() * 40,
+        l,
+        v: spec.vMin + Math.random() * spec.vSpan,
+        b
+      };
+    };
 
     const fit = (force = false) => {
       const w = window.innerWidth;
@@ -87,26 +93,40 @@ export const StormBackground: React.FC = () => {
       if (ctx) {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
-      const n = Math.min(300, Math.round((W * H) / 8000));
+      const n = Math.min(280, Math.round((W * H) / 8200));
       while (drops.length < n) drops.push(newDrop(true));
       drops.length = n;
     };
 
     const drawRain = () => {
       if (!ctx) return;
-      ctx.lineCap = 'butt';
-      ctx.lineJoin = 'miter';
-      RAIN.forEach(([col, lw], b) => {
-        ctx.strokeStyle = col;
-        ctx.lineWidth = lw;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      RAIN.forEach((spec, b) => {
+        ctx.strokeStyle = spec.col;
+        ctx.lineWidth = spec.lw;
         ctx.beginPath();
         for (const d of drops) {
           if (d.b === b) {
             ctx.moveTo(d.x, d.y);
-            ctx.lineTo(d.x + d.l * 0.04, d.y + d.l);
+            ctx.lineTo(d.x + d.l * RAIN_SLOPE, d.y + d.l);
           }
         }
         ctx.stroke();
+
+        if (spec.tip) {
+          ctx.strokeStyle = spec.tip;
+          ctx.lineWidth = spec.lw;
+          ctx.beginPath();
+          for (const d of drops) {
+            if (d.b === b) {
+              const t = 0.65;
+              ctx.moveTo(d.x + d.l * t * RAIN_SLOPE, d.y + d.l * t);
+              ctx.lineTo(d.x + d.l * RAIN_SLOPE, d.y + d.l);
+            }
+          }
+          ctx.stroke();
+        }
       });
     };
 
@@ -131,12 +151,12 @@ export const StormBackground: React.FC = () => {
     };
 
     let lastStrike = 0;
-    const strike = (x?: number) => {
+    const strike = () => {
       if (reduced) return;
       const now = performance.now();
       if (now - lastStrike < 120) return;
       lastStrike = now;
-      const sx = x == null ? W * (0.12 + Math.random() * 0.76) : x;
+      const sx = W * (0.12 + Math.random() * 0.76);
       const y1 = H * (0.55 + Math.random() * 0.45);
       const x1 = sx + (Math.random() - 0.5) * W * 0.2;
       const main = bolt(sx, -10, x1, y1, H * 0.16, 6);
@@ -343,15 +363,16 @@ export const StormBackground: React.FC = () => {
     let nextStrike = last + 600;
 
     const frame = (now: number) => {
-      const dt = Math.min(0.05, (now - last) / 1000);
+      const dt = Math.min(0.033, Math.max(0.001, (now - last) / 1000));
       last = now;
       if (ctx) {
         ctx.clearRect(0, 0, W, H);
         for (const d of drops) {
+          d.x += d.v * RAIN_SLOPE * dt;
           d.y += d.v * dt;
-          if (d.y > H + 30) {
-            d.y = -30;
-            d.x = Math.random() * (W + 80) - 40;
+          if (d.y > H + d.l || d.x > W + 60) {
+            d.y = -d.l - Math.random() * 40;
+            d.x = Math.random() * (W + 120) - 80;
           }
         }
         drawRain();
@@ -362,7 +383,7 @@ export const StormBackground: React.FC = () => {
       if (now > nextStrike) {
         strike();
         if (Math.random() < 0.35) setTimeout(() => strike(), 140);
-        nextStrike = now + 1100 + Math.random() * 2200;
+        nextStrike = now + 1500 + Math.random() * 500;
       }
       stepOrbs(dt);
       raf = requestAnimationFrame(frame);
@@ -396,13 +417,6 @@ export const StormBackground: React.FC = () => {
       if (glow) glow.style.opacity = '0';
     };
 
-    const onPointerDown = (e: PointerEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target || !target.closest('a,button,input,textarea,label,.map')) {
-        strike(e.clientX);
-      }
-    };
-
     let rz: ReturnType<typeof setTimeout>;
     const onResize = () => {
       clearTimeout(rz);
@@ -425,7 +439,6 @@ export const StormBackground: React.FC = () => {
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     window.addEventListener('pointerup', onPointerUp);
     document.documentElement.addEventListener('mouseleave', onMouseLeave);
-    window.addEventListener('pointerdown', onPointerDown);
     window.addEventListener('resize', onResize);
     document.addEventListener('visibilitychange', onVisChange);
 
@@ -435,7 +448,6 @@ export const StormBackground: React.FC = () => {
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       document.documentElement.removeEventListener('mouseleave', onMouseLeave);
-      window.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVisChange);
     };

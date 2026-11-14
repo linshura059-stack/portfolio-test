@@ -1,5 +1,3 @@
-import React from 'react';
-
 // Profile photo for the My Portfolio mockup
 const FOLIO_PHOTO = '/assets/sok-sophea-profile.png';
 
@@ -80,7 +78,7 @@ export const SCREENS: Record<string, () => string> = {
   )
 };
 
-export const TECH_ICONS: Record<string, string> = {
+const TECH_ICONS: Record<string, string> = {
   'laravel': '<svg viewBox="0 0 24 24"><path fill="#ff2d20" d="M23.6 5.6 19 3a.6.6 0 0 0-.6 0l-4 2.3-.1.1V9L10.6 11V6.7l-.1-.1L6.4 4.2a.6.6 0 0 0-.6 0L1.2 6.8a.6.6 0 0 0-.3.5v10.2c0 .2.1.4.3.5l9.2 5.3a.6.6 0 0 0 .6 0l9.2-5.3 4-2.3a.6.6 0 0 0 .3-.5V6.1a.6.6 0 0 0-.9-.5zM6.1 5.3l3.2 1.8-3.2 1.9L2.9 7.100zM2.100 8.100 5.500 10v4.200l-3.400-2zm8 12.600-6.100-3.500V13l6.100 3.500zm.5-5.100-3.400-2V9.600l3.400 2zm8.200-6.800 3.200 1.800L18.800 12l-3.200-1.800zM11 20.700v-4.100l6.100-3.500v4.100zm9.100-8.400-3.400 2V10l3.400-2z"/></svg>',
   'mysql': '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3" fill="#4aa3df"/><path fill="#2f7fb8" d="M4 6v5c0 1.700 3.600 3 8 3s8-1.300 8-3V6c0 1.700-3.600 3-8 3S4 7.700 4 6z"/><path fill="#1f5f8f" d="M4 12v5c0 1.700 3.600 3 8 3s8-1.300 8-3v-5c0 1.700-3.600 3-8 3s-8-1.300-8-3z"/></svg>',
   'react.js': '<svg viewBox="-12 -12 24 24"><g fill="none" stroke="#61dafb" stroke-width="1.2"><ellipse rx="10" ry="4"/><ellipse rx="10" ry="4" transform="rotate(60)"/><ellipse rx="10" ry="4" transform="rotate(120)"/></g><circle r="1.8" fill="#61dafb"/></svg>',
