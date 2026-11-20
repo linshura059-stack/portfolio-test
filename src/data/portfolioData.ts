@@ -91,7 +91,7 @@ export const PROJECTS: ProjectItem[] = [
     screen: 'dashboard',
     image: '/assets/aistudio/Inventory_Dashboard_02d814b0.webp',
     rgb: '25,224,210',
-    url: '',
+    url: 'https://loan-ruddy-omega.vercel.app/',
     repo: '',
     description:
       'Admin dashboard for managing products, inventory, and business data.',
@@ -159,7 +159,7 @@ export const PROJECTS: ProjectItem[] = [
     screen: 'folio',
     image: '/assets/aistudio/my-portfolio-preview_d1267459.webp',
     rgb: '255,214,51',
-    url: '',
+    url: 'https://sophea-silk.vercel.app/',
     repo: '',
     description:
       'Interactive developer portfolio focused on modern UI, responsive layouts, and motion.',
