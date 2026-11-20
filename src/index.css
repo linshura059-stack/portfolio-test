@@ -2064,3 +2064,103 @@ html.lite .orb::after {
 html.lite .orb {
   box-shadow: none !important;
 }
+
+/* Portfolio refinements: smaller, cleaner laptop previews */
+.projects {
+  gap: clamp(28px, 3.4vw, 48px) clamp(20px, 2.4vw, 32px);
+}
+
+.project-premium {
+  gap: 0.6rem;
+  padding-bottom: 1.1rem;
+  border-radius: 18px;
+}
+
+.project-visual {
+  padding: clamp(14px, 1.6vw, 22px) clamp(18px, 2.4vw, 34px) 0;
+}
+
+.laptop {
+  max-width: 300px;
+  margin-inline: auto;
+}
+
+.lid {
+  border-radius: 9px 9px 0 0;
+  padding: 3% 3.2% 3.4%;
+}
+
+.screen {
+  border-radius: 3px;
+}
+
+.chip {
+  top: auto;
+  left: 6px;
+  bottom: 6px;
+  transform: none;
+  max-width: calc(100% - 12px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(89, 232, 240, 0.28);
+  background: rgba(6, 14, 19, 0.82);
+  font-size: 0.6rem;
+  letter-spacing: 0.02em;
+}
+
+@media (hover: hover) {
+  .project-premium:hover .chip,
+  .project-premium:focus-within .chip {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.project-copy {
+  padding-top: 0.7rem;
+}
+
+.project-heading h3 {
+  font-size: clamp(0.98rem, 1.3vw, 1.1rem);
+}
+
+.project-description {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  .laptop {
+    max-width: 280px;
+  }
+}
+
+/* Match laptop screen to the wide (~2.08:1) screenshots so nothing is cut off */
+.screen {
+  aspect-ratio: 1.9 / 1;
+}
+
+.view img {
+  object-position: center top;
+}
+
+.laptop {
+  max-width: 320px;
+}
+
+@media (min-width: 641px) {
+  .project-stack-row,
+  .project-stack-row:not(.many) {
+    flex-wrap: wrap;
+    gap: 0.6rem 0.8rem;
+  }
+
+  .project-stack-row:not(.many) .tech-list,
+  .project-stack-row .tech-list {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+}
